@@ -1,0 +1,10 @@
+{
+  "name": "vadim-korolkov-portfolio-clone",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Static clone of vadim-korolkov-en.figma.site",
+  "scripts": {
+    "start": "npx serve ."
+  }
+}
+
