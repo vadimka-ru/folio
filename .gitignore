@@ -1,0 +1,17 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Editor / agent
+.claude/
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS junk
+Thumbs.db

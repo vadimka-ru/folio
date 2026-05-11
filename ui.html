@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UI — Вадим Корольков</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="favicon.png">
+  <link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<!-- Top-left: identity -->
+  <a class="chrome-pill me-card" href="https://drive.google.com/file/d/1rrkNZL5k16p9dHij-_F4tXXOePsKGHDB/view?usp=sharing" target="_blank">
+    <div class="me-avatar">
+      <img class="avatar-main" src="avatar.jpg" alt="Vadim Korolkov">
+      <img class="avatar-alt" id="avatar-alt" alt="">
+    </div>
+    <div class="me-text">
+      <div class="me-name">Вадим Корольков</div>
+      <div class="me-role">Продуктовый дизайнер</div>
+      <div class="me-text-alt">
+        <div class="me-name" id="alt-name">Fingular</div>
+        <div class="me-role" id="alt-role">2025 – н. в.</div>
+      </div>
+    </div>
+  </a>
+
+  <!-- Top-right: theme toggle -->
+  <div class="chrome-pill theme-toggle" role="group" aria-label="Theme">
+    <div class="inner">
+      <button id="theme-light" aria-label="Light theme">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+      <button id="theme-dark" class="active" aria-label="Dark theme">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Top-right: close case (shown only when case opened) -->
+  <button class="chrome-pill case-close" id="case-close" aria-label="Close case">
+    <div class="inner">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 13.0538L6.92689 18.1269C6.78844 18.2654 6.6144 18.3362 6.40479 18.3394C6.19519 18.3426 6.01795 18.2718 5.87309 18.1269C5.7282 17.982 5.65576 17.8064 5.65576 17.6C5.65576 17.3936 5.7282 17.218 5.87309 17.0731L10.9462 12L5.87309 6.9269C5.73462 6.78845 5.66379 6.61442 5.66059 6.4048C5.65737 6.1952 5.7282 6.01797 5.87309 5.8731C6.01795 5.72822 6.19359 5.65578 6.39999 5.65578C6.60639 5.65578 6.78202 5.72822 6.92689 5.8731L12 10.9462L17.0731 5.8731C17.2115 5.73464 17.3856 5.6638 17.5952 5.6606C17.8048 5.65739 17.982 5.72822 18.1269 5.8731C18.2718 6.01797 18.3442 6.1936 18.3442 6.4C18.3442 6.6064 18.2718 6.78203 18.1269 6.9269L13.0538 12L18.1269 17.0731C18.2654 17.2116 18.3362 17.3856 18.3394 17.5952C18.3426 17.8048 18.2718 17.982 18.1269 18.1269C17.982 18.2718 17.8064 18.3442 17.6 18.3442C17.3936 18.3442 17.218 18.2718 17.0731 18.1269L12 13.0538Z" fill="currentColor"/></svg>
+    </div>
+  </button>
+
+  <!-- Bottom-center nav -->
+  <nav class="main-nav" id="nav">
+    <a  href="index.html">Обо мне</a>
+    <a  href="cases.html">Кейсы</a>
+    <a class="active" href="ui.html">UI</a>
+    <a  href="experience.html">Опыт</a>
+  </nav>
+
+  <!-- Bottom-left: socials -->
+  <div class="chrome-pill socials">
+    <a href="https://figma.com" target="_blank" aria-label="Figma">
+      <svg viewBox="0 0 38 57" xmlns="http://www.w3.org/2000/svg">
+        <path fill="currentColor" d="M19 28.5a9.5 9.5 0 1 1 19 0 9.5 9.5 0 0 1-19 0z"/>
+        <path fill="currentColor" d="M0 47.5A9.5 9.5 0 0 1 9.5 38H19v9.5a9.5 9.5 0 1 1-19 0z"/>
+        <path fill="currentColor" d="M19 0v19h9.5a9.5 9.5 0 1 0 0-19H19z"/>
+        <path fill="currentColor" d="M0 9.5A9.5 9.5 0 0 0 9.5 19H19V0H9.5A9.5 9.5 0 0 0 0 9.5z"/>
+        <path fill="currentColor" d="M0 28.5A9.5 9.5 0 0 0 9.5 38H19V19H9.5A9.5 9.5 0 0 0 0 28.5z"/>
+      </svg>
+    </a>
+    <a href="https://t.me/Vadim_Korol" target="_blank" aria-label="Telegram">
+      <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 24c6.627 0 12-5.373 12-12S18.627 0 12 0 0 5.373 0 12s5.373 12 12 12zm5.487-16.91-2.02 9.527c-.152.67-.548.83-1.112.517l-3.06-2.257-1.476 1.421c-.163.163-.3.3-.614.3l.22-3.12 5.678-5.13c.246-.22-.054-.342-.383-.122l-7.017 4.418-3.025-.947c-.657-.205-.67-.658.137-.974l11.83-4.56c.547-.205 1.026.122.842.968z"/></svg>
+    </a>
+    <a href="https://www.linkedin.com/in/vadim-korolkov-1838a2332/" target="_blank" aria-label="LinkedIn">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M4.98 3.5C4.98 4.881 3.87 6 2.5 6S.02 4.881.02 3.5C.02 2.12 1.13 1 2.5 1s2.48 1.12 2.48 2.5zM5 8H0v16h5V8zm7.982 0H8.014v16h4.969v-8.399c0-4.67 6.029-5.052 6.029 0V24H24V13.869c0-7.88-8.922-7.593-11.018-3.714V8z"/></svg>
+    </a>
+  </div>
+
+  <!-- Bottom-right: CV -->
+  <a class="chrome-pill cv-button" href="https://drive.google.com/file/d/1rrkNZL5k16p9dHij-_F4tXXOePsKGHDB/view?usp=sharing" target="_blank" id="cv-btn">
+    <div class="inner">CV</div>
+  </a>
+
+  <!-- ===== Sections ===== -->
+  <main>
+    <section class="section ui-section" id="ui">
+      <div class="ui-canvas" id="ui-canvas">
+        <div class="ui-canvas-world" id="ui-canvas-world">
+          <div class="uic-card uic-card--block uic-card--demo" style="left:0px;top:0px"><img src="experiments/dashboard.png" alt=""></div>
+<div class="uic-card uic-card--block uic-card--demo" style="left:1008px;top:0px"><video src="experiments/anim-girl.mp4" autoplay loop muted playsinline></video></div>
+<div class="uic-card uic-card--block uic-card--demo" style="left:2016px;top:0px"><video src="experiments/graphic-dollar.mp4" autoplay loop muted playsinline></video></div>
+<div class="uic-card uic-card--block uic-card--demo" style="left:3024px;top:0px"><img class="uic-phone-baked" src="experiments/stay-btwn-phone.png" alt=""></div>
+<div class="uic-card uic-card--block uic-card--demo" style="left:0px;top:688px"><img src="experiments/graphic-phone.png" alt=""></div>
+<div class="uic-card uic-card--block uic-card--duo" style="left:1008px;top:688px"><div class="uic-phone"><img src="experiments/Profile.png" alt=""></div><div class="uic-phone"><img src="experiments/Profile-1.png" alt=""></div></div>
+<div class="uic-card uic-card--block uic-card--demo" style="left:2016px;top:688px"><video src="experiments/calendar.mp4" autoplay loop muted playsinline></video></div>
+<div class="uic-card uic-card--block uic-card--demo" style="left:3024px;top:688px"><img src="experiments/MVP-11.jpg" alt=""></div>
+<div class="uic-card uic-card--block uic-card--demo" style="left:0px;top:1376px"><img src="experiments/MVP-1.png" alt=""></div>
+<div class="uic-card uic-card--block uic-card--demo" style="left:1008px;top:1376px"><video src="experiments/anim-2020.mp4" autoplay loop muted playsinline></video></div>
+<div class="uic-card uic-card--block uic-card--demo" style="left:2016px;top:1376px"><img src="experiments/synapse-ui.png" alt=""></div>
+<div class="uic-card uic-card--block uic-card--duo" style="left:3024px;top:1376px"><div class="uic-phone"><img src="experiments/Login.png" alt=""></div><div class="uic-phone"><img src="experiments/Main.png" alt=""></div></div>
+<div class="uic-card uic-card--block uic-card--duo" style="left:0px;top:2064px"><div class="uic-phone"><img src="experiments/Enter Amount.png" alt=""></div><div class="uic-phone"><img src="experiments/Enter Amount-1.png" alt=""></div></div>
+<div class="uic-card uic-card--block uic-card--duo" style="left:1008px;top:2064px"><div class="uic-phone"><img src="experiments/Welcome-1.png" alt=""></div><div class="uic-phone"><img src="experiments/OTP.png" alt=""></div></div>
+<div class="uic-card uic-card--block uic-card--duo" style="left:2016px;top:2064px"><img class="uic-phone-baked" src="experiments/wallet-ui.png" alt=""><div class="uic-phone"><video src="experiments/fingular.mp4" autoplay loop muted playsinline></video></div></div>
+<div class="uic-card uic-card--block uic-card--demo" style="left:3024px;top:2064px"><img src="experiments/MVP-11-1.jpg" alt=""></div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script src="assets/site.js"></script>
+</body>
+</html>

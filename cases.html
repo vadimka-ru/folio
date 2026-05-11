@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Кейсы — Вадим Корольков</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="favicon.png">
+  <link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<!-- Top-left: identity -->
+  <a class="chrome-pill me-card" href="https://drive.google.com/file/d/1rrkNZL5k16p9dHij-_F4tXXOePsKGHDB/view?usp=sharing" target="_blank">
+    <div class="me-avatar">
+      <img class="avatar-main" src="avatar.jpg" alt="Vadim Korolkov">
+      <img class="avatar-alt" id="avatar-alt" alt="">
+    </div>
+    <div class="me-text">
+      <div class="me-name">Вадим Корольков</div>
+      <div class="me-role">Продуктовый дизайнер</div>
+      <div class="me-text-alt">
+        <div class="me-name" id="alt-name">Fingular</div>
+        <div class="me-role" id="alt-role">2025 – н. в.</div>
+      </div>
+    </div>
+  </a>
+
+  <!-- Top-right: theme toggle -->
+  <div class="chrome-pill theme-toggle" role="group" aria-label="Theme">
+    <div class="inner">
+      <button id="theme-light" aria-label="Light theme">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+      <button id="theme-dark" class="active" aria-label="Dark theme">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Top-right: close case (shown only when case opened) -->
+  <button class="chrome-pill case-close" id="case-close" aria-label="Close case">
+    <div class="inner">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 13.0538L6.92689 18.1269C6.78844 18.2654 6.6144 18.3362 6.40479 18.3394C6.19519 18.3426 6.01795 18.2718 5.87309 18.1269C5.7282 17.982 5.65576 17.8064 5.65576 17.6C5.65576 17.3936 5.7282 17.218 5.87309 17.0731L10.9462 12L5.87309 6.9269C5.73462 6.78845 5.66379 6.61442 5.66059 6.4048C5.65737 6.1952 5.7282 6.01797 5.87309 5.8731C6.01795 5.72822 6.19359 5.65578 6.39999 5.65578C6.60639 5.65578 6.78202 5.72822 6.92689 5.8731L12 10.9462L17.0731 5.8731C17.2115 5.73464 17.3856 5.6638 17.5952 5.6606C17.8048 5.65739 17.982 5.72822 18.1269 5.8731C18.2718 6.01797 18.3442 6.1936 18.3442 6.4C18.3442 6.6064 18.2718 6.78203 18.1269 6.9269L13.0538 12L18.1269 17.0731C18.2654 17.2116 18.3362 17.3856 18.3394 17.5952C18.3426 17.8048 18.2718 17.982 18.1269 18.1269C17.982 18.2718 17.8064 18.3442 17.6 18.3442C17.3936 18.3442 17.218 18.2718 17.0731 18.1269L12 13.0538Z" fill="currentColor"/></svg>
+    </div>
+  </button>
+
+  <!-- Bottom-center nav -->
+  <nav class="main-nav" id="nav">
+    <a  href="index.html">Обо мне</a>
+    <a class="active" href="cases.html">Кейсы</a>
+    <a  href="ui.html">UI</a>
+    <a  href="experience.html">Опыт</a>
+  </nav>
+
+  <!-- Bottom-left: socials -->
+  <div class="chrome-pill socials">
+    <a href="https://figma.com" target="_blank" aria-label="Figma">
+      <svg viewBox="0 0 38 57" xmlns="http://www.w3.org/2000/svg">
+        <path fill="currentColor" d="M19 28.5a9.5 9.5 0 1 1 19 0 9.5 9.5 0 0 1-19 0z"/>
+        <path fill="currentColor" d="M0 47.5A9.5 9.5 0 0 1 9.5 38H19v9.5a9.5 9.5 0 1 1-19 0z"/>
+        <path fill="currentColor" d="M19 0v19h9.5a9.5 9.5 0 1 0 0-19H19z"/>
+        <path fill="currentColor" d="M0 9.5A9.5 9.5 0 0 0 9.5 19H19V0H9.5A9.5 9.5 0 0 0 0 9.5z"/>
+        <path fill="currentColor" d="M0 28.5A9.5 9.5 0 0 0 9.5 38H19V19H9.5A9.5 9.5 0 0 0 0 28.5z"/>
+      </svg>
+    </a>
+    <a href="https://t.me/Vadim_Korol" target="_blank" aria-label="Telegram">
+      <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 24c6.627 0 12-5.373 12-12S18.627 0 12 0 0 5.373 0 12s5.373 12 12 12zm5.487-16.91-2.02 9.527c-.152.67-.548.83-1.112.517l-3.06-2.257-1.476 1.421c-.163.163-.3.3-.614.3l.22-3.12 5.678-5.13c.246-.22-.054-.342-.383-.122l-7.017 4.418-3.025-.947c-.657-.205-.67-.658.137-.974l11.83-4.56c.547-.205 1.026.122.842.968z"/></svg>
+    </a>
+    <a href="https://www.linkedin.com/in/vadim-korolkov-1838a2332/" target="_blank" aria-label="LinkedIn">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M4.98 3.5C4.98 4.881 3.87 6 2.5 6S.02 4.881.02 3.5C.02 2.12 1.13 1 2.5 1s2.48 1.12 2.48 2.5zM5 8H0v16h5V8zm7.982 0H8.014v16h4.969v-8.399c0-4.67 6.029-5.052 6.029 0V24H24V13.869c0-7.88-8.922-7.593-11.018-3.714V8z"/></svg>
+    </a>
+  </div>
+
+  <!-- Bottom-right: CV -->
+  <a class="chrome-pill cv-button" href="https://drive.google.com/file/d/1rrkNZL5k16p9dHij-_F4tXXOePsKGHDB/view?usp=sharing" target="_blank" id="cv-btn">
+    <div class="inner">CV</div>
+  </a>
+
+  <!-- ===== Sections ===== -->
+  <main>
+    <section class="section" id="cases">
+      <div class="section-inner cases-inner">
+        <div class="cases-grid">
+
+          <article class="case-card" data-case="fingular" data-brand-name="Fingular" data-brand-date="2025 – н. в." data-brand-logo="cases/fingular-logo.png">
+            <header class="case-head">
+              <div class="case-brand">
+                <div class="case-brand-row">
+                  <img class="case-brand-logo" src="cases/fingular-logo.png" alt="Fingular">
+                  <span class="case-brand-name">Fingular</span>
+                </div>
+                <p class="case-desc">
+                  NeoBank-суперапп для Малайзии: кредит, BNPL и кошелёк в одной архитектуре. MVP 1.0 в разработке за 3 месяца.
+                  <span class="case-desc-sub">3 итерации с локальными пользователями · единственный дизайнер</span>
+                </p>
+              </div>
+              <span class="case-cta" aria-hidden="true">
+                <svg viewBox="0 0 20 20" fill="none"><path d="M6 14L14 6M14 6H7M14 6V13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </header>
+            <div class="case-media">
+              <img src="cases/fingular-phone.png" alt="Fingular app">
+            </div>
+            <footer class="case-foot">
+              <span>2025 – н. в.</span>
+              <span>Мобильное приложение · FinTech</span>
+            </footer>
+            <div class="case-open-body" aria-hidden="true">
+              <article class="ca-article">
+                <header class="ca-hero">
+                  <div class="ca-meta">
+                    <span>Senior продуктовый дизайнер</span>
+                    <span class="ca-dot">·</span>
+                    <span>2025 — н. в.</span>
+                    <span class="ca-dot">·</span>
+                    <span>Мобильное приложение · FinTech</span>
+                  </div>
+                  <h1 class="ca-title">Fingular</h1>
+                  <p class="ca-lede">
+                    Спроектировал NeoBank-суперапп для Малайзии — кредит, BNPL и кошелёк в одной архитектуре. MVP 1.0 в разработке за 3 месяца.
+                  </p>
+                </header>
+
+                <section class="ca-section">
+                  <h2>Результаты</h2>
+                  <div class="ca-metrics">
+                    <div class="ca-metric"><div class="ca-metric-value">3 мес</div><div class="ca-metric-label">От нуля до MVP 1.0 в разработке</div></div>
+                    <div class="ca-metric"><div class="ca-metric-value">3 итерации</div><div class="ca-metric-label">Тестов главного экрана с пользователями в Малайзии</div></div>
+                    <div class="ca-metric"><div class="ca-metric-value">3 → 1</div><div class="ca-metric-label">Tambadana, AhaPay и кошелёк в единой архитектуре</div></div>
+                    <div class="ca-metric"><div class="ca-metric-value">Senior, единственный</div><div class="ca-metric-label">Дизайнер на проекте — лидировал product → design → handoff</div></div>
+                  </div>
+                </section>
+
+                <section class="ca-section" data-toc="context">
+                  <h2>Контекст компании</h2>
+                  <p>Fingular — финтех-стартап на малайзийском рынке. На старте у компании было два независимых продукта: кредитная линия <strong>Tambadana</strong> (основной источник дохода) и BNPL-сервис <strong>AhaPay</strong>. Целевая аудитория — местные пользователи с ограниченным доступом к классическим банкам. Проект финансировался как стартап с жёстким сроком 3 месяца на требования и дизайн до передачи в разработку.</p>
+                </section>
+
+                <section class="ca-section" data-toc="task">
+                  <h2>Задача</h2>
+                  <p class="ca-quote">Объединить кредит, BNPL и кошелёк в одно приложение так, чтобы пользователи перестали воспринимать функции как разные инструменты.</p>
+                </section>
+
+                <figure class="ca-figure">
+                  <div class="ca-figure-grid ca-figure-grid--2">
+                    <div class="ca-screen">
+                      <div class="ca-screen-img" data-label="AhaPay"><img src="cases/fingular/ahapay.png" alt="AhaPay BNPL" onerror="this.parentElement.classList.add('ca-screen-img--placeholder'); this.remove();"></div>
+                      <figcaption>Текущее приложение BNPL (AhaPay)</figcaption>
+                    </div>
+                    <div class="ca-screen">
+                      <div class="ca-screen-img" data-label="Tambadana"><img src="cases/fingular/tambadana.png" alt="Tambadana Credit Line" onerror="this.parentElement.classList.add('ca-screen-img--placeholder'); this.remove();"></div>
+                      <figcaption>Текущее приложение Credit Line (Tambadana)</figcaption>
+                    </div>
+                  </div>
+                </figure>
+
+                <section class="ca-section" data-toc="hypothesis">
+                  <h2>Гипотеза</h2>
+                  <p>Если задать архитектуру суперапп с приоритетом кредитной линии и добавить слой кошелька, ментальная модель пользователей сойдётся с продуктом и активность по связанным сценариям вырастет.</p>
+                </section>
+
+                <section class="ca-section" data-toc="research">
+                  <h2>Исследование и тестирование</h2>
+                  <p>Протестировал 3 концепции главного экрана с малайзийскими пользователями. Итерация 1 — пользователи путали кредит и кошелёк (отклонено). Итерация 2 — развёл финансовые и долговые действия, но иерархия сценариев осталась размытой (отклонено). Итерация 3 — кошелёк стал хабом, ментальная модель сошлась.</p>
+                  <p>Дизайн-систему расширял по ходу — упрощал там, где сроки не давали довести до идеала, и фиксировал технический долг отдельно.</p>
+                </section>
+
+                <figure class="ca-figure">
+                  <div class="ca-figure-grid ca-figure-grid--3">
+                    <div class="ca-screen">
+                      <div class="ca-screen-img" data-label="V1"><img src="cases/fingular/iter-1.png" alt="Итерация 1" onerror="this.parentElement.classList.add('ca-screen-img--placeholder'); this.remove();"></div>
+                      <figcaption>Итерация 1 — пользователи путали кредит и кошелёк</figcaption>
+                    </div>
+                    <div class="ca-screen">
+                      <div class="ca-screen-img" data-label="V2"><img src="cases/fingular/iter-2.png" alt="Итерация 2" onerror="this.parentElement.classList.add('ca-screen-img--placeholder'); this.remove();"></div>
+                      <figcaption>Итерация 2 — развёл финансовые и долговые действия</figcaption>
+                    </div>
+                    <div class="ca-screen">
+                      <div class="ca-screen-img" data-label="V3"><img src="cases/fingular/iter-3.png" alt="Итерация 3" onerror="this.parentElement.classList.add('ca-screen-img--placeholder'); this.remove();"></div>
+                      <figcaption>Итерация 3 — кошелёк стал основным хабом, ментальная модель сошлась</figcaption>
+                    </div>
+                  </div>
+                </figure>
+
+                <section class="ca-section">
+                  <h2>Эволюция MVP — от основного дохода к финансовой экосистеме</h2>
+                  <p>Продукт запускали поэтапно в условиях жёстких ограничений по времени и ресурсам.</p>
+                  <p><strong>MVP 1.0.</strong> Сконцентрировался на основном источнике дохода — кредитной линии: онбординг и KYC, подписание кредитного договора, погашение долга. Приоритетами были ясность, снижение трения и оптимизация сценариев, ориентированных на выручку.</p>
+                </section>
+
+                <figure class="ca-figure">
+                  <div class="ca-figure-grid ca-figure-grid--2">
+                    <div class="ca-screen">
+                      <div class="ca-screen-img ca-screen-img--phone" data-label="Loan"><img src="cases/fingular/mvp1-loan.png" alt="Погашение долга" onerror="this.parentElement.classList.add('ca-screen-img--placeholder'); this.remove();"></div>
+                      <figcaption>Погашение долга</figcaption>
+                    </div>
+                    <div class="ca-screen">
+                      <div class="ca-screen-img ca-screen-img--phone" data-label="Sign"><img src="cases/fingular/mvp1-sign.gif" alt="Подписание кредита" onerror="this.parentElement.classList.add('ca-screen-img--placeholder'); this.remove();"></div>
+                      <figcaption>Подписание кредита</figcaption>
+                    </div>
+                  </div>
+                </figure>
+
+                <section class="ca-section">
+                  <h2>MVP 2.0 — инфраструктура кошелька</h2>
+                  <p>Параллельно с разработкой первого MVP спроектировал MVP 2.0 — инфраструктуру кошелька: оплату счетов, переводы DuitNow, пополнения и настройки. Сейчас сценарий тестируется на интерактивном прототипе с реальными пользователями.</p>
+                </section>
+
+                <figure class="ca-figure">
+                  <div class="ca-figure-grid ca-figure-grid--2">
+                    <div class="ca-screen">
+                      <div class="ca-screen-img ca-screen-img--phone" data-label="Wallet"><img src="cases/fingular/mvp2-wallet.png" alt="Главный экран с кошельком" onerror="this.parentElement.classList.add('ca-screen-img--placeholder'); this.remove();"></div>
+                      <figcaption>Версия главного экрана с кошельком</figcaption>
+                    </div>
+                    <div class="ca-screen">
+                      <div class="ca-screen-img ca-screen-img--phone" data-label="Send"><img src="cases/fingular/mvp2-send.png" alt="Отправка денег" onerror="this.parentElement.classList.add('ca-screen-img--placeholder'); this.remove();"></div>
+                      <figcaption>Отправка денег</figcaption>
+                    </div>
+                  </div>
+                </figure>
+
+                <section class="ca-section">
+                  <h2>MVP 3.0 — единое супер-приложение</h2>
+                  <p>Концепция MVP 3.0 объединила кошелёк, кредитную линию и BNPL в масштабируемую архитектуру супер-приложения с согласованной логикой главного экрана.</p>
+                </section>
+
+                <figure class="ca-figure">
+                  <div class="ca-figure-grid ca-figure-grid--1">
+                    <div class="ca-screen">
+                      <div class="ca-screen-img ca-screen-img--phone" data-label="NeoBank"><img src="cases/fingular/mvp3-neobank.gif" alt="Результирующий NeoBank App" onerror="this.parentElement.classList.add('ca-screen-img--placeholder'); this.remove();"></div>
+                      <figcaption>Результирующий NeoBank App — единая логика главной</figcaption>
+                    </div>
+                  </div>
+                </figure>
+
+                <section class="ca-section">
+                  <h2>Эволюция дизайн-системы</h2>
+                  <p>Дизайн-система уже существовала — на ней были построены Tambadana и AhaPay, — но требовала доработки под единый нео-банк. Расширил библиотеку компонентов, улучшил интерфейс и заложил правила масштабирования при росте продукта.</p>
+                </section>
+
+                <section class="ca-section">
+                  <h2>Кросс-функциональная работа</h2>
+                  <p>Параллельные дизайн-треки MVP 1/2/3 не блокировали инженерию: сначала отдавал в разработку погашение и подписание кредита, параллельно проектировал кошелёк и архитектуру суперапп. С продактами — приоритизация по выручке, с разработкой — фиксация архитектуры до handoff, с локальными пользователями — валидация ментальной модели.</p>
+                </section>
+
+                <section class="ca-section" data-toc="outcomes">
+                  <h2>Итоги</h2>
+                  <ul>
+                    <li>MVP 1.0 (кредитная линия) — в разработке за 3 месяца.</li>
+                    <li>MVP 2.0 (кошелёк) — на тестировании на интерактивном прототипе с реальными пользователями.</li>
+                    <li>MVP 3.0 (суперапп) — единая архитектура главного экрана зафиксирована.</li>
+                    <li>Дизайн-система расширена под мультипродуктовое расширение.</li>
+                  </ul>
+                </section>
+
+                <section class="ca-section" data-toc="result">
+                  <h2>Эффект и ожидаемые метрики</h2>
+                  <p>Запуск NeoBank на малайзийском рынке — в ближайшие месяцы. Целевые метрики, которые будем мерить после запуска: конверсия «заявка → выдача кредита», удержание (D7/D30), доля пользователей, использующих более одного продукта (cross-product activation).</p>
+                  <div class="ca-metrics">
+                    <div class="ca-metric"><div class="ca-metric-value">3 мес</div><div class="ca-metric-label">До передачи MVP 1.0 в разработку</div></div>
+                    <div class="ca-metric"><div class="ca-metric-value">3 итерации</div><div class="ca-metric-label">Тестов с пользователями в Малайзии</div></div>
+                    <div class="ca-metric"><div class="ca-metric-value">3 → 1</div><div class="ca-metric-label">Продуктов в единой архитектуре</div></div>
+                    <div class="ca-metric"><div class="ca-metric-value">D7 / D30</div><div class="ca-metric-label">Удержание после запуска (целевая метрика)</div></div>
+                  </div>
+                </section>
+              </article>
+            </div>
+          </article>
+
+          <article class="case-card case-card--infowatch" data-case="infowatch" data-brand-name="InfoWatch" data-brand-date="2023 – 2025" data-brand-logo="cases/infowatch-logo.svg">
+            <header class="case-head">
+              <div class="case-brand">
+                <div class="case-brand-row">
+                  <img class="case-brand-logo" src="cases/infowatch-logo.svg" alt="InfoWatch">
+                  <span class="case-brand-name">InfoWatch</span>
+                </div>
+                <p class="case-desc">
+                  Объединил 8 продуктов в единую UX-экосистему.
+                  <span class="case-desc-sub">Внедрил дизайн-ревью и пользовательские исследования, ускорив time-to-market в 1,5×</span>
+                </p>
+              </div>
+              <span class="case-cta" aria-hidden="true">
+                <svg viewBox="0 0 20 20" fill="none"><path d="M6 14L14 6M14 6H7M14 6V13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </header>
+            <div class="case-media case-media--framed">
+              <div class="case-frame">
+                <div class="case-frame-clip">
+                  <img class="case-frame-img" src="cases/infowatch-hero.jpg" alt="InfoWatch dashboard">
+                </div>
+                <img class="case-frame-stamp" src="cases/stamp.png" alt="" aria-hidden="true">
+              </div>
+            </div>
+            <footer class="case-foot">
+              <span>2023 – 2025</span>
+              <span>DLP-System</span>
+            </footer>
+            <div class="case-open-body" aria-hidden="true">
+              <article class="ca-article">
+                <header class="ca-hero">
+                  <div class="ca-meta">
+                    <span>Lead продуктовый дизайнер</span>
+                    <span class="ca-dot">·</span>
+                    <span>2023 — 2025</span>
+                    <span class="ca-dot">·</span>
+                    <span>B2B · Кибербезопасность · NDA</span>
+                  </div>
+                  <h1 class="ca-title">InfoWatch</h1>
+                  <p class="ca-lede">
+                    Собрал дизайн-систему и UX-процессы для 8 B2B-продуктов кибербезопасности. Time-to-market ускорился ~1,5×.
+                  </p>
+                </header>
+
+                <section class="ca-section">
+                  <h2>Результаты</h2>
+                  <div class="ca-metrics">
+                    <div class="ca-metric"><div class="ca-metric-value">~1,5×</div><div class="ca-metric-label">Ускорение time-to-market</div></div>
+                    <div class="ca-metric"><div class="ca-metric-value">8 → 1</div><div class="ca-metric-label">Продукта в едином дизайн-контуре</div></div>
+                    <div class="ca-metric"><div class="ca-metric-value">DS с нуля</div><div class="ca-metric-label">Собрал и внедрил дизайн-систему</div></div>
+                    <div class="ca-metric"><div class="ca-metric-value">Lead</div><div class="ca-metric-label">Запустил дизайн-ревью и user research как процессы</div></div>
+                  </div>
+                </section>
+
+                <section class="ca-section" data-toc="context">
+                  <h2>Контекст компании</h2>
+                  <p>InfoWatch — российская B2B-компания в области DLP и кибербезопасности. Экосистема из 8 независимых продуктов для корпоративных заказчиков (банки, госкомпании, промышленность). Интерфейсы — высоконагруженные, аналитические, под операторов SOC и безопасников. На старте дизайн был фрагментирован, дизайн-системы не было, процессы рассогласованы.</p>
+                </section>
+
+                <section class="ca-section" data-toc="task">
+                  <h2>Задача</h2>
+                  <p class="ca-quote">Свести 8 продуктов в единый UX-контур и встроить дизайн-ревью + user research в процесс, не имея дизайн-культуры на старте.</p>
+                </section>
+
+                <section class="ca-section">
+                  <h2>Точки роста, которые я нашёл</h2>
+                  <ul>
+                    <li>Решения принимались без тестирования на пользователях — высокий риск неэффективных изменений.</li>
+                    <li>Дизайн-системы не было — визуальные и функциональные расхождения между продуктами.</li>
+                    <li>Дизайн-ревью не встроено в процесс.</li>
+                    <li>UX-методологии не воспринимались как значимый фактор решений.</li>
+                  </ul>
+                </section>
+
+                <figure class="ca-figure">
+                  <div class="ca-figure-grid ca-figure-grid--full">
+                    <img src="cases/infowatch/problem.png" alt="Срез продуктов InfoWatch до изменений">
+                  </div>
+                </figure>
+
+                <section class="ca-section" data-toc="hypothesis">
+                  <h2>Гипотеза</h2>
+                  <p>Перед изменением UX разумно его проверить — это снижает риск плохих решений в продакшене и экономит на дорогой переделке.</p>
+                  <p>Параллельно я заметил, что продуктовая культура в компании не развита, и решил выращивать её сам. Но сначала нужно было привести в порядок Figma.</p>
+                </section>
+
+                <section class="ca-section">
+                  <h2>Проблема с организацией макетов</h2>
+                  <p>Макеты собирались без auto layout и без дизайн-системы (её просто не было). Сценарии не были оформлены. Вот как выглядела Figma, когда я пришёл:</p>
+                </section>
+
+                <figure class="ca-figure">
+                  <div class="ca-figure-grid ca-figure-grid--full">
+                    <img src="cases/infowatch/figma-before.png" alt="Figma до — хаос файлов">
+                  </div>
+                </figure>
+
+                <section class="ca-section">
+                  <p>А вот как выглядит Figma спустя шесть месяцев — каждый макет собран из компонентов дизайн-системы:</p>
+                </section>
+
+                <figure class="ca-figure">
+                  <div class="ca-figure-grid ca-figure-grid--full">
+                    <img src="cases/infowatch/figma-after.png" alt="Figma после — единая структура на DS">
+                  </div>
+                </figure>
+
+                <section class="ca-section">
+                  <p>Параллельно с макетами собирал дизайн-систему. Тогда же встретил разработчика, с которым позже мы запустим Synapse UI — об этом отдельно.</p>
+                </section>
+
+                <figure class="ca-figure">
+                  <div class="ca-figure-grid ca-figure-grid--full">
+                    <img src="cases/infowatch/design-system.png" alt="Дизайн-система InfoWatch">
+                  </div>
+                </figure>
+
+                <section class="ca-section">
+                  <h2>Появилось дизайн-ревью</h2>
+                  <p>Раньше дизайн-ревью не проводились — решения оставались сырыми, интерфейсы выглядели неаккуратно. Мы предложили формат ревью и встроили его в процесс.</p>
+                </section>
+
+                <figure class="ca-figure">
+                  <div class="ca-figure-grid ca-figure-grid--full">
+                    <img src="cases/infowatch/review.png" alt="Формат дизайн-ревью">
+                  </div>
+                </figure>
+
+                <section class="ca-section" data-toc="research">
+                  <h2>И самое важное изменение</h2>
+                  <p>Удалось запустить тестирование интерфейса — пока на одном продукте. Хотел продемонстрировать ценность подхода именно на нём.</p>
+                  <p>Один из product owner’ов выделил ресурсы. В процессе тестирования стало ясно, что не все идеи работают, и макеты постепенно дорабатывались. Исследование шло на кликабельных прототипах — это были первые шаги в user research:</p>
+                </section>
+
+                <figure class="ca-figure">
+                  <div class="ca-figure-grid ca-figure-grid--full">
+                    <img src="cases/infowatch/testing.png" alt="Юзабилити-тестирование на прототипах">
+                  </div>
+                </figure>
+
+                <section class="ca-section" data-toc="outcomes">
+                  <h2>Что не получилось — и чему научился</h2>
+                  <p>Полностью масштабировать research и UX-метрики на все 8 продуктов не успел: B2B с длинными циклами и устоявшимися процессами не даёт «прийти и переделать». Урок — изменения вшиваются через бизнес-приоритеты конкретных PO, а не через декларации. Заложил фундамент, дальше команда продолжает.</p>
+                </section>
+
+                <section class="ca-section" data-toc="result">
+                  <h2>Итоги и эффект</h2>
+                  <p>Все 8 продуктов в едином дизайн-контуре. Time-to-market ~1,5×. Дизайн-ревью — встроенный процесс. User research на прототипах — рабочая практика на пилотном продукте.</p>
+                  <div class="ca-metrics">
+                    <div class="ca-metric"><div class="ca-metric-value">~1,5×</div><div class="ca-metric-label">Ускорение time-to-market</div></div>
+                    <div class="ca-metric"><div class="ca-metric-value">8 → 1</div><div class="ca-metric-label">Продукта в едином дизайн-контуре</div></div>
+                  </div>
+                </section>
+              </article>
+            </div>
+          </article>
+
+          <article class="case-card case-card--synapse" data-case="synapse" data-brand-name="Synapse UI" data-brand-date="2025 – н. в." data-brand-logo="cases/synapse-logo.svg">
+            <header class="case-head">
+              <div class="case-brand">
+                <div class="case-brand-row">
+                  <img class="case-brand-logo" src="cases/synapse-logo.svg" alt="Synapse UI">
+                  <span class="case-brand-name">Synapse UI</span>
+                </div>
+                <p class="case-desc">
+                  Парсер, сокращающий перенос компонентов из Figma в код в 2 раза.
+                  <span class="case-desc-sub">Протестирован на продакшн-продукте</span>
+                </p>
+              </div>
+              <span class="case-cta" aria-hidden="true">
+                <svg viewBox="0 0 20 20" fill="none"><path d="M6 14L14 6M14 6H7M14 6V13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </header>
+            <div class="case-media">
+              <img src="cases/synapse-hero.svg" alt="Synapse UI">
+            </div>
+            <footer class="case-foot">
+              <span>2025 – н. в.</span>
+              <span>Дизайн-система</span>
+            </footer>
+            <div class="case-open-body" aria-hidden="true">
+              <article class="ca-article">
+                <header class="ca-hero">
+                  <div class="ca-meta">
+                    <span>Дизайнер</span>
+                    <span class="ca-dot">·</span>
+                    <span>2025 — н. в.</span>
+                    <span class="ca-dot">·</span>
+                    <span>Дизайн-система · Tooling</span>
+                  </div>
+                  <h1 class="ca-title">Synapse UI</h1>
+                  <p class="ca-lede">
+                    Дизайн-система + парсер Figma → React/Angular. В продакшене InfoWatch ускорил реализацию компонента ~2×.
+                  </p>
+                </header>
+
+                <section class="ca-section">
+                  <h2>Результаты</h2>
+                  <div class="ca-metrics">
+                    <div class="ca-metric"><div class="ca-metric-value">~2×</div><div class="ca-metric-label">Ускорение реализации компонента в продакшене</div></div>
+                    <div class="ca-metric"><div class="ca-metric-value">Design ⇄ Code</div><div class="ca-metric-label">Согласованность без ручной синхронизации</div></div>
+                    <div class="ca-metric"><div class="ca-metric-value">Co-founder</div><div class="ca-metric-label">Делаю вдвоём с Full Stack-разработчиком (20 лет опыта)</div></div>
+                    <div class="ca-metric"><div class="ca-metric-value">Прод-валидация</div><div class="ca-metric-label">Парсер обкатан на реальном B2B-продукте</div></div>
+                  </div>
+                </section>
+
+                <section class="ca-section" data-toc="context">
+                  <h2>Контекст</h2>
+                  <p>Synapse UI — собственный продукт. Стартап-френдли DS-шаблон + парсер Figma → код для B2B/B2C-команд. Целевая аудитория — маленькие продуктовые команды, где нет ресурса на отдельного DS-инженера. Делаем вдвоём с ко-фаундером — Full Stack-разработчиком с 20-летним опытом. Парсер уже обкатан в продакшене InfoWatch.</p>
+                  <p>Обычный DS-процесс в командах, которые я видел:</p>
+                </section>
+
+                <figure class="ca-figure">
+                  <div class="ca-flow">
+                    <div class="ca-flow-step"><div class="ca-flow-icon">J</div><div class="ca-flow-label">Design&nbsp;task</div></div>
+                    <span class="ca-flow-arrow">→</span>
+                    <div class="ca-flow-step"><div class="ca-flow-icon">F</div><div class="ca-flow-label">Design</div></div>
+                    <span class="ca-flow-arrow">→</span>
+                    <div class="ca-flow-step"><div class="ca-flow-icon">J</div><div class="ca-flow-label">Dev&nbsp;task</div></div>
+                    <span class="ca-flow-arrow">→</span>
+                    <div class="ca-flow-step"><div class="ca-flow-icon">JS</div><div class="ca-flow-label">Dev</div></div>
+                    <span class="ca-flow-arrow">→</span>
+                    <div class="ca-flow-step"><div class="ca-flow-icon">✓</div><div class="ca-flow-label">Review&nbsp;&amp;&nbsp;Prod</div></div>
+                  </div>
+                </figure>
+
+                <section class="ca-section" data-toc="task">
+                  <h2>Задача</h2>
+                  <p class="ca-quote">Сделать дизайн-систему, в которой Figma и код не расходятся, и которую маленькая команда внедряет за день, а не за квартал.</p>
+                </section>
+
+                <section class="ca-section">
+                  <h2>Проблема</h2>
+                  <p>DS постоянно расходятся: код и Figma живут отдельно, дизайнеры правят макеты, не понимая последствий, разработчики реализуют компоненты несогласованно. Существующие Figma-to-code инструменты либо генерируют неаккуратный JSX, либо опираются на нестабильный AI, либо не годятся для продакшена. Любое изменение в DS — даже мелкое — погружает команду в бюрократию.</p>
+                </section>
+
+                <section class="ca-section" data-toc="hypothesis">
+                  <h2>Гипотеза</h2>
+                  <p>Парсер поверх Figma может:</p>
+                  <ul>
+                    <li>сократить время переноса DS в код;</li>
+                    <li>устранить расхождения между Figma и JS-фреймворком;</li>
+                    <li>снизить ручную работу и упростить процессы.</li>
+                  </ul>
+                  <p class="ca-quote">
+                    Design&nbsp;System ⇄ Synapse&nbsp;Link → Parser → CSS&nbsp;Store → Components&nbsp;Lib&nbsp;(npm)
+                  </p>
+                </section>
+
+                <section class="ca-section" data-toc="research">
+                  <h2>Исследование и тестирование</h2>
+                  <p>Чтобы подтвердить концепцию, парсер встроили в продакшен-процесс в InfoWatch — вместе с тем самым ко-фаундером. Связка нарочно простая: структура компонентов жёстко зафиксирована во внутренней npm-библиотеке, локальный парсер вытаскивает CSS из Figma и автоматически применяет к этой структуре.</p>
+                  <p>Без собственной схемы и без AI-логики — только фиксированная архитектура компонентов плюс автоматическая прокачка стилей.</p>
+                  <p>После интеграции время на реализацию компонента сократилось примерно в 2 раза при сохранении согласованности между Figma и кодом. Эксперимент показал: даже минимальный парсерный подход реально ускоряет разработку UI в реальных условиях.</p>
+                </section>
+
+                <section class="ca-section" data-toc="outcomes">
+                  <h2>Дорожная карта</h2>
+                  <p>После успешной интеграции в продакшен у нас сформировалось чёткое понимание продукта и аудитории. Решение уже обкатано в реальной среде — следующий шаг превратить локальный инструмент в самостоятельный продукт: обернуть парсер в интерфейс и сделать его доступным другим командам.</p>
+                  <p><strong>1. Стартовая дизайн-система.</strong> Простой шаблон DS — и в Figma, и в коде. Кодовая база структурирована так, чтобы парсер надёжно применял стили к фиксированной архитектуре. Эта система — основа для демонстрации и масштабирования решения.</p>
+                </section>
+
+                <figure class="ca-figure">
+                  <div class="ca-figure-grid ca-figure-grid--full">
+                    <img src="cases/synapse/ds-screens.png" alt="Стартовая дизайн-система Synapse в Figma и в коде">
+                  </div>
+                </figure>
+
+                <section class="ca-section">
+                  <p><strong>2. Сервисный слой вокруг парсера.</strong> Сейчас разрабатываем сервис, который позволяет:</p>
+                  <ul>
+                    <li>связывать Figma-компоненты с компонентами в коде;</li>
+                    <li>проверять корректность переноса стилей;</li>
+                    <li>поддерживать согласованность между дизайном и реализацией.</li>
+                  </ul>
+                </section>
+
+                <figure class="ca-figure">
+                  <div class="ca-figure-grid ca-figure-grid--full">
+                    <img src="cases/synapse/bridge-ui.png" alt="Synapse UI Bridge — интерфейс сервисного слоя">
+                  </div>
+                </figure>
+
+                <section class="ca-section">
+                  <h2>Результаты</h2>
+                  <p>На текущем этапе собрана полная стартовая дизайн-система — и в Figma, и в коде. Компоненты интегрированы с парсером и поддерживают структурированную передачу стилей в React/Angular.</p>
+                </section>
+
+                <figure class="ca-figure">
+                  <div class="ca-figure-grid ca-figure-grid--full">
+                    <img src="cases/synapse/parser-anim.gif" alt="Демонстрация работы парсера: Figma → код">
+                  </div>
+                </figure>
+
+                <section class="ca-section">
+                  <p>Параллельно идёт разработка сервисного слоя — связывание компонентов, проверка передачи стилей и поддержка согласованности design-to-code. Основная фаза разработки близка к завершению, продукт приближается к готовности к запуску и масштабированию.</p>
+                </section>
+
+                <section class="ca-section">
+                  <h2>Таймлайн</h2>
+                  <div class="ca-roadmap">
+                    <div class="ca-roadmap-item ca-roadmap-item--done">
+                      <div class="ca-roadmap-dot"></div>
+                      <div class="ca-roadmap-meta">
+                        <span class="ca-roadmap-date">Aug 2025</span>
+                        <span class="ca-roadmap-pill ca-roadmap-pill--done">Done</span>
+                      </div>
+                      <h4 class="ca-roadmap-title">Design-System release</h4>
+                    </div>
+                    <div class="ca-roadmap-item ca-roadmap-item--done">
+                      <div class="ca-roadmap-dot"></div>
+                      <div class="ca-roadmap-meta">
+                        <span class="ca-roadmap-date">Oct 2025</span>
+                        <span class="ca-roadmap-pill ca-roadmap-pill--done">Done</span>
+                      </div>
+                      <h4 class="ca-roadmap-title">Tokens &amp; Light theme</h4>
+                    </div>
+                    <div class="ca-roadmap-item ca-roadmap-item--done">
+                      <div class="ca-roadmap-dot"></div>
+                      <div class="ca-roadmap-meta">
+                        <span class="ca-roadmap-date">Oct 2025</span>
+                        <span class="ca-roadmap-pill ca-roadmap-pill--done">Done</span>
+                      </div>
+                      <h4 class="ca-roadmap-title">Design-system through a parser</h4>
+                    </div>
+                    <div class="ca-roadmap-item ca-roadmap-item--active">
+                      <div class="ca-roadmap-dot"></div>
+                      <div class="ca-roadmap-meta">
+                        <span class="ca-roadmap-date">Nov 2025 — Mar 2026</span>
+                        <span class="ca-roadmap-pill ca-roadmap-pill--active">In progress</span>
+                      </div>
+                      <h4 class="ca-roadmap-title">Detailed documentation</h4>
+                    </div>
+                    <div class="ca-roadmap-item ca-roadmap-item--next">
+                      <div class="ca-roadmap-dot"></div>
+                      <div class="ca-roadmap-meta">
+                        <span class="ca-roadmap-date">Nov 2025 — May 2026</span>
+                        <span class="ca-roadmap-pill ca-roadmap-pill--next">Up next</span>
+                      </div>
+                      <h4 class="ca-roadmap-title">Synapse UI Bridge</h4>
+                      <div class="ca-roadmap-sub">Product-wrapped parser</div>
+                    </div>
+                  </div>
+                </section>
+
+                <section class="ca-section" data-toc="result">
+                  <h2>Итоги и эффект</h2>
+                  <p>Парсер обкатан на реальном B2B-продукте — реализация компонента ускорилась ~2× при сохранении согласованности Figma↔код. DS-шаблон собран в Figma и в коде. Сервисный слой (Synapse UI Bridge) — в активной разработке.</p>
+                  <div class="ca-metrics">
+                    <div class="ca-metric"><div class="ca-metric-value">~2×</div><div class="ca-metric-label">Ускорение реализации компонента</div></div>
+                    <div class="ca-metric"><div class="ca-metric-value">Design ⇄ Code</div><div class="ca-metric-label">Согласованность без ручной синхронизации</div></div>
+                  </div>
+                </section>
+              </article>
+            </div>
+          </article>
+
+          <article class="case-card case-card--rgs" data-case="rosgosstrakh" data-brand-name="Росгосстрах" data-brand-date="2022" data-brand-logo="cases/rgs-logo.svg">
+            <header class="case-head">
+              <div class="case-brand">
+                <div class="case-brand-row">
+                  <img class="case-brand-logo" src="cases/rgs-logo.svg" alt="Росгосстрах">
+                  <span class="case-brand-name">Росгосстрах</span>
+                </div>
+                <p class="case-desc">
+                  Перевёл агентов с бумажных бланков на цифровое оформление полисов.
+                  <span class="case-desc-sub">20 интервью, 10 юзабилити-тестов, запуск на реальных пользователях</span>
+                </p>
+              </div>
+              <span class="case-cta" aria-hidden="true">
+                <svg viewBox="0 0 20 20" fill="none"><path d="M6 14L14 6M14 6H7M14 6V13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </header>
+            <div class="case-media case-media--framed">
+              <div class="case-frame">
+                <div class="case-frame-clip">
+                  <img class="case-frame-img" src="cases/rgs-hero.png" alt="Rosgosstrakh dashboard">
+                </div>
+                <img class="case-frame-stamp" src="cases/stamp.png" alt="" aria-hidden="true">
+              </div>
+            </div>
+            <footer class="case-foot">
+              <span>2022</span>
+              <span>Личный кабинет</span>
+            </footer>
+            <div class="case-open-body" aria-hidden="true">
+              <article class="ca-article">
+                <header class="ca-hero">
+                  <div class="ca-meta">
+                    <span>Продуктовый дизайнер</span>
+                    <span class="ca-dot">·</span>
+                    <span>2022</span>
+                    <span class="ca-dot">·</span>
+                    <span>Страхование · Внутренний инструмент · NDA</span>
+                  </div>
+                  <h1 class="ca-title">Росгосстрах</h1>
+                  <p class="ca-lede">
+                    Перевёл выездных агентов с бумажных бланков на цифровое оформление полисов. 20 интервью, 10 юзабилити-тестов, релиз.
+                  </p>
+                </header>
+
+                <section class="ca-section">
+                  <h2>Результаты</h2>
+                  <div class="ca-metrics">
+                    <div class="ca-metric"><div class="ca-metric-value">~20</div><div class="ca-metric-label">Очных интервью с агентами в офисе РГС</div></div>
+                    <div class="ca-metric"><div class="ca-metric-value">~10</div><div class="ca-metric-label">Удалённых юзабилити-тестов на прототипах</div></div>
+                    <div class="ca-metric"><div class="ca-metric-value">N → 1</div><div class="ca-metric-label">Внутренних сервисов сведены в один интерфейс</div></div>
+                    <div class="ca-metric"><div class="ca-metric-value">Релиз</div><div class="ca-metric-label">Запуск на реальных агентах в полевой работе</div></div>
+                  </div>
+                </section>
+
+                <section class="ca-section" data-toc="context">
+                  <h2>Контекст компании</h2>
+                  <p>Росгосстрах — крупнейшая страховая компания РФ с сетью выездных агентов по всей стране. Основная аудитория продукта — страховые агенты, часто 50+, со скромным опытом современных интерфейсов. На выезде агенты заполняли полис на бумаге, в конце дня переносили данные в устаревшие внутренние системы — двойная работа и риск ошибок.</p>
+                </section>
+
+                <section class="ca-section" data-toc="task">
+                  <h2>Задача</h2>
+                  <p class="ca-quote">Дать агенту оформить полис прямо у клиента в одном интерфейсе — без бумаги и без переноса данных в конце дня.</p>
+                </section>
+
+                <section class="ca-section">
+                  <h2>Исследования пользователей</h2>
+                  <p>Начал проект с пользовательского исследования: ~20 очных интервью со страховыми агентами в московском офисе Росгосстраха. Цель интервью — понять:</p>
+                  <ul>
+                    <li>как проходит типичный рабочий день агента;</li>
+                    <li>как происходит оформление страховки;</li>
+                    <li>какие проблемы возникают при работе с текущей системой.</li>
+                  </ul>
+                  <p>Основная аудитория — выездные страховые агенты, многие из которых работают в компании годами и имеют небольшой опыт с современными интерфейсами.</p>
+                </section>
+
+                <section class="ca-section">
+                  <h2>CJM</h2>
+                  <p>На основе интервью собрал customer journey map процесса оформления страховки — описывает ежедневный сценарий агента.</p>
+                </section>
+
+                <section class="ca-section" data-toc="hypothesis">
+                  <h2>Проблема с оформлением полиса</h2>
+                  <p class="ca-quote">Для выездных агентов доверие клиента — ключевой фактор продажи. Любое неожиданное изменение цены в конце процесса подрывало доверие и усложняло закрытие сделки.</p>
+                  <p>Поэтому важно работать с интерфейсом в нужный момент времени, чтобы оперативно закрывать эту проблему. Предложил такие решения:</p>
+                  <ul>
+                    <li>возможность согласовать скидку при пролонгации;</li>
+                    <li>советы по работе с возражениями прямо в интерфейсе;</li>
+                    <li>в личном кабинете клиента — преимущества полного покрытия.</li>
+                  </ul>
+                  <p>Так хотел повлиять на конверсию успешно оформленных полисов.</p>
+                </section>
+
+                <section class="ca-section" data-toc="research">
+                  <h2>Прототипирование и тестирование</h2>
+                  <p>Собрал несколько прототипов и провёл ~10 удалённых юзабилити-тестов. Тесты показали: в целом пользователи успешно справляются с задачами оформления полиса, но с нюансами. Пример скрипта, по которому вёл пользователя:</p>
+                </section>
+
+                <figure class="ca-figure">
+                  <div class="ca-figure-grid ca-figure-grid--full">
+                    <img src="cases/rgs/cjm.png" alt="Скрипт юзабилити-теста / CJM">
+                  </div>
+                </figure>
+
+                <section class="ca-section">
+                  <h2>Результаты тестирования</h2>
+                  <p>Перед тестом объяснял пользователю, что правильных и неправильных ответов нет — снижал тревожность. Во время сессии не подсказывал. Результат:</p>
+                </section>
+
+                <figure class="ca-figure">
+                  <div class="ca-figure-grid ca-figure-grid--full">
+                    <img src="cases/rgs/testing-results.png" alt="Результаты юзабилити-тестов">
+                  </div>
+                </figure>
+
+                <section class="ca-section" data-toc="outcomes">
+                  <h2>Итоги и эффект</h2>
+                  <p>Несколько внутренних сервисов сведены в один интерфейс. Бумажные бланки убраны из сценария — оформление проходит при встрече с клиентом. Релиз ушёл на реальных агентов.</p>
+                  <p>Продуктовая аналитика в проекте не внедрялась — поэтому фиксирую метрики, по которым решение можно оценивать после внедрения трекинга: конверсия «встреча → оформленный полис», время оформления, CSI агентов, доля сделок без бумажного бланка.</p>
+                  <div class="ca-metrics">
+                    <div class="ca-metric"><div class="ca-metric-value">~20</div><div class="ca-metric-label">Очных интервью</div></div>
+                    <div class="ca-metric"><div class="ca-metric-value">~10</div><div class="ca-metric-label">Юзабилити-тестов</div></div>
+                    <div class="ca-metric"><div class="ca-metric-value">N → 1</div><div class="ca-metric-label">Сервисов в одном интерфейсе</div></div>
+                    <div class="ca-metric"><div class="ca-metric-value">Релиз</div><div class="ca-metric-label">Запуск на реальных пользователях</div></div>
+                  </div>
+                </section>
+              </article>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+  </main>
+  <script src="assets/site.js"></script>
+</body>
+</html>
