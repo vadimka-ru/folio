@@ -313,7 +313,7 @@
   const canvas = document.getElementById('ui-canvas');
   const world = document.getElementById('ui-canvas-world');
   if (!canvas || !world) return;
-  const W = 4024, H = 2744;
+  const W = 4024, H = 4120;
   const GAP = 8; // seam gap between repeated tiles
   const TW = W + GAP, TH = H + GAP;
   let tx = 0, ty = 0, scale = 1;
@@ -359,11 +359,83 @@
   center();
   window.addEventListener('resize', center);
 
+  // ===== Empty modal on cell click (reuses case open effect/size) =====
+  let modalOpen = false, modalEl = null, modalRect = null;
+  function openUiModal(cell) {
+    if (modalOpen) return;
+    modalOpen = true;
+    const rect = cell.getBoundingClientRect();
+    modalRect = { top: rect.top, left: rect.left, width: rect.width, height: rect.height };
+    const m = document.createElement('div');
+    m.className = 'ui-modal';
+    m.style.top = rect.top + 'px';
+    m.style.left = rect.left + 'px';
+    m.style.width = rect.width + 'px';
+    m.style.height = rect.height + 'px';
+    m.style.borderRadius = '12px';
+    document.body.appendChild(m);
+    modalEl = m;
+    document.body.classList.add('ui-modal-open');
+
+    // Inject case content if this cell is tagged, otherwise empty (click closes)
+    const caseKey = cell.dataset.case;
+    const tpl = caseKey && document.getElementById('ui-case-' + caseKey);
+    if (tpl) {
+      m.classList.add('ui-modal--content', 'ui-modal--' + caseKey);
+      m.appendChild(tpl.content.cloneNode(true));
+      if (window.protoInit) window.protoInit(m);
+    } else {
+      m.addEventListener('click', closeUiModal);
+    }
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const mobile = window.innerWidth <= 680;
+        if (mobile) {
+          m.style.top = '0px'; m.style.left = '0px';
+          m.style.width = '100vw'; m.style.height = window.innerHeight + 'px';
+          m.style.borderRadius = '0';
+        } else {
+          m.style.top = '20px'; m.style.left = '20px';
+          m.style.width = 'calc(100vw - 40px)';
+          m.style.height = 'calc(100vh - 40px)';
+          m.style.borderRadius = '24px';
+        }
+      });
+    });
+  }
+  function closeUiModal() {
+    if (!modalOpen || !modalEl) return;
+    const m = modalEl, r = modalRect;
+    m.classList.add('ui-modal--closing'); // fade out inner content during shrink
+    m.style.top = r.top + 'px';
+    m.style.left = r.left + 'px';
+    m.style.width = r.width + 'px';
+    m.style.height = r.height + 'px';
+    m.style.borderRadius = '12px';
+    document.body.classList.remove('ui-modal-open');
+    let done = false;
+    const cleanup = () => {
+      if (done) return;
+      done = true;
+      m.removeEventListener('transitionend', onEnd);
+      if (m.parentElement) m.parentElement.removeChild(m);
+      modalEl = null; modalRect = null; modalOpen = false;
+    };
+    const onEnd = (e) => { if (e.propertyName === 'top') cleanup(); };
+    m.addEventListener('transitionend', onEnd);
+    setTimeout(cleanup, 650); // fallback if transitionend never fires
+  }
+  const caseCloseBtn = document.getElementById('case-close');
+  if (caseCloseBtn) caseCloseBtn.addEventListener('click', () => { if (modalOpen) closeUiModal(); });
+  window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modalOpen) closeUiModal(); });
+
   // Drag to pan
-  let dragging = false, lastX = 0, lastY = 0;
+  let dragging = false, lastX = 0, lastY = 0, downX = 0, downY = 0, moved = false;
   canvas.addEventListener('pointerdown', (e) => {
-    dragging = true;
+    if (modalOpen) return;
+    dragging = true; moved = false;
     lastX = e.clientX; lastY = e.clientY;
+    downX = e.clientX; downY = e.clientY;
     canvas.classList.add('dragging');
     canvas.setPointerCapture(e.pointerId);
   });
@@ -372,6 +444,7 @@
     tx += e.clientX - lastX;
     ty += e.clientY - lastY;
     lastX = e.clientX; lastY = e.clientY;
+    if (Math.hypot(e.clientX - downX, e.clientY - downY) > 6) moved = true;
     apply();
   });
   function endDrag(e) {
@@ -380,7 +453,18 @@
     canvas.classList.remove('dragging');
     try { canvas.releasePointerCapture(e.pointerId); } catch(_) {}
   }
-  canvas.addEventListener('pointerup', endDrag);
+  canvas.addEventListener('pointerup', (e) => {
+    const wasDragging = dragging, didMove = moved;
+    endDrag(e);
+    if (wasDragging && !didMove && !modalOpen) {
+      const t = document.elementFromPoint(e.clientX, e.clientY);
+      // Live prototype controls inside a card: tap them instead of opening the card
+      const ctl = t && t.closest ? t.closest('.ph [data-k]') : null;
+      if (ctl) { ctl.dispatchEvent(new CustomEvent('proto-tap', { bubbles: true })); return; }
+      const cell = t && t.closest ? t.closest('.uic-card') : null;
+      if (cell && !cell.dataset.nomodal) openUiModal(cell);
+    }
+  });
   canvas.addEventListener('pointercancel', endDrag);
   canvas.addEventListener('pointerleave', endDrag);
 
@@ -453,7 +537,7 @@
 // ===== Mobile menu =====
 (function() {
   const nav = document.querySelector('nav.main-nav');
-  if (!nav) return;
+  if (!nav || nav.classList.contains('filters')) return; // filters page uses the mobile bar (proto.js)
 
   // Read hrefs from existing hidden chrome elements
   const cvHref = document.querySelector('.cv-button')?.href || '#';
