@@ -2193,8 +2193,8 @@ html.light .msheet-lead { --ab-accent: #E4572E; }
 .uic-cap b { font-size: 14px; line-height: 18px; font-weight: 500; color: var(--text); opacity: .45; }
 .uic-cap span { font-size: 12px; line-height: 16px; color: var(--gray); opacity: .75; }
 .ui-lightbox-card .uic-cap { display: none; }
-/* NDA mark moves to the top-right so the caption can own the top-left */
-.uic-card[data-nda]::before { left: auto; right: 26px; }
+/* NDA mark sits in the bottom-right corner, away from the caption in the top-left */
+.uic-card[data-nda]::before { top: auto; left: auto; right: 26px; bottom: 22px; }
 
 /* Keyboard focus on canvas cards: ring follows the 12px radius and stays ~3px on screen at any zoom.
    .kb-focus is mirrored onto the card's copies in the cloned tiles, so whichever copy is on screen shows it. */
