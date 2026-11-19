@@ -2206,3 +2206,15 @@ html.light .msheet-lead { --ab-accent: #E4572E; }
 /* hidden chrome (close, card stepper) leaves the tab order while invisible; fade-out still plays */
 .case-close, .card-nav { visibility: hidden; transition: opacity .3s, transform .3s, visibility 0s linear .3s; }
 body.case-open .case-close, body.ui-modal-open .case-close, .card-nav.shown { visibility: visible; transition-delay: 0s; }
+/* CV skills: grouped (code / process / design); process reuses the roadmap timeline, compact */
+.cv-skill + .cv-skill { margin-top: 28px; }
+.cv-skill-k { font-size: 18px; line-height: 1.35; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 10px; }
+.cv-skill-k .cv-note { margin-top: 2px; }
+.cv-skill .ca-section p, .ca-section .cv-skill p { font-size: 14px; line-height: 20px; color: var(--case-text-dim); margin: 0; }
+.ca-section .cv-skill .cv-text { margin-top: 8px; }
+.cv-flow { padding-top: 0; padding-bottom: 0; }
+.cv-flow .ca-roadmap-item { padding: 8px 0; }
+.cv-flow .ca-roadmap-dot { top: 15px; }
+.cv-flow::before { top: 21px; bottom: 30px; }
+.cv-flow .ca-roadmap-title { font-size: 16px; }
+.ca-section .cv-flow .ca-roadmap-sub { margin-top: 2px; }
