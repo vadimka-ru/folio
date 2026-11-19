@@ -456,10 +456,18 @@
     if (ab._inited || reduceMotion) return;
     ab._inited = true;
     ab.classList.add('is-pre');
+    // write the correction only once Caveat is in (otherwise it shows in a fallback font, then jumps);
+    // a slow font never holds the phrase back for more than ~1.2s
+    const font = document.fonts && document.fonts.load
+      ? Promise.race([document.fonts.load('700 62px Caveat', 'работающего продукта'), new Promise((r) => setTimeout(r, 1200))]).catch(() => {})
+      : Promise.resolve();
     watch(ab, (active) => {
-      if (!active || !ab.classList.contains('is-pre')) return;
-      ab.classList.add('is-in');
-      requestAnimationFrame(() => ab.classList.remove('is-pre'));
+      if (!active || !ab.classList.contains('is-pre') || ab._waiting) return;
+      ab._waiting = true;
+      font.then(() => {
+        ab.classList.add('is-in');
+        requestAnimationFrame(() => ab.classList.remove('is-pre'));
+      });
     });
   }
 

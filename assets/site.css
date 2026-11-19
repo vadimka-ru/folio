@@ -2144,8 +2144,8 @@ html.light .ab { --ab-accent: #E4572E; }
 /* first time the card shows up: the strike is drawn, then the correction is "written" left to right */
 .ab.is-pre .ab-strike path { stroke-dashoffset: 220; }
 .ab.is-pre .ab-hand { clip-path: inset(0 100% 0 0); }
-.ab.is-in .ab-strike path { transition: stroke-dashoffset .45s ease-out .3s; }
-.ab.is-in .ab-hand { transition: clip-path .9s cubic-bezier(.4,0,.2,1) .8s; }
+.ab.is-in .ab-strike path { transition: stroke-dashoffset .4s ease-out .1s; }
+.ab.is-in .ab-hand { transition: clip-path .7s cubic-bezier(.4,0,.2,1) .45s; }
 
 
 /* handwritten hints on the live prototypes: tell people the phones can be tapped */
