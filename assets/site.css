@@ -1813,3 +1813,23 @@ nav.main-nav a, .case-close .inner, .pill-tile { border-radius: 999px; }
 .ph:not(.live), .ph:not(.live) * { animation-play-state: paused !important; }
 .ph.live { will-change: transform; }
 .ph-slot { contain: layout paint; }
+
+/* Games case: phone videos with captions, Telegram digest */
+.gc-row { display: flex; justify-content: center; gap: 48px; flex-wrap: wrap; margin: 8px auto 56px; max-width: 760px; }
+.gc-item { display: flex; flex-direction: column; align-items: center; gap: 14px; margin: 0; }
+.gc-item .gc-phone { height: 560px; }
+.gc-item figcaption { font-size: 13px; line-height: 18px; color: var(--case-text-dim, var(--gray)); text-align: center; max-width: 240px; }
+.tg-msg { max-width: 420px; margin: 0 auto; padding: 14px 16px 12px; border-radius: 18px 18px 18px 6px; background: var(--surface-2); color: var(--text); }
+.tg-msg-head { display: flex; align-items: center; gap: 10px; font-size: 13px; margin-bottom: 10px; }
+.tg-msg-head span:last-child { margin-left: auto; color: var(--gray); font-size: 12px; }
+.tg-msg-ava { width: 28px; height: 28px; border-radius: 50%; background: #5b8def; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 13px; }
+.tg-msg pre { margin: 0; font-family: inherit; font-size: 13px; line-height: 20px; white-space: pre-wrap; }
+.tg-msg-note { margin-top: 10px; font-size: 11px; color: var(--gray); }
+@media (max-width: 680px) {
+  .gc-row { gap: 32px; }
+  .gc-item .gc-phone { height: auto; width: 72vw; }
+}
+
+/* One tile for all three games: three phones side by side */
+.uic-card--trio { align-items: center; justify-content: center; gap: 36px; padding: 0; }
+.uic-card--trio .uic-phone { height: 72%; }
