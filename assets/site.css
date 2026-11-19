@@ -1840,3 +1840,78 @@ nav.main-nav a, .case-close .inner, .pill-tile { border-radius: 999px; }
 /* Opened cases too: no selection highlight, no image drag */
 .ui-modal, .ui-modal *, .msheet, .msheet * { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
 .ui-modal img, .ui-modal video, .msheet img { -webkit-user-drag: none; user-drag: none; }
+
+/* OneTwoTrip: canvas tile + case */
+.uic-card--ott { border: 0; cursor: pointer; }
+.ott-sub { font-size: 16px; line-height: 22px; color: var(--gray); }
+.ott-dots { display: flex; gap: 10px; margin-top: 18px; }
+.ott-dots i { width: 14px; height: 14px; border-radius: 50%; background: var(--c, #8a8a8a); display: block; }
+.ott-dot--ai, .ott-who--ai { --c: #8fa8ff; }
+.ott-dot--me, .ott-who--me { --c: #f2b544; }
+.ott-dot--dev, .ott-who--dev { --c: #5bd38c; }
+.ott-dot--mix, .ott-who--mix { --c: #c9a7ff; }
+.ott-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.ott-step { background: var(--surface-2); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 6px; }
+.ott-step-n { font-size: 11px; color: var(--gray); }
+.ott-step-t { font-size: 15px; line-height: 20px; font-weight: 500; }
+.ott-step-who { align-self: flex-start; font-size: 11px; line-height: 14px; padding: 3px 8px; border-radius: 999px; color: var(--c, #8a8a8a); background: color-mix(in srgb, var(--c, #8a8a8a) 14%, transparent); }
+.ott-step-r { font-size: 12px; line-height: 17px; color: var(--gray); }
+.ott-tree { background: var(--surface-2); border-radius: 12px; padding: 18px 20px; overflow-x: auto; }
+.ott-tree pre { margin: 0; font-family: inherit; font-size: 13px; line-height: 21px; }
+@media (max-width: 680px) { .ott-steps { grid-template-columns: 1fr; } .ott-tree pre { font-size: 11px; } }
+
+/* Screenshot placeholders (OTT: before/after the new UI) */
+.shot-row { display: grid; gap: 16px; }
+.shot-row--desk { grid-template-columns: 1fr 1fr; }
+.shot-row--mob { grid-template-columns: repeat(4, 1fr); justify-items: center; }
+.shot-item { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; }
+.shot-item figcaption { font-size: 12px; color: var(--gray); }
+.shot-desk { width: 100%; aspect-ratio: 16 / 10; border-radius: 12px; overflow: hidden; background: var(--surface-2); display: flex; flex-direction: column; }
+.shot-desk-bar { height: 22px; display: flex; gap: 6px; align-items: center; padding: 0 10px; background: rgba(255,255,255,0.04); flex-shrink: 0; }
+.shot-desk-bar i { width: 7px; height: 7px; border-radius: 50%; background: var(--gray); opacity: .45; }
+.shot-desk .shot-ph { flex: 1; margin: 10px; }
+.shot-ph {
+  display: flex; align-items: center; justify-content: center; text-align: center;
+  font-size: 12px; line-height: 17px; color: var(--gray); border-radius: 8px;
+  border: 1px dashed var(--case-placeholder-border, rgba(255,255,255,0.14));
+  background: repeating-linear-gradient(135deg, transparent 0 10px, rgba(255,255,255,0.025) 10px 20px);
+}
+.shot-phone { height: 300px; }
+.shot-phone .shot-ph {
+  position: absolute; top: 2.5%; left: 5.33%; width: 89.34%; height: 95%;
+  border-radius: 9.8% / 4.7%; border: 0; background-color: var(--surface-2);
+}
+@media (max-width: 680px) {
+  .shot-row--desk { grid-template-columns: 1fr; }
+  .shot-row--mob { grid-template-columns: 1fr 1fr; }
+  .shot-phone { height: auto; width: 70%; }
+}
+
+/* OTT process as a timeline (same component as the Synapse roadmap) */
+.ott-roadmap::before { background: rgba(255,255,255,0.14); }
+html.light .ott-roadmap::before { background: rgba(0,0,0,0.12); }
+.ott-roadmap .ca-roadmap-dot { background: var(--c, #8a8a8a); box-shadow: 0 0 0 4px var(--case-bg), 0 0 0 8px color-mix(in srgb, var(--c, #8a8a8a) 22%, transparent); }
+.ott-rm--ai { --c: #8fa8ff; } .ott-rm--me { --c: #f2b544; } .ott-rm--dev { --c: #5bd38c; } .ott-rm--mix { --c: #c9a7ff; }
+.ott-roadmap .ca-roadmap-pill { text-transform: none; letter-spacing: 0; font-size: 11px; color: var(--c, #8a8a8a); background: color-mix(in srgb, var(--c, #8a8a8a) 14%, transparent); }
+
+/* Hide scrollbars everywhere (scrolling still works: wheel, trackpad, touch, keys) */
+html, body, .ui-modal, .msheet-card, .ott-tree { scrollbar-width: none; -ms-overflow-style: none; }
+html::-webkit-scrollbar, body::-webkit-scrollbar, .ui-modal::-webkit-scrollbar,
+.msheet-card::-webkit-scrollbar, .ott-tree::-webkit-scrollbar, *::-webkit-scrollbar { width: 0; height: 0; display: none; }
+* { scrollbar-width: none; }
+
+/* Case modal TOC: fixed at the left edge of the opened modal */
+.ca-toc--modal { position: fixed; left: 60px; top: 50%; transform: translateY(-50%); z-index: 210; opacity: 0; transition: opacity 0.3s; }
+.ca-toc--modal.shown { opacity: 1; }
+body:not(.ui-modal-open) .ca-toc--modal { opacity: 0; pointer-events: none; }
+.ca-toc--modal { --case-text: var(--text); --case-text-dim: var(--gray); }
+
+/* Grab cursor everywhere on the canvas (cards and prototypes too); grabbing wins while dragging */
+.ui-canvas .uic-card, .ui-canvas .uic-card--ott, .ui-canvas .ph { cursor: grab; }
+.ui-canvas .ph button { cursor: pointer; }
+.ui-canvas.dragging, .ui-canvas.dragging * { cursor: grabbing !important; }
+
+/* Hover: the tile gets a touch lighter */
+.ui-canvas .uic-card:not(.uic-card--about) { transition: background-color 0.25s ease, opacity 0.3s ease; }
+/* same colour as the opened case (modal), so hover previews the card opening */
+.ui-canvas:not(.dragging) .uic-card:not(.uic-card--about):hover { background-color: var(--modal-bg); }

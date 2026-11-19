@@ -384,6 +384,7 @@
       m.classList.add('ui-modal--content', 'ui-modal--' + caseKey);
       m.appendChild(tpl.content.cloneNode(true));
       if (window.protoInit) window.protoInit(m);
+      buildModalToc(m);
     } else {
       m.addEventListener('click', closeUiModal);
     }
@@ -403,9 +404,67 @@
       });
     });
   }
+
+  // ===== Fixed table of contents for case modals (same look as the old case cards) =====
+  const TOC_LABELS = { context: 'Контекст', task: 'Задача', hypothesis: 'Гипотеза', research: 'Исследование', outcomes: 'Итоги' };
+  function buildModalToc(m) {
+    const secs = [...m.querySelectorAll('[data-toc]')].filter((s, i, a) => a.findIndex((x) => x.dataset.toc === s.dataset.toc) === i);
+    // the old cards listed only these five keys; extra keys need an explicit label
+    const list = secs.filter((s) => s.dataset.tocLabel || TOC_LABELS[s.dataset.toc]);
+    if (list.length < 2) return;
+    const nav = document.createElement('nav');
+    nav.className = 'ca-toc ca-toc--modal';
+    const ul = document.createElement('ul');
+    ul.className = 'ca-toc-list';
+    const track = document.createElement('div');
+    track.className = 'ca-toc-track';
+    const progress = document.createElement('div');
+    progress.className = 'ca-toc-progress';
+    track.appendChild(progress);
+    ul.appendChild(track);
+    const items = list.map((sec) => {
+      const li = document.createElement('li');
+      const btn = document.createElement('button');
+      btn.className = 'ca-toc-item';
+      btn.textContent = sec.dataset.tocLabel || TOC_LABELS[sec.dataset.toc];
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        m.scrollTo({ top: sec.getBoundingClientRect().top - m.getBoundingClientRect().top + m.scrollTop - 40, behavior: 'smooth' });
+      });
+      li.appendChild(btn);
+      ul.appendChild(li);
+      return btn;
+    });
+    nav.appendChild(ul);
+    document.body.appendChild(nav);
+    setTimeout(() => { nav.classList.add('shown'); onScroll(); }, 500);
+
+    function onScroll() {
+      const top = m.getBoundingClientRect().top;
+      const mid = 120;
+      let active = -1;
+      list.forEach((sec, i) => { if (sec.getBoundingClientRect().top - top <= mid) active = i; });
+      if (m.scrollTop >= m.scrollHeight - m.clientHeight - 4) active = list.length - 1;
+      items.forEach((it, i) => it.classList.toggle('active', i === active));
+      const trackH = track.clientHeight;
+      if (active === items.length - 1) progress.style.height = trackH + 'px';
+      else if (active >= 0) {
+        const li = items[active].parentElement;
+        progress.style.height = Math.max(0, Math.min(trackH, li.offsetTop + li.offsetHeight / 2 - track.offsetTop)) + 'px';
+      } else progress.style.height = '0';
+    }
+    m.addEventListener('scroll', onScroll, { passive: true });
+    m._tocCleanup = () => {
+      m.removeEventListener('scroll', onScroll);
+      nav.remove();
+      delete m._tocCleanup;
+    };
+    onScroll();
+  }
   function closeUiModal() {
     if (!modalOpen || !modalEl) return;
     const m = modalEl, r = modalRect;
+    if (m._tocCleanup) m._tocCleanup();
     m.classList.add('ui-modal--closing'); // fade out inner content during shrink
     m.style.top = r.top + 'px';
     m.style.left = r.left + 'px';

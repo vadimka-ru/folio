@@ -377,3 +377,10 @@
     if (sel && sel.rangeCount) sel.removeAllRanges();
   });
 })();
+
+// Safari swaps the grab cursor for an arrow when a drag starts its own (selection) gesture:
+// cancel the native mousedown action on the canvas; pointer events and taps still work.
+(function () {
+  const canvas = document.getElementById('ui-canvas');
+  if (canvas) canvas.addEventListener('mousedown', (e) => { if (e.button === 0) e.preventDefault(); });
+})();
