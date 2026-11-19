@@ -389,7 +389,20 @@
     });
   }
 
+  // about card phrase: strike «макета», then reveal the handwritten correction, once per card
+  function initLead(ab) {
+    if (ab._inited || reduceMotion) return;
+    ab._inited = true;
+    ab.classList.add('is-pre');
+    watch(ab, (active) => {
+      if (!active || !ab.classList.contains('is-pre')) return;
+      ab.classList.add('is-in');
+      requestAnimationFrame(() => ab.classList.remove('is-pre'));
+    });
+  }
+
   window.protoInit = function (root) {
+    root.querySelectorAll('.uic-card--about .ab').forEach(initLead);
     root.querySelectorAll('canvas.ab-morph').forEach(initMorph);
     root.querySelectorAll('.ph[data-proto]').forEach((ph) => {
       if (ph._inited) return;
