@@ -364,3 +364,16 @@
     }
   }
 })();
+
+// Canvas: never start a text selection or a native image drag while panning
+(function () {
+  const canvas = document.getElementById('ui-canvas');
+  if (!canvas) return;
+  const inUi = (t) => t instanceof Element && !!t.closest('.ui-canvas, .ui-modal, .msheet');
+  document.addEventListener('selectstart', (e) => { if (inUi(e.target.nodeType === 3 ? e.target.parentElement : e.target)) e.preventDefault(); });
+  document.addEventListener('dragstart', (e) => { if (inUi(e.target)) e.preventDefault(); });
+  canvas.addEventListener('pointerdown', () => {
+    const sel = window.getSelection && window.getSelection();
+    if (sel && sel.rangeCount) sel.removeAllRanges();
+  });
+})();

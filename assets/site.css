@@ -1833,3 +1833,10 @@ nav.main-nav a, .case-close .inner, .pill-tile { border-radius: 999px; }
 /* One tile for all three games: three phones side by side */
 .uic-card--trio { align-items: center; justify-content: center; gap: 36px; padding: 0; }
 .uic-card--trio .uic-phone { height: 72%; }
+
+/* No text/image selection or native image drag while panning the canvas (Safari needs the -webkit- forms) */
+.ui-canvas, .ui-canvas * { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+.ui-canvas img, .ui-canvas video { -webkit-user-drag: none; user-drag: none; }
+/* Opened cases too: no selection highlight, no image drag */
+.ui-modal, .ui-modal *, .msheet, .msheet * { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+.ui-modal img, .ui-modal video, .msheet img { -webkit-user-drag: none; user-drag: none; }
