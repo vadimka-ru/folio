@@ -2195,3 +2195,14 @@ html.light .msheet-lead { --ab-accent: #E4572E; }
 .ui-lightbox-card .uic-cap { display: none; }
 /* NDA mark moves to the top-right so the caption can own the top-left */
 .uic-card[data-nda]::before { left: auto; right: 26px; }
+
+/* Keyboard focus on canvas cards: ring follows the 12px radius and stays ~3px on screen at any zoom.
+   .kb-focus is mirrored onto the card's copies in the cloned tiles, so whichever copy is on screen shows it. */
+.uic-card:focus { outline: none; }
+.uic-card.kb-focus {
+  box-shadow: 0 0 0 calc(3px / var(--cs, 1)) var(--bg), 0 0 0 calc(5px / var(--cs, 1)) var(--text);
+}
+.ui-modal:focus { outline: none; }
+/* hidden chrome (close, card stepper) leaves the tab order while invisible; fade-out still plays */
+.case-close, .card-nav { visibility: hidden; transition: opacity .3s, transform .3s, visibility 0s linear .3s; }
+body.case-open .case-close, body.ui-modal-open .case-close, .card-nav.shown { visibility: visible; transition-delay: 0s; }

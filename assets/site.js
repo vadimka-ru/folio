@@ -331,12 +331,31 @@
     .filter((c) => !c.dataset.nomodal)
     .sort((a, b) => (parseInt(a.style.top) - parseInt(b.style.top)) || (parseInt(a.style.left) - parseInt(b.style.left)));
   NAV.forEach((c, i) => { c.dataset.idx = i; });
+  // DOM order = Tab order: put the cards in reading order (they are absolutely positioned, layout doesn't change)
+  [...baseTile.querySelectorAll(':scope > .uic-card')]
+    .sort((a, b) => (parseInt(a.style.top) - parseInt(b.style.top)) || (parseInt(a.style.left) - parseInt(b.style.left)))
+    .forEach((c) => baseTile.appendChild(c));
+  // keyboard: every openable base card is a button; data-ki pairs it with its copies in the clones
+  baseTile.querySelectorAll('.uic-card').forEach((c, i) => {
+    c.dataset.ki = i;
+    if (c.dataset.nomodal) return;
+    const cap = c.querySelector('.uic-cap');
+    const b = cap && cap.querySelector('b'), sp = cap && cap.querySelector('span');
+    c.tabIndex = 0;
+    c.setAttribute('role', 'button');
+    // live prototypes on the canvas are tapped with a pointer; by keyboard they are used inside the opened card
+    c.querySelectorAll('.ph button, .ph [tabindex]').forEach((el) => { el.tabIndex = -1; });
+    c.setAttribute('aria-label', [b && b.textContent.trim(), sp && sp.textContent.trim()].filter(Boolean).join(' — '));
+  });
   for (let i = 0; i < 3; i++) {
     for (let j = 0; j < 3; j++) {
       if (i === 0 && j === 0) continue;
       const c = baseTile.cloneNode(true);
       c.style.left = (i * TW) + 'px';
       c.style.top = (j * TH) + 'px';
+      // copies are decoration for the infinite pan: no tab stops, hidden from screen readers
+      c.setAttribute('aria-hidden', 'true');
+      c.querySelectorAll('[tabindex], a[href], button, input, video[controls]').forEach((el) => { el.tabIndex = -1; });
       world.appendChild(c);
     }
   }
@@ -358,6 +377,7 @@
     const mx = ((tx % sw) + sw) % sw - sw;
     const my = ((ty % sh) + sh) % sh - sh;
     world.style.transform = 'translate(' + mx + 'px,' + my + 'px) scale(' + scale + ')';
+    world.style.setProperty('--cs', scale);
     canvas.style.setProperty('--dot-x', (mx % (32 * scale)) + 'px');
     canvas.style.setProperty('--dot-y', (my % (32 * scale)) + 'px');
     if (window.__zoomSync) window.__zoomSync(scale, minScale, maxScale);
@@ -380,14 +400,47 @@
     ty = canvas.clientHeight / 2 - cy * scale;
     apply();
   }
+  // smooth pan that centres a card, taking the shortest way around the wrapped tiles
+  let panRaf = 0, panEnd = null;
+  function stopPan(finish) {
+    if (!panRaf) return;
+    cancelAnimationFrame(panRaf); panRaf = 0;
+    if (finish && panEnd) { tx = panEnd[0]; ty = panEnd[1]; apply(); }
+    panEnd = null;
+  }
+  function panToCard(card) {
+    stopPan(false);
+    const sw = TW * scale, sh = TH * scale;
+    let ntx = canvas.clientWidth / 2 - (parseInt(card.style.left) + card.offsetWidth / 2) * scale;
+    let nty = canvas.clientHeight / 2 - (parseInt(card.style.top) + card.offsetHeight / 2) * scale;
+    ntx += Math.round((tx - ntx) / sw) * sw;
+    nty += Math.round((ty - nty) / sh) * sh;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { tx = ntx; ty = nty; apply(); return; }
+    const sx = tx, sy = ty, t0 = performance.now(), D = 420;
+    panEnd = [ntx, nty];
+    const step = (now) => {
+      const k = Math.min(1, (now - t0) / D), e = 1 - Math.pow(1 - k, 3);
+      tx = sx + (ntx - sx) * e; ty = sy + (nty - sy) * e; apply();
+      if (k < 1) panRaf = requestAnimationFrame(step); else { panRaf = 0; panEnd = null; }
+    };
+    panRaf = requestAnimationFrame(step);
+  }
+  // the on-screen copy of a card (base tile or one of the clones) closest to the viewport centre
+  function nearestCopy(attr, val) {
+    return [...world.querySelectorAll('.uic-card[' + attr + '="' + val + '"]')]
+      .map((c) => ({ c, r: c.getBoundingClientRect() }))
+      .sort((a, b) => Math.hypot(a.r.left + a.r.width / 2 - innerWidth / 2, a.r.top + a.r.height / 2 - innerHeight / 2)
+                    - Math.hypot(b.r.left + b.r.width / 2 - innerWidth / 2, b.r.top + b.r.height / 2 - innerHeight / 2))[0];
+  }
   center();
   window.addEventListener('resize', center);
 
   // ===== Empty modal on cell click (reuses case open effect/size) =====
-  let modalOpen = false, modalEl = null, modalRect = null;
-  function openUiModal(cell) {
+  let modalOpen = false, modalEl = null, modalRect = null, kbOpened = false;
+  function openUiModal(cell, viaKeyboard) {
     if (modalOpen) return;
     modalOpen = true;
+    kbOpened = !!viaKeyboard;
     const rect = cell.getBoundingClientRect();
     modalRect = { top: rect.top, left: rect.left, width: rect.width, height: rect.height };
     const m = document.createElement('div');
@@ -408,6 +461,10 @@
     });
     bindSwipe(m);
     showCardNav(true);
+    m.tabIndex = -1;
+    m.setAttribute('role', 'dialog');
+    m.setAttribute('aria-modal', 'true');
+    if (kbOpened) m.focus({ preventScroll: true });
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         const mobile = window.innerWidth <= 680;
@@ -445,6 +502,8 @@
       box.className = 'ui-lightbox';
       const clone = cell.cloneNode(true);
       clone.removeAttribute('style');
+      ['tabindex', 'role', 'aria-label', 'aria-hidden'].forEach((a) => clone.removeAttribute(a));
+      clone.classList.remove('kb-focus');
       clone.classList.add('ui-lightbox-card');
       clone.querySelectorAll('video').forEach((v) => { v.muted = true; v.loop = true; v.playsInline = true; });
       box.appendChild(clone);
@@ -468,10 +527,7 @@
       while (m.firstChild) m.removeChild(m.firstChild);
       // move the canvas behind so the card we land on sits in the middle (closing shrinks into it)
       centerOnCard(target);
-      const hit = [...world.querySelectorAll('.uic-card[data-idx="' + target.dataset.idx + '"]')]
-        .map((c) => c.getBoundingClientRect())
-        .sort((a, b) => Math.hypot(a.left + a.width / 2 - innerWidth / 2, a.top + a.height / 2 - innerHeight / 2)
-                      - Math.hypot(b.left + b.width / 2 - innerWidth / 2, b.top + b.height / 2 - innerHeight / 2))[0];
+      const near = nearestCopy('data-idx', target.dataset.idx), hit = near && near.r;
       if (hit) modalRect = { top: hit.top, left: hit.left, width: hit.width, height: hit.height };
       fillModal(m, target);
       m.style.setProperty('--swap-dx', (dir > 0 ? 1 : -1) * 40 + 'px');
@@ -575,6 +631,7 @@
     if (m._tocCleanup) m._tocCleanup();
     showCardNav(false);
     m.classList.add('ui-modal--closing'); // fade out inner content during shrink
+    if (kbOpened && NAV[currentIdx]) { restoringFocus = true; NAV[currentIdx].focus({ preventScroll: true }); restoringFocus = false; }
     m.style.top = r.top + 'px';
     m.style.left = r.left + 'px';
     m.style.width = r.width + 'px';
@@ -596,6 +653,35 @@
   const caseCloseBtn = document.getElementById('case-close');
   if (caseCloseBtn) caseCloseBtn.addEventListener('click', () => { if (modalOpen) closeUiModal(); });
   window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modalOpen) closeUiModal(); });
+
+  // ===== Keyboard: Tab through cards, Enter/Space opens, focus pans the canvas =====
+  let restoringFocus = false;
+  function markFocus(ki, on) {
+    world.querySelectorAll('.uic-card[data-ki="' + ki + '"]').forEach((c) => c.classList.toggle('kb-focus', on));
+  }
+  baseTile.addEventListener('focusin', (e) => {
+    // a focused element far inside the overflow:hidden canvas makes the browser scroll it: undo that
+    canvas.scrollLeft = 0; canvas.scrollTop = 0;
+    const card = e.target;
+    if (!card.classList.contains('uic-card') || !card.matches(':focus-visible')) return;
+    markFocus(card.dataset.ki, true);
+    if (!restoringFocus) panToCard(card);
+  });
+  baseTile.addEventListener('focusout', (e) => {
+    if (e.target.classList.contains('uic-card')) markFocus(e.target.dataset.ki, false);
+  });
+  baseTile.addEventListener('keydown', (e) => {
+    const card = e.target;
+    if (modalOpen || !card.classList.contains('uic-card')) return;
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    e.preventDefault();
+    if (card.dataset.nomodal) return;
+    stopPan(true);
+    const near = nearestCopy('data-ki', card.dataset.ki);
+    openUiModal(near ? near.c : card, true);
+  });
+  canvas.addEventListener('pointerdown', () => stopPan(false));
+  canvas.addEventListener('wheel', () => stopPan(false), { passive: true });
 
   // Drag to pan
   let dragging = false, lastX = 0, lastY = 0, downX = 0, downY = 0, moved = false;
@@ -633,7 +719,7 @@
       const link = t && t.closest ? t.closest('.uic-card a[href]') : null;
       if (link) { window.open(link.href, link.target || '_self', 'noopener'); return; }
       const cell = t && t.closest ? t.closest('.uic-card') : null;
-      if (cell && !cell.dataset.nomodal) openUiModal(cell);
+      if (cell && !cell.dataset.nomodal) openUiModal(cell, false);
     }
   });
   canvas.addEventListener('pointercancel', endDrag);
