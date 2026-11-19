@@ -313,7 +313,7 @@
   const canvas = document.getElementById('ui-canvas');
   const world = document.getElementById('ui-canvas-world');
   if (!canvas || !world) return;
-  const W = 4024, H = 4120;
+  const W = 4024, H = 3432;
   const GAP = 8; // seam gap between repeated tiles
   const TW = W + GAP, TH = H + GAP;
   let tx = 0, ty = 0, scale = 1;

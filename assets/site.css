@@ -1238,7 +1238,7 @@ html.light .xp-roadmap-pill--done { background: rgba(255,255,255,0.06); }
   position: absolute;
   top: 0; left: 0;
   width: 4024px;
-  height: 4120px;
+  height: 3432px;
   transform-origin: 0 0;
   will-change: transform;
   z-index: 1;
@@ -1276,7 +1276,7 @@ html.light .xp-roadmap-pill--done { background: rgba(255,255,255,0.06); }
 .ui-tile {
   position: absolute;
   width: 4024px;
-  height: 4120px;
+  height: 3432px;
   top: 0; left: 0;
 }
 
@@ -1397,10 +1397,7 @@ body.ui-modal-open nav.main-nav { opacity: 0; pointer-events: none; transform: t
 .uic-card--demo img[src$=".gif"],
 .uic-card--demo video[src$=".mp4"] { border-radius: 24px; }
 
-.uic-card--demo img[src$="MVP-1.png"],
-.uic-card--demo img[src$="MVP-11.jpg"],
-.uic-card--demo img[src$="MVP-11-1.jpg"],
-.uic-card--demo img[src$="dashboard.png"] { border-radius: 24px; }
+.uic-card--demo img[src$="MVP-11.jpg"] { border-radius: 24px; }
 
 .uic-card--demo video[src$="graphic-dollar.mp4"] { max-height: 40%; max-width: 60%; border-radius: 8px; }
 
@@ -1548,8 +1545,6 @@ nav.main-nav .nav-more-btn {
 @font-face { font-family: 'Akt'; src: url('../fonts/Akt-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
 @font-face { font-family: 'Akt'; src: url('../fonts/Akt-Medium.woff2') format('woff2'); font-weight: 500; font-display: swap; }
 @font-face { font-family: 'Akt'; src: url('../fonts/Akt-Bold.woff2') format('woff2'); font-weight: 700; font-display: swap; }
-@font-face { font-family: 'Supply'; src: url('../fonts/Supply-Regular.otf') format('opentype'); font-weight: 400; font-display: swap; }
-@font-face { font-family: 'Supply'; src: url('../fonts/Supply-Medium.otf') format('opentype'); font-weight: 500; font-display: swap; }
 
 /* Filters instead of page links */
 nav.filters a { gap: 6px; user-select: none; }
@@ -1613,7 +1608,7 @@ nav.filters a b { font-weight: 400; font-size: 12px; opacity: 0.5; }
 .pa-label { font-size: 12px; color: var(--p-dim); }
 .pa-num { font-size: 16px; letter-spacing: 0.02em; margin-top: 2px; }
 .pa-card { position: absolute; left: 16px; right: 16px; top: 197px; height: 255px; border-radius: 24px; background: var(--p-card); }
-.pa-amount { position: absolute; top: 80px; left: 0; right: 0; height: 60px; display: flex; align-items: center; justify-content: center; font-family: 'Supply', 'Akt', monospace; font-size: 44px; font-weight: 500; letter-spacing: -0.01em; white-space: nowrap; transition: color 0.2s; }
+.pa-amount { position: absolute; top: 80px; left: 0; right: 0; height: 60px; display: flex; align-items: center; justify-content: center; font-family: 'Akt', -apple-system, system-ui, sans-serif; font-size: 44px; font-weight: 400; letter-spacing: -0.01em; white-space: nowrap; transition: color 0.2s; }
 .pa-cur { margin-right: 16px; }
 .pa-digits { display: inline-flex; }
 .pa-ch { display: inline-block; animation: pa-in 0.32s cubic-bezier(.2,.9,.25,1.2); }

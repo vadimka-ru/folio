@@ -238,14 +238,8 @@
 
   // ---------- welcome ----------
   function initWelcome(ph) {
-    const dots = [...ph.querySelectorAll('.pw-pager i')];
-    let i = 0;
-    const st = lifecycle(ph, async (ok) => {
-      await sleep(2200); if (!ok()) return;
-      dots[i].classList.remove('on');
-      i = (i + 1) % dots.length;
-      dots[i].classList.add('on');
-    });
+    // static pager; lifecycle only toggles .live so the wallet keeps floating
+    const st = lifecycle(ph, () => sleep(2000));
     bindTaps(ph, (k) => {
       if (k !== 'start') return;
       const pair = ph.closest('.proto-pair');
