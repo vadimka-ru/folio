@@ -1783,6 +1783,8 @@ nav.filters a b { font-weight: 400; font-size: 12px; opacity: 0.5; }
 nav.main-nav a, .case-close .inner, .pill-tile { border-radius: 999px; }
 .me-avatar, .me-card .me-avatar img { border-radius: 50%; }
 .me-card { padding-right: 24px; }
+/* optical centring: cap height on top vs baseline below measured 16px / 12px; lift text 2px */
+.me-card .me-text { top: -2px; }
 
 /* Real iPhone frame on every mobile screen */
 .uic-phone--fit img { object-fit: contain; }
@@ -2113,3 +2115,22 @@ body.ui-modal-open .zoom-ctl { opacity: 0; pointer-events: none; transform: tran
 .zoom-fill { position: absolute; left: 0; top: 0; height: 38px; border-radius: 999px; background: color-mix(in srgb, var(--text) 30%, transparent); pointer-events: none; }
 .zoom-thumb { position: absolute; left: 0; top: 0; width: 38px; height: 38px; border-radius: 50%; background: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,0.25); pointer-events: none; }
 .zoom-ctl.dragging .zoom-track { cursor: grabbing; }
+
+/* ---------- about card on the canvas (variant A: business card) ---------- */
+.uic-card--about { padding: 56px; align-items: stretch; justify-content: flex-start; text-align: left; }
+.ab { width: 100%; display: flex; flex-direction: column; color: var(--text); }
+.ab-head { display: flex; align-items: center; gap: 20px; }
+.ab-avatar { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+.ab-name { font-size: 28px; line-height: 34px; font-weight: 600; letter-spacing: -0.01em; }
+.ab-role { margin-top: 2px; font-size: 17px; line-height: 24px; color: var(--gray); }
+.ab-lead { margin: 44px 0 0; max-width: 820px; font-size: 40px; line-height: 48px; font-weight: 500; letter-spacing: -0.02em; }
+.ab-cols { margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+.ab-h { margin-bottom: 12px; font-size: 15px; line-height: 20px; color: var(--gray); }
+.ab-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.ab-pill { display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--pill-border); font-size: 15px; white-space: nowrap; }
+.ab-pill img { width: 22px; height: 22px; border-radius: 6px; margin-left: -6px; }
+.ab-foot { margin-top: 36px; padding-top: 24px; border-top: 1px solid var(--pill-border); display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.ab-stack { font-family: var(--font-mono); font-size: 13px; color: var(--gray); }
+.ab-tg { display: inline-flex; align-items: center; gap: 10px; height: 48px; padding: 0 22px; border-radius: 999px; background: var(--text); color: var(--bg); font-size: 16px; font-weight: 600; text-decoration: none; transition: opacity .2s; }
+.ab-tg:hover { opacity: .88; }
+.ab-tg svg { width: 18px; height: 18px; }

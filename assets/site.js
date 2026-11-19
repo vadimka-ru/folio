@@ -629,6 +629,9 @@
       // Live prototype controls inside a card: tap them instead of opening the card
       const ctl = t && t.closest ? t.closest('.ph [data-k]') : null;
       if (ctl) { ctl.dispatchEvent(new CustomEvent('proto-tap', { bubbles: true })); return; }
+      // Real links inside a card (e.g. Telegram on the about card): follow them instead of opening the card
+      const link = t && t.closest ? t.closest('.uic-card a[href]') : null;
+      if (link) { window.open(link.href, link.target || '_self', 'noopener'); return; }
       const cell = t && t.closest ? t.closest('.uic-card') : null;
       if (cell && !cell.dataset.nomodal) openUiModal(cell);
     }
