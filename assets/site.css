@@ -1401,7 +1401,7 @@ body.ui-modal-open nav.main-nav { opacity: 0; pointer-events: none; transform: t
 .uic-card--demo video[src$=".mp4"] { border-radius: 24px; }
 
 .uic-card--demo img[src$="MVP-11.jpg"],
-.uic-card--demo img[src$="rgs-hero.png"],
+.uic-card--demo img[src$="rgs-hero.jpg"],
 .uic-card--demo img[src$="infowatch-hero.jpg"] { border-radius: 24px; }
 
 .uic-card--demo video[src$="graphic-dollar.mp4"] { max-height: 40%; max-width: 60%; border-radius: 8px; }
@@ -2166,3 +2166,18 @@ html.light .msheet-lead { --ab-accent: #E4572E; }
 .msheet-lead .ab-strike svg { height: 12px; stroke-width: 3; }
 .msheet-hand { display: block; margin-top: 2px; font-family: 'Caveat', cursive; font-weight: 700; font-size: 30px; line-height: 30px; letter-spacing: 0; color: var(--ab-accent); transform: rotate(-3deg); }
 .msheet-actions .msheet-btn { flex: 1; }
+
+/* Canvas cards: media fades in once it can paint; until then the card shimmers faintly.
+   Videos only enter this state when they start loading (on screen), so off-screen copies stay idle. */
+.ui-canvas .uic-card img, .ui-canvas .uic-card video { transition: opacity .5s ease; }
+.ui-canvas .uic-card .is-pending { opacity: 0; }
+.ui-canvas .uic-card.is-loading {
+  background-image: linear-gradient(100deg, transparent 30%, rgba(255,255,255,0.045) 50%, transparent 70%);
+  background-size: 250% 100%; animation: card-shimmer 1.4s linear infinite;
+}
+html.light .ui-canvas .uic-card.is-loading { background-image: linear-gradient(100deg, transparent 30%, rgba(0,0,0,0.04) 50%, transparent 70%); }
+@keyframes card-shimmer { from { background-position: 120% 0; } to { background-position: -120% 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .ui-canvas .uic-card.is-loading { animation: none; }
+  .ui-canvas .uic-card img, .ui-canvas .uic-card video { transition: none; }
+}

@@ -68,6 +68,30 @@
   }
 
   // Videos: play only while visible
+  // Canvas cards: hide a media element until it can paint, shimmer its card meanwhile, then fade it in.
+  function markPending(el, readyEvent) {
+    const card = el.closest('.ui-canvas .uic-card');
+    if (!card || el._pending) return;
+    el._pending = true;
+    el.classList.add('is-pending');
+    card._pending = (card._pending || 0) + 1;
+    card.classList.add('is-loading');
+    const done = () => {
+      if (!el._pending) return;
+      el._pending = false;
+      el.classList.remove('is-pending');
+      card._pending -= 1;
+      if (card._pending <= 0) card.classList.remove('is-loading');
+    };
+    el.addEventListener(readyEvent, done, { once: true });
+    el.addEventListener('error', done, { once: true });
+  }
+  function initImgFade(img) {
+    if (img._faded) return;
+    img._faded = true;
+    if (!img.complete || !img.naturalWidth) markPending(img, 'load');
+  }
+
   function initVideo(v) {
     if (v._watch) return;
     v.removeAttribute('autoplay');
@@ -75,7 +99,7 @@
     // nothing is fetched until the video is actually on screen (the canvas holds 9 copies of every card)
     if (v.preload !== 'auto') v.preload = 'none';
     watch(v, (active) => {
-      if (active) { v.preload = 'auto'; const p = v.play(); if (p && p.catch) p.catch(() => {}); }
+      if (active) { v.preload = 'auto'; if (v.readyState < 2) markPending(v, 'loadeddata'); const p = v.play(); if (p && p.catch) p.catch(() => {}); }
       else v.pause();
     });
   }
@@ -419,6 +443,7 @@
       INIT[ph.dataset.proto](ph);
     });
     root.querySelectorAll('video').forEach(initVideo);
+    if (!reduceMotion) root.querySelectorAll('.ui-canvas .uic-card img').forEach(initImgFade);
     fitModal(root);
   };
   window.protoInit(document);
