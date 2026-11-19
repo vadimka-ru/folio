@@ -1729,10 +1729,6 @@ nav.filters a b { font-weight: 400; font-size: 12px; opacity: 0.5; }
   .mbar-mini-text b, .mbar-mini-text span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .mbar-mini-text b { font-size: 14px; line-height: 18px; font-weight: 500; }
   .mbar-mini-text span { font-size: 11px; line-height: 14px; color: var(--gray); }
-  .mbar-cv {
-    flex-shrink: 0; height: 38px; padding: 0 14px; border-radius: 19px; background: var(--surface-2);
-    color: var(--text); text-decoration: none; font-size: 14px; display: flex; align-items: center;
-  }
 
   /* theme circle (only in compact) */
   .mbar-theme {
@@ -2042,19 +2038,20 @@ body.ui-modal-open .ui-lightbox { opacity: 1; }
 .ui-lightbox-card.uic-card--duo, .ui-lightbox-card.uic-card--flatduo { gap: 64px; }
 .proto-modal { padding: 48px 24px; }
 
-/* NDA badge: canvas tiles and case headers */
+/* NDA: a handwritten note circled with a marker (same hand as the about card), canvas tiles and case headers */
 .uic-card[data-nda]::before {
-  content: 'NDA'; position: absolute; top: 24px; left: 24px; z-index: 3;
-  font-family: var(--font-mono); font-size: 13px; line-height: 16px; font-weight: 600; letter-spacing: 0.08em;
-  color: #fff; background: #e5484d; padding: 6px 12px; border-radius: 999px;
-  box-shadow: 0 4px 14px rgba(229,72,77,0.35);
+  content: 'NDA'; position: absolute; top: 22px; left: 26px; z-index: 3;
+  font-family: 'Caveat', cursive; font-weight: 700; font-size: 40px; line-height: 40px; letter-spacing: 0.02em;
+  color: #E5484D; padding: 10px 26px 12px; transform: rotate(-7deg);
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 120' preserveAspectRatio='none'%3E%3Cpath d='M70 12C150 0 268 6 292 44c20 34-22 66-120 70C84 118 10 104 8 64 6 30 52 12 150 10' fill='none' stroke='%23E5484D' stroke-width='3' stroke-linecap='round' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
 }
 .nda-badge {
-  font-family: var(--font-mono); font-size: 11px; line-height: 14px; font-weight: 600; letter-spacing: 0.08em;
-  color: #fff; background: #e5484d; padding: 3px 9px; border-radius: 999px; margin-right: 4px;
+  display: inline-block; margin: -4px 12px -4px -4px; padding: 5px 17px 8px;
+  font-family: 'Caveat', cursive; font-weight: 700; font-size: 24px; line-height: 22px; letter-spacing: 0.02em;
+  color: #E5484D; transform: rotate(-6deg); vertical-align: middle;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 120' preserveAspectRatio='none'%3E%3Cpath d='M70 12C150 0 268 6 292 44c20 34-22 66-120 70C84 118 10 104 8 64 6 30 52 12 150 10' fill='none' stroke='%23E5484D' stroke-width='3' stroke-linecap='round' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
 }
 .ui-lightbox-card[data-nda]::before { display: none; }
-.uic-card[data-nda]::before { font-size: 16px; line-height: 20px; padding: 8px 16px; top: 28px; left: 28px; }
 
 /* No all-caps anywhere: labels, pills and statuses stay in normal case */
 *, *::before, *::after { text-transform: none !important; }
@@ -2141,3 +2138,23 @@ html.light .ab { --ab-accent: #E4572E; }
 .ab-sign { margin-top: 28px; display: flex; flex-direction: column; align-items: center; gap: 4px; font-family: var(--font-mono); }
 .ab-name { font-size: 16px; line-height: 20px; font-weight: 500; }
 .ab-role { font-size: 14px; line-height: 18px; color: var(--gray); }
+
+/* handwritten hints on the live prototypes: tell people the phones can be tapped */
+.hand-note { --hand: #FF8A65; position: absolute; z-index: 2; pointer-events: none; color: var(--hand);
+  font-family: 'Caveat', cursive; font-weight: 700; font-size: 32px; line-height: 30px; letter-spacing: 0; }
+html.light .hand-note { --hand: #E4572E; }
+.hand-note span { display: block; transform: rotate(-6deg); }
+.hand-note svg { display: block; margin-top: 6px; }
+.hand-note--left { left: 44px; top: 330px; text-align: left; }
+.hand-note--left svg { margin-left: 60px; }
+.hand-note--right { right: 36px; top: 330px; text-align: right; }
+.hand-note--right span { transform: rotate(5deg); }
+.hand-note--right svg { margin-left: auto; margin-right: 70px; }
+.ui-lightbox-card .hand-note { display: none; }
+
+/* mobile about sheet: same "edit on a mockup" phrase as the about card */
+.msheet-lead { --ab-accent: #FF8A65; font-size: 22px; line-height: 28px; font-weight: 500; letter-spacing: -0.02em; }
+html.light .msheet-lead { --ab-accent: #E4572E; }
+.msheet-lead .ab-strike svg { height: 12px; stroke-width: 3; }
+.msheet-hand { display: block; margin-top: 2px; font-family: 'Caveat', cursive; font-weight: 700; font-size: 30px; line-height: 30px; letter-spacing: 0; color: var(--ab-accent); transform: rotate(-3deg) translateX(16px); }
+.msheet-actions .msheet-btn { flex: 1; }

@@ -481,7 +481,7 @@
       document.querySelectorAll('.chrome-pill.socials a').forEach((a) => socials.appendChild(a.cloneNode(true)));
       const open = () => { sheet.classList.add('open'); sheet.setAttribute('aria-hidden', 'false'); };
       const close = () => { sheet.classList.remove('open'); sheet.setAttribute('aria-hidden', 'true'); };
-      mini.addEventListener('click', (e) => { if (!e.target.closest('.mbar-cv')) open(); });
+      mini.addEventListener('click', open);
       sheet.querySelector('.msheet-backdrop').addEventListener('click', close);
       window.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
       // drag the card down to dismiss
