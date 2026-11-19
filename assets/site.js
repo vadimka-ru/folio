@@ -326,6 +326,11 @@
   baseTile.style.top = '0px';
   while (world.firstChild) baseTile.appendChild(world.firstChild);
   world.appendChild(baseTile);
+  // reading order of the openable cards: used to step through them inside the modal
+  const NAV = [...baseTile.querySelectorAll('.uic-card')]
+    .filter((c) => !c.dataset.nomodal)
+    .sort((a, b) => (parseInt(a.style.top) - parseInt(b.style.top)) || (parseInt(a.style.left) - parseInt(b.style.left)));
+  NAV.forEach((c, i) => { c.dataset.idx = i; });
   for (let i = 0; i < 3; i++) {
     for (let j = 0; j < 3; j++) {
       if (i === 0 && j === 0) continue;
@@ -355,6 +360,25 @@
     world.style.transform = 'translate(' + mx + 'px,' + my + 'px) scale(' + scale + ')';
     canvas.style.setProperty('--dot-x', (mx % (32 * scale)) + 'px');
     canvas.style.setProperty('--dot-y', (my % (32 * scale)) + 'px');
+    if (window.__zoomSync) window.__zoomSync(scale, minScale, maxScale);
+  }
+  // zoom keeping the point (cx, cy) on screen in place; viewport centre by default
+  function zoomTo(next, cx, cy) {
+    next = Math.max(minScale, Math.min(maxScale, next));
+    if (cx == null) { cx = canvas.clientWidth / 2; cy = canvas.clientHeight / 2; }
+    const wx = (cx - tx) / scale, wy = (cy - ty) / scale;
+    scale = next;
+    tx = cx - wx * scale; ty = cy - wy * scale;
+    apply();
+  }
+  window.uiCanvasZoom = { set: (s) => zoomTo(s), get: () => scale, min: minScale, max: maxScale };
+  // centre a base-tile card (by world position) in the viewport
+  function centerOnCard(card) {
+    const cx = parseInt(card.style.left) + card.offsetWidth / 2;
+    const cy = parseInt(card.style.top) + card.offsetHeight / 2;
+    tx = canvas.clientWidth / 2 - cx * scale;
+    ty = canvas.clientHeight / 2 - cy * scale;
+    apply();
   }
   center();
   window.addEventListener('resize', center);
@@ -377,17 +401,13 @@
     modalEl = m;
     document.body.classList.add('ui-modal-open');
 
-    // Inject case content if this cell is tagged, otherwise empty (click closes)
-    const caseKey = cell.dataset.case;
-    const tpl = caseKey && document.getElementById('ui-case-' + caseKey);
-    if (tpl) {
-      m.classList.add('ui-modal--content', 'ui-modal--' + caseKey);
-      m.appendChild(tpl.content.cloneNode(true));
-      if (window.protoInit) window.protoInit(m);
-      buildModalToc(m);
-    } else {
-      m.addEventListener('click', closeUiModal);
-    }
+    fillModal(m, cell);
+    m.addEventListener('click', (e) => {
+      // lightbox: any click closes it, except on prototype controls and the nav pill
+      if (m.classList.contains('ui-modal--lightbox') && !e.target.closest('.ph [data-k], .card-nav')) closeUiModal();
+    });
+    bindSwipe(m);
+    showCardNav(true);
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         const mobile = window.innerWidth <= 680;
@@ -403,6 +423,94 @@
         }
       });
     });
+  }
+
+
+  // ===== Modal content for a card: a case template, or the card itself enlarged =====
+  let currentIdx = -1;
+  function fillModal(m, cell) {
+    currentIdx = Number(cell.dataset.idx);
+    m.className = 'ui-modal';
+    m.scrollTop = 0;
+    const caseKey = cell.dataset.case;
+    const tpl = caseKey && document.getElementById('ui-case-' + caseKey);
+    if (tpl) {
+      m.classList.add('ui-modal--content', 'ui-modal--' + caseKey);
+      m.appendChild(tpl.content.cloneNode(true));
+      if (window.protoInit) window.protoInit(m);
+      buildModalToc(m);
+    } else {
+      m.classList.add('ui-modal--lightbox');
+      const box = document.createElement('div');
+      box.className = 'ui-lightbox';
+      const clone = cell.cloneNode(true);
+      clone.removeAttribute('style');
+      clone.classList.add('ui-lightbox-card');
+      clone.querySelectorAll('video').forEach((v) => { v.muted = true; v.loop = true; v.playsInline = true; });
+      box.appendChild(clone);
+      m.appendChild(box);
+      if (window.protoInit) window.protoInit(m);
+    }
+    updateCardNav();
+  }
+
+  // step to the previous / next card without closing the modal
+  let navBusy = false;
+  function stepCard(dir) {
+    if (!modalOpen || !modalEl || navBusy || currentIdx < 0) return;
+    navBusy = true;
+    const m = modalEl;
+    const target = NAV[(currentIdx + dir + NAV.length) % NAV.length];
+    m.classList.add('ui-modal--swap-out');
+    m.style.setProperty('--swap-dx', (dir > 0 ? -1 : 1) * 40 + 'px');
+    setTimeout(() => {
+      if (m._tocCleanup) m._tocCleanup();
+      while (m.firstChild) m.removeChild(m.firstChild);
+      // move the canvas behind so the card we land on sits in the middle (closing shrinks into it)
+      centerOnCard(target);
+      const hit = [...world.querySelectorAll('.uic-card[data-idx="' + target.dataset.idx + '"]')]
+        .map((c) => c.getBoundingClientRect())
+        .sort((a, b) => Math.hypot(a.left + a.width / 2 - innerWidth / 2, a.top + a.height / 2 - innerHeight / 2)
+                      - Math.hypot(b.left + b.width / 2 - innerWidth / 2, b.top + b.height / 2 - innerHeight / 2))[0];
+      if (hit) modalRect = { top: hit.top, left: hit.left, width: hit.width, height: hit.height };
+      fillModal(m, target);
+      m.style.setProperty('--swap-dx', (dir > 0 ? 1 : -1) * 40 + 'px');
+      m.classList.add('ui-modal--swap-in');
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        m.classList.remove('ui-modal--swap-in');
+        setTimeout(() => { navBusy = false; }, 220);
+      }));
+    }, 160);
+  }
+
+  // nav pill: ‹ 3 / 22 ›
+  const cardNav = document.createElement('div');
+  cardNav.className = 'chrome-pill card-nav';
+  cardNav.innerHTML = '<button class="card-nav-btn" data-dir="-1" aria-label="Предыдущая карточка"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>'
+    + '<span class="card-nav-count"></span>'
+    + '<button class="card-nav-btn" data-dir="1" aria-label="Следующая карточка"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>';
+  document.body.appendChild(cardNav);
+  cardNav.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-dir]');
+    if (b) { e.stopPropagation(); stepCard(Number(b.dataset.dir)); }
+  });
+  function updateCardNav() { cardNav.querySelector('.card-nav-count').textContent = (currentIdx + 1) + ' / ' + NAV.length; }
+  function showCardNav(on) { cardNav.classList.toggle('shown', on); }
+  window.addEventListener('keydown', (e) => {
+    if (!modalOpen) return;
+    if (e.key === 'ArrowRight') { e.preventDefault(); stepCard(1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); stepCard(-1); }
+  });
+  // swipe left / right on touch screens
+  function bindSwipe(m) {
+    let sx = 0, sy = 0, st = 0;
+    m.addEventListener('touchstart', (e) => { if (e.touches.length !== 1) return; sx = e.touches[0].clientX; sy = e.touches[0].clientY; st = Date.now(); }, { passive: true });
+    m.addEventListener('touchend', (e) => {
+      const t = e.changedTouches[0]; if (!t || !st) return;
+      const dx = t.clientX - sx, dy = t.clientY - sy;
+      st = 0;
+      if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) stepCard(dx < 0 ? 1 : -1);
+    }, { passive: true });
   }
 
   // ===== Fixed table of contents for case modals (same look as the old case cards) =====
@@ -465,6 +573,7 @@
     if (!modalOpen || !modalEl) return;
     const m = modalEl, r = modalRect;
     if (m._tocCleanup) m._tocCleanup();
+    showCardNav(false);
     m.classList.add('ui-modal--closing'); // fade out inner content during shrink
     m.style.top = r.top + 'px';
     m.style.left = r.left + 'px';

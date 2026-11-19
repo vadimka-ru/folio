@@ -113,10 +113,15 @@
     </a>
   </div>
 
-  <!-- Bottom-right: CV -->
-  <a class="chrome-pill cv-button" href="https://drive.google.com/file/d/1rrkNZL5k16p9dHij-_F4tXXOePsKGHDB/view?usp=sharing" target="_blank" id="cv-btn">
-    <div class="inner">CV</div>
-  </a>
+  <!-- Bottom-right: canvas zoom -->
+  <div class="chrome-pill zoom-ctl" role="group" aria-label="Масштаб">
+    <button class="zoom-btn" data-z="-1" aria-label="Отдалить"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 12h12"/></svg></button>
+    <input class="zoom-range" type="range" min="0" max="1000" value="500" aria-label="Масштаб канваса">
+    <button class="zoom-btn" data-z="1" aria-label="Приблизить"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 12h12M12 6v12"/></svg></button>
+  </div>
+
+  <!-- First-visit hint -->
+  <div class="canvas-hint" id="canvas-hint"><span class="hint-desk">Тащи, чтобы двигаться · кликни карточку, чтобы открыть</span><span class="hint-mob">Двигай пальцем · тапни карточку</span></div>
 
   <!-- ===== Sections ===== -->
   <main>
@@ -128,7 +133,7 @@
 <div class="uic-card uic-card--block uic-card--demo" data-cat="ui" style="left:2016px;top:0px"><video src="experiments/graphic-dollar.mp4" autoplay loop muted playsinline></video></div>
 <div class="uic-card uic-card--block uic-card--demo" data-cat="ui" style="left:3024px;top:0px"><img class="uic-phone-baked" src="experiments/stay-btwn-phone.png" alt=""></div>
 <div class="uic-card uic-card--block uic-card--demo" data-cat="ui" style="left:0px;top:688px"><img src="experiments/graphic-phone.png" alt=""></div>
-<div class="uic-card uic-card--block uic-card--demo" data-cat="product" data-case="rgs" style="left:1008px;top:688px"><img src="cases/rgs-hero.png" alt=""></div>
+<div class="uic-card uic-card--block uic-card--demo" data-cat="product" data-case="rgs" data-nda="1" style="left:1008px;top:688px"><img src="cases/rgs-hero.png" alt=""></div>
 <div class="uic-card uic-card--block uic-card--demo" data-cat="build" data-case="snagme" style="left:2016px;top:688px"><video src="projects/snagme.mp4" autoplay loop muted playsinline></video></div>
 <div class="uic-card uic-card--block uic-card--demo" data-cat="ui" style="left:3024px;top:688px"><video src="experiments/calendar.mp4" autoplay loop muted playsinline></video></div>
 <div class="uic-card uic-card--block uic-card--demo" data-cat="product" data-case="synapse" style="left:0px;top:1376px"><img src="experiments/synapse-ui.png" alt=""></div>
@@ -138,7 +143,7 @@
     Меня зовут <strong>Вадим Корольков</strong>, я <strong>design engineer</strong>: рисую интерфейсы и сам довожу их до работающего продукта. В базе — продуктовый дизайн: <strong>Fingular</strong>, <strong>InfoWatch</strong>, <strong>Synapse UI</strong>, <strong>Росгосстрах</strong>. Сейчас собираю свои продукты руками — онлайн-игры (нарды, дурак, покер) и <strong>SnagMe</strong> для референсов. Figma, TypeScript, Swift, .NET, Claude Code. Пишите: <a href="https://t.me/Vadim_Korol" target="_blank">t.me/Vadim_Korol</a>.
   </div>
 </div>
-<div class="uic-card uic-card--block uic-card--demo" data-cat="product" data-case="infowatch" style="left:3024px;top:1376px"><img src="cases/infowatch-hero.jpg" alt=""></div>
+<div class="uic-card uic-card--block uic-card--demo" data-cat="product" data-case="infowatch" data-nda="1" style="left:3024px;top:1376px"><img src="cases/infowatch-hero.jpg" alt=""></div>
 <div class="uic-card uic-card--block uic-card--proto" data-cat="ui" data-case="proto-amount" style="left:0px;top:2064px"><div class="proto-pair"><div class="ph-slot"><div class="ph ph--dark" data-proto="amount" data-script="1 0 0 0 wait go"><div class="ph-status"><span class="ph-time">9:41</span><span class="ph-icons"><svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg width="16" height="12" viewBox="0 0 16 12"><path d="M8 2.6c2.2 0 4.2.8 5.7 2.2l1.1-1.2A9.8 9.8 0 0 0 8 1 9.8 9.8 0 0 0 1.2 3.6l1.1 1.2C3.8 3.4 5.8 2.6 8 2.6Zm0 3.2c1.3 0 2.5.5 3.4 1.3l1.1-1.2A6.6 6.6 0 0 0 8 4.2c-1.7 0-3.3.6-4.5 1.7l1.1 1.2c.9-.8 2.1-1.3 3.4-1.3Zm0 3.2c-.5 0-1 .2-1.3.5L8 11l1.3-1.5C9 9.2 8.5 9 8 9Z"/></svg><svg width="26" height="12" viewBox="0 0 26 12"><rect x=".5" y=".5" width="22" height="11" rx="3.5" fill="none" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="19" height="8" rx="2"/><rect x="24" y="4" width="1.5" height="4" rx=".75" opacity=".4"/></svg></span></div><div class="ph-island"></div>
   <div class="pa-head"><span class="pa-back"><svg width="10" height="16" viewBox="0 0 10 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2 2 8l6 6"/></svg></span><span>Send to</span></div>
   <div class="pa-contact"><img src="projects/raypay-avatar.png" alt=""><div><div class="pa-label">Phone</div><div class="pa-num">+44 7987 654321</div></div></div>
@@ -381,6 +386,11 @@
         <div class="ca-meta"><span>Соло: дизайн + код</span><span class="ca-dot">·</span><span>2026</span><span class="ca-dot">·</span><span>Telegram · ВК · Яндекс Игры</span></div>
         <h1 class="ca-title">Нарды, дурак, покер</h1>
         <p class="ca-lede">Три онлайн-игры на одном движке. Ставка — на интерфейс: красивый, плавный и живой там, где у конкурентов всё топорно.</p>
+        <div class="game-links">
+          <a class="cv-btn cv-btn--primary" href="https://t.me/poku_nard_bot?start=s_portfolio" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 24c6.627 0 12-5.373 12-12S18.627 0 12 0 0 5.373 0 12s5.373 12 12 12zm5.487-16.91-2.02 9.527c-.152.67-.548.83-1.112.517l-3.06-2.257-1.476 1.421c-.163.163-.3.3-.614.3l.22-3.12 5.678-5.13c.246-.22-.054-.342-.383-.122l-7.017 4.418-3.025-.947c-.657-.205-.67-.658.137-.974l11.83-4.56c.547-.205 1.026.122.842.968z"/></svg> Нарды</a>
+          <a class="cv-btn" href="https://t.me/durak_tgclub_bot" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 24c6.627 0 12-5.373 12-12S18.627 0 12 0 0 5.373 0 12s5.373 12 12 12zm5.487-16.91-2.02 9.527c-.152.67-.548.83-1.112.517l-3.06-2.257-1.476 1.421c-.163.163-.3.3-.614.3l.22-3.12 5.678-5.13c.246-.22-.054-.342-.383-.122l-7.017 4.418-3.025-.947c-.657-.205-.67-.658.137-.974l11.83-4.56c.547-.205 1.026.122.842.968z"/></svg> Дурак</a>
+          <a class="cv-btn" href="https://t.me/poker_tgclub_bot" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 24c6.627 0 12-5.373 12-12S18.627 0 12 0 0 5.373 0 12s5.373 12 12 12zm5.487-16.91-2.02 9.527c-.152.67-.548.83-1.112.517l-3.06-2.257-1.476 1.421c-.163.163-.3.3-.614.3l.22-3.12 5.678-5.13c.246-.22-.054-.342-.383-.122l-7.017 4.418-3.025-.947c-.657-.205-.67-.658.137-.974l11.83-4.56c.547-.205 1.026.122.842.968z"/></svg> Покер</a>
+        </div>
       </header>
 
       <figure class="ca-figure"><div class="proto-shots">
@@ -635,11 +645,12 @@
   <template id="ui-case-infowatch"><article class="ca-article">
                 <header class="ca-hero">
                   <div class="ca-meta">
+                    <span class="nda-badge">NDA</span>
                     <span>Lead продуктовый дизайнер</span>
                     <span class="ca-dot">·</span>
                     <span>2023 — 2025</span>
                     <span class="ca-dot">·</span>
-                    <span>B2B · Кибербезопасность · NDA</span>
+                    <span>B2B · Кибербезопасность</span>
                   </div>
                   <h1 class="ca-title">InfoWatch</h1>
                   <p class="ca-lede">
@@ -762,11 +773,12 @@
   <template id="ui-case-rgs"><article class="ca-article">
                 <header class="ca-hero">
                   <div class="ca-meta">
+                    <span class="nda-badge">NDA</span>
                     <span>Продуктовый дизайнер</span>
                     <span class="ca-dot">·</span>
                     <span>2022</span>
                     <span class="ca-dot">·</span>
-                    <span>Страхование · Внутренний инструмент · NDA</span>
+                    <span>Страхование · Внутренний инструмент</span>
                   </div>
                   <h1 class="ca-title">Росгосстрах</h1>
                   <p class="ca-lede">
@@ -860,7 +872,6 @@
 
   <template id="ui-case-proto-amount">
     <div class="proto-modal">
-      <div class="proto-modal-head"><h1 class="ca-title">Ввод суммы</h1><p class="ca-lede">Прототип в коде: живая клавиатура, анимация цифр, проверка баланса. Понажимай.</p></div>
       <div class="proto-modal-stage"><div class="proto-pair"><div class="ph-slot"><div class="ph ph--dark" data-proto="amount" data-script="1 0 0 0 wait go"><div class="ph-status"><span class="ph-time">9:41</span><span class="ph-icons"><svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg width="16" height="12" viewBox="0 0 16 12"><path d="M8 2.6c2.2 0 4.2.8 5.7 2.2l1.1-1.2A9.8 9.8 0 0 0 8 1 9.8 9.8 0 0 0 1.2 3.6l1.1 1.2C3.8 3.4 5.8 2.6 8 2.6Zm0 3.2c1.3 0 2.5.5 3.4 1.3l1.1-1.2A6.6 6.6 0 0 0 8 4.2c-1.7 0-3.3.6-4.5 1.7l1.1 1.2c.9-.8 2.1-1.3 3.4-1.3Zm0 3.2c-.5 0-1 .2-1.3.5L8 11l1.3-1.5C9 9.2 8.5 9 8 9Z"/></svg><svg width="26" height="12" viewBox="0 0 26 12"><rect x=".5" y=".5" width="22" height="11" rx="3.5" fill="none" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="19" height="8" rx="2"/><rect x="24" y="4" width="1.5" height="4" rx=".75" opacity=".4"/></svg></span></div><div class="ph-island"></div>
   <div class="pa-head"><span class="pa-back"><svg width="10" height="16" viewBox="0 0 10 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2 2 8l6 6"/></svg></span><span>Send to</span></div>
   <div class="pa-contact"><img src="projects/raypay-avatar.png" alt=""><div><div class="pa-label">Phone</div><div class="pa-num">+44 7987 654321</div></div></div>
@@ -887,7 +898,6 @@
 
   <template id="ui-case-proto-otp">
     <div class="proto-modal">
-      <div class="proto-modal-head"><h1 class="ca-title">Вход по коду</h1><p class="ca-lede">Прототип в коде: онбординг и ввод кода из СМС с таймером. Нажми «1234» или набери сам.</p></div>
       <div class="proto-modal-stage"><div class="proto-pair"><div class="ph-slot"><div class="ph ph--dark" data-proto="welcome"><div class="ph-status"><span class="ph-time">9:41</span><span class="ph-icons"><svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg width="16" height="12" viewBox="0 0 16 12"><path d="M8 2.6c2.2 0 4.2.8 5.7 2.2l1.1-1.2A9.8 9.8 0 0 0 8 1 9.8 9.8 0 0 0 1.2 3.6l1.1 1.2C3.8 3.4 5.8 2.6 8 2.6Zm0 3.2c1.3 0 2.5.5 3.4 1.3l1.1-1.2A6.6 6.6 0 0 0 8 4.2c-1.7 0-3.3.6-4.5 1.7l1.1 1.2c.9-.8 2.1-1.3 3.4-1.3Zm0 3.2c-.5 0-1 .2-1.3.5L8 11l1.3-1.5C9 9.2 8.5 9 8 9Z"/></svg><svg width="26" height="12" viewBox="0 0 26 12"><rect x=".5" y=".5" width="22" height="11" rx="3.5" fill="none" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="19" height="8" rx="2"/><rect x="24" y="4" width="1.5" height="4" rx=".75" opacity=".4"/></svg></span></div><div class="ph-island"></div>
   <div class="pw-logo"><svg width="30" height="30" viewBox="0 0 30 30"><g fill="currentColor"><rect x="12" y="1" width="6" height="28" rx="3"/><rect x="12" y="1" width="6" height="28" rx="3" transform="rotate(60 15 15)"/><rect x="12" y="1" width="6" height="28" rx="3" transform="rotate(-60 15 15)"/></g></svg><span>RayPay</span></div>
   <div class="pw-art"><img src="projects/raypay-wallet.png" alt=""></div>

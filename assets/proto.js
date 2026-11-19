@@ -262,7 +262,7 @@
     const mobile = window.innerWidth <= 680;
     const fit = mobile
       ? Math.min(0.9, (window.innerWidth - 64) / 437)
-      : Math.min(0.9, (window.innerHeight - 40 - 300) / 888, (window.innerWidth - 120) / (437 * 2 + 72));
+      : Math.min(0.9, (window.innerHeight - 40 - 120) / 888, (window.innerWidth - 120) / (437 * 2 + 72));
     stage.style.setProperty('--fit', Math.max(0.4, fit).toFixed(3));
   }
 
@@ -383,4 +383,41 @@
 (function () {
   const canvas = document.getElementById('ui-canvas');
   if (canvas) canvas.addEventListener('mousedown', (e) => { if (e.button === 0) e.preventDefault(); });
+})();
+
+// ---------- canvas zoom slider (bottom-right) ----------
+(function () {
+  const ctl = document.querySelector('.zoom-ctl');
+  const Z = window.uiCanvasZoom;
+  if (!ctl || !Z) return;
+  const range = ctl.querySelector('.zoom-range');
+  // log scale so each step feels the same near and far
+  const lo = Math.log(Z.min), hi = Math.log(Z.max);
+  const toVal = (s) => Math.round(((Math.log(s) - lo) / (hi - lo)) * 1000);
+  const toScale = (v) => Math.exp(lo + (v / 1000) * (hi - lo));
+  let syncing = false;
+  function paint() { range.style.setProperty('--p', (range.value / 10) + '%'); }
+  window.__zoomSync = (s) => { if (syncing) return; range.value = toVal(s); paint(); };
+  window.__zoomSync(Z.get());
+  range.addEventListener('input', () => { syncing = true; Z.set(toScale(Number(range.value))); syncing = false; paint(); });
+  ctl.querySelectorAll('.zoom-btn').forEach((b) => b.addEventListener('click', () => {
+    Z.set(Z.get() * (Number(b.dataset.z) > 0 ? 1.25 : 0.8));
+  }));
+  // the slider is part of the chrome, not the canvas: don't start a canvas drag from it
+  ['pointerdown', 'wheel'].forEach((t) => ctl.addEventListener(t, (e) => e.stopPropagation()));
+})();
+
+// ---------- first-visit hint: fades out after the first pan, zoom or open ----------
+(function () {
+  const hint = document.getElementById('canvas-hint');
+  const canvas = document.getElementById('ui-canvas');
+  if (!hint || !canvas) return;
+  setTimeout(() => hint.classList.add('shown'), 700);
+  const hide = () => { hint.classList.remove('shown'); hint.classList.add('gone'); };
+  let down = null;
+  canvas.addEventListener('pointerdown', (e) => { down = [e.clientX, e.clientY]; });
+  canvas.addEventListener('pointermove', (e) => { if (down && Math.hypot(e.clientX - down[0], e.clientY - down[1]) > 20) hide(); });
+  canvas.addEventListener('wheel', hide, { passive: true, once: true });
+  new MutationObserver(() => { if (document.body.classList.contains('ui-modal-open')) hide(); })
+    .observe(document.body, { attributes: true, attributeFilter: ['class'] });
 })();
