@@ -385,26 +385,49 @@
   if (canvas) canvas.addEventListener('mousedown', (e) => { if (e.button === 0) e.preventDefault(); });
 })();
 
-// ---------- canvas zoom slider (bottom-right) ----------
+// ---------- canvas zoom slider (bottom-right, Figma 12557:35) ----------
 (function () {
   const ctl = document.querySelector('.zoom-ctl');
   const Z = window.uiCanvasZoom;
   if (!ctl || !Z) return;
-  const range = ctl.querySelector('.zoom-range');
-  // log scale so each step feels the same near and far
+  const track = ctl.querySelector('.zoom-track');
+  const thumb = ctl.querySelector('.zoom-thumb');
+  const fill = ctl.querySelector('.zoom-fill');
+  const THUMB = 38;
+  // log scale so each step feels the same near and far; t in [0, 1]
   const lo = Math.log(Z.min), hi = Math.log(Z.max);
-  const toVal = (s) => Math.round(((Math.log(s) - lo) / (hi - lo)) * 1000);
-  const toScale = (v) => Math.exp(lo + (v / 1000) * (hi - lo));
-  let syncing = false;
-  function paint() { range.style.setProperty('--p', (range.value / 10) + '%'); }
-  window.__zoomSync = (s) => { if (syncing) return; range.value = toVal(s); paint(); };
+  const toT = (s) => (Math.log(s) - lo) / (hi - lo);
+  const toScale = (t) => Math.exp(lo + Math.max(0, Math.min(1, t)) * (hi - lo));
+  function paint(t) {
+    const x = t * (track.clientWidth - THUMB);
+    thumb.style.transform = 'translateX(' + x + 'px)';
+    fill.style.width = (x + THUMB - 10) + 'px';
+    track.setAttribute('aria-valuenow', Math.round(t * 100));
+  }
+  window.__zoomSync = (s) => paint(toT(s));
   window.__zoomSync(Z.get());
-  range.addEventListener('input', () => { syncing = true; Z.set(toScale(Number(range.value))); syncing = false; paint(); });
-  ctl.querySelectorAll('.zoom-btn').forEach((b) => b.addEventListener('click', () => {
-    Z.set(Z.get() * (Number(b.dataset.z) > 0 ? 1.25 : 0.8));
-  }));
-  // the slider is part of the chrome, not the canvas: don't start a canvas drag from it
-  ['pointerdown', 'wheel'].forEach((t) => ctl.addEventListener(t, (e) => e.stopPropagation()));
+  // drag anywhere on the track: the thumb's centre follows the pointer
+  function setFromX(clientX) {
+    const r = track.getBoundingClientRect();
+    const t = (clientX - r.left - THUMB / 2) / (r.width - THUMB);
+    Z.set(toScale(t));
+  }
+  let dragging = false;
+  track.addEventListener('pointerdown', (e) => {
+    e.stopPropagation(); e.preventDefault();
+    dragging = true; ctl.classList.add('dragging');
+    try { track.setPointerCapture(e.pointerId); } catch (_) {}
+    setFromX(e.clientX);
+  });
+  track.addEventListener('pointermove', (e) => { if (dragging) setFromX(e.clientX); });
+  const end = () => { dragging = false; ctl.classList.remove('dragging'); };
+  track.addEventListener('pointerup', end);
+  track.addEventListener('pointercancel', end);
+  track.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowUp') { e.preventDefault(); e.stopPropagation(); Z.set(Z.get() * 1.15); }
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') { e.preventDefault(); e.stopPropagation(); Z.set(Z.get() / 1.15); }
+  });
+  ctl.addEventListener('wheel', (e) => e.stopPropagation());
 })();
 
 // ---------- first-visit hint: fades out after the first pan, zoom or open ----------

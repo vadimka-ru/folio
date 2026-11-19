@@ -2110,3 +2110,11 @@ body.ui-modal-open .zoom-ctl { opacity: 0; pointer-events: none; transform: tran
 .game-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
 .game-links .cv-btn { gap: 8px; }
 .game-links svg { width: 16px; height: 16px; }
+
+/* Zoom slider v2 (Figma 12557:35): pill 200×56, track 38px, white thumb, translucent fill */
+.zoom-ctl { width: 200px; height: 56px; padding: 8px; gap: 0; }
+.zoom-track { position: relative; flex: 1; height: 38px; border-radius: 999px; background: var(--surface-2); cursor: pointer; touch-action: none; outline: none; overflow: hidden; }
+.zoom-track:focus-visible { box-shadow: 0 0 0 2px var(--text); }
+.zoom-fill { position: absolute; left: 0; top: 0; height: 38px; border-radius: 999px; background: color-mix(in srgb, var(--text) 30%, transparent); pointer-events: none; }
+.zoom-thumb { position: absolute; left: 0; top: 0; width: 38px; height: 38px; border-radius: 50%; background: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,0.25); pointer-events: none; }
+.zoom-ctl.dragging .zoom-track { cursor: grabbing; }
