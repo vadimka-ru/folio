@@ -69,16 +69,22 @@
 
   // Videos: play only while visible
   // Canvas cards: hide a media element until it can paint, show a small loading line meanwhile, then fade it in.
+  // Inside an opened case the same line sits in the middle of the media's own box (phone frame, figure).
   function markPending(el, readyEvent) {
-    const card = el.closest('.ui-canvas .uic-card');
+    let card = el.closest('.ui-canvas .uic-card'), centred = false;
+    if (!card && el.closest('.ui-modal')) { card = el.parentElement; centred = true; }
     if (!card || el._pending) return;
     el._pending = true;
     el.classList.add('is-pending');
     card._pending = (card._pending || 0) + 1;
     if (!card.querySelector(':scope > .uic-load')) {
       const bar = document.createElement('i');
-      bar.className = 'uic-load';
+      bar.className = 'uic-load' + (centred ? ' uic-load--centre' : '');
       bar.setAttribute('aria-hidden', 'true');
+      if (centred) {
+        card.classList.add('load-host');
+        if (getComputedStyle(card).position === 'static') card.style.position = 'relative';
+      }
       card.appendChild(bar);
     }
     card.classList.add('is-loading');
@@ -467,6 +473,7 @@
     });
     root.querySelectorAll('video').forEach(initVideo);
     if (!reduceMotion) root.querySelectorAll('.ui-canvas .uic-card img').forEach(initImgFade);
+    if (!reduceMotion && root.classList && root.classList.contains('ui-modal')) root.querySelectorAll('img').forEach(initImgFade);
     fitModal(root);
   };
   window.protoInit(document);
