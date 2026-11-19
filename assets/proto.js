@@ -263,7 +263,7 @@
   // ---------- about card: one dot cloud morphing Figma → Claude → portrait ----------
   // Every shape is rasterised once and sampled on a regular grid tuned so it yields ~N points;
   // the same N particles then fly between the shapes. The cursor pushes them away.
-  const MORPH = { size: 320, box: 250, n: 2800, hold: 2.6, fly: 1.7 };
+  const MORPH = { size: 440, box: 250, n: 2800, hold: 2.6, fly: 1.7 }; // canvas leaves room for scattered dots
   const SHAPES = [
     { name: 'figma', aspect: 2 / 3, draw(g, w, h) {
       const u = w / 2, r = u / 2;
@@ -336,11 +336,12 @@
     const parts = Array.from({ length: n }, () => ({ ox: 0, oy: 0, vx: 0, vy: 0, seed: Math.random() }));
     const ease = (u) => (u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2);
     const cycle = hold + fly;
-    let mouse = null; // in canvas px
+    let mouse = null; // in canvas px, with the cursor's own velocity so a fast swipe throws dots further
     card.addEventListener('pointermove', (e) => {
       if (e.pointerType === 'touch') return;
       const r = cv.getBoundingClientRect();
-      mouse = { x: (e.clientX - r.left) * (size / r.width), y: (e.clientY - r.top) * (size / r.height) };
+      const x = (e.clientX - r.left) * (size / r.width), y = (e.clientY - r.top) * (size / r.height);
+      mouse = mouse ? { x, y, vx: x - mouse.x, vy: y - mouse.y } : { x, y, vx: 0, vy: 0 };
     });
     card.addEventListener('pointerleave', () => { mouse = null; });
     let raf = 0, running = false, start = performance.now();
@@ -360,17 +361,24 @@
         // swirl while in flight
         const sw = Math.sin(m * Math.PI) * (14 + p.seed * 18);
         x += Math.cos(p.seed * 6.283 + t) * sw; y += Math.sin(p.seed * 6.283 + t) * sw;
-        // cursor: push away, spring back
+        // cursor: scatter dots away (each at its own slightly skewed angle, plus the cursor's own motion),
+        // then let them drift back slowly
         if (mouse) {
-          const dx = cx + x + p.ox - mouse.x, dy = cy + y + p.oy - mouse.y, d2 = dx * dx + dy * dy;
-          if (d2 < 3600 && d2 > 0.01) { const d = Math.sqrt(d2), f = (1 - d / 60) * 2.2; p.vx += (dx / d) * f; p.vy += (dy / d) * f; }
+          const dx = cx + x + p.ox - mouse.x, dy = cy + y + p.oy - mouse.y, d2 = dx * dx + dy * dy, R = 90;
+          if (d2 < R * R && d2 > 0.01) {
+            const d = Math.sqrt(d2), fall = 1 - d / R, f = fall * fall * 9 * (0.6 + p.seed * 0.8);
+            const ang = Math.atan2(dy, dx) + (p.seed - 0.5) * 1.2;
+            p.vx += Math.cos(ang) * f + mouse.vx * fall * 0.35;
+            p.vy += Math.sin(ang) * f + mouse.vy * fall * 0.35;
+          }
         }
-        p.vx = (p.vx - p.ox * 0.06) * 0.84; p.vy = (p.vy - p.oy * 0.06) * 0.84;
+        p.vx = (p.vx - p.ox * 0.02) * 0.92; p.vy = (p.vy - p.oy * 0.02) * 0.92;
         p.ox += p.vx; p.oy += p.vy;
         const c0 = a.rgb, c1 = b.rgb;
         ctx.fillStyle = `rgb(${Math.round(c0[0] + (c1[0] - c0[0]) * m)},${Math.round(c0[1] + (c1[1] - c0[1]) * m)},${Math.round(c0[2] + (c1[2] - c0[2]) * m)})`;
         ctx.beginPath(); ctx.arc(cx + x + p.ox, cy + y + p.oy, A.r + (B.r - A.r) * m, 0, 6.283); ctx.fill();
       }
+      if (mouse) { mouse.vx *= 0.7; mouse.vy *= 0.7; }
       if (running) raf = requestAnimationFrame(frame);
     }
     // logos are ready at once; the portrait joins the loop when its image has loaded and could be read
@@ -481,7 +489,7 @@
       document.querySelectorAll('.chrome-pill.socials a').forEach((a) => socials.appendChild(a.cloneNode(true)));
       const open = () => { sheet.classList.add('open'); sheet.setAttribute('aria-hidden', 'false'); };
       const close = () => { sheet.classList.remove('open'); sheet.setAttribute('aria-hidden', 'true'); };
-      mini.addEventListener('click', open);
+      mini.addEventListener('click', (e) => { if (!e.target.closest('.mbar-tg')) open(); });
       sheet.querySelector('.msheet-backdrop').addEventListener('click', close);
       window.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
       // drag the card down to dismiss
