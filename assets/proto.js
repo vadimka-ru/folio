@@ -68,13 +68,19 @@
   }
 
   // Videos: play only while visible
-  // Canvas cards: hide a media element until it can paint, shimmer its card meanwhile, then fade it in.
+  // Canvas cards: hide a media element until it can paint, show a small loading line meanwhile, then fade it in.
   function markPending(el, readyEvent) {
     const card = el.closest('.ui-canvas .uic-card');
     if (!card || el._pending) return;
     el._pending = true;
     el.classList.add('is-pending');
     card._pending = (card._pending || 0) + 1;
+    if (!card.querySelector(':scope > .uic-load')) {
+      const bar = document.createElement('i');
+      bar.className = 'uic-load';
+      bar.setAttribute('aria-hidden', 'true');
+      card.appendChild(bar);
+    }
     card.classList.add('is-loading');
     const done = () => {
       if (!el._pending) return;
@@ -288,7 +294,7 @@
   // ---------- about card: one dot cloud morphing Figma → Claude → portrait ----------
   // Every shape is rasterised once and sampled on a regular grid tuned so it yields ~N points;
   // the same N particles then fly between the shapes. The cursor pushes them away.
-  const MORPH = { size: 440, box: 250, n: 2800, hold: 2.6, fly: 1.7 }; // canvas leaves room for scattered dots
+  const MORPH = { box: 250, n: 2800, hold: 2.6, fly: 1.7 };
   const SHAPES = [
     { name: 'figma', aspect: 2 / 3, draw(g, w, h) {
       const u = w / 2, r = u / 2;
@@ -351,32 +357,48 @@
   function initMorph(cv) {
     if (cv._inited) return;
     cv._inited = true;
-    const { size, n, hold, fly } = MORPH, dpr = 2;
-    cv.width = size * dpr; cv.height = size * dpr;
-    cv.style.width = size + 'px'; cv.style.height = size + 'px';
-    const ctx = cv.getContext('2d');
-    ctx.scale(dpr, dpr);
+    const { n, hold, fly } = MORPH, dpr = 2;
+    // the canvas covers the whole card so scattered dots can fly anywhere on it;
+    // the cloud itself is drawn at the centre of an empty slot that keeps its place in the layout
     const card = cv.closest('.uic-card') || cv.parentElement;
+    const slot = card.querySelector('.ab-morph-slot');
+    let W = 0, H = 0;
+    cv.width = 0; cv.height = 0; // off-screen copies hold no pixels at all
+    const ctx = cv.getContext('2d');
+    // the backing store is only allocated while this copy is on screen (the canvas tile repeats 9 times)
+    function alloc(on) {
+      if (on) {
+        W = card.offsetWidth; H = card.offsetHeight;
+        if (cv.width !== W * dpr) { cv.width = W * dpr; cv.height = H * dpr; }
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      } else if (cv.width) { cv.width = 0; cv.height = 0; }
+    }
+    const centre = () => {
+      if (!slot) return { x: W / 2, y: H / 2 };
+      let x = slot.offsetWidth / 2, y = slot.offsetHeight / 2;
+      for (let el = slot; el && el !== card; el = el.offsetParent) { x += el.offsetLeft; y += el.offsetTop; }
+      return { x, y };
+    };
     let shapes = null;
     const parts = Array.from({ length: n }, () => ({ ox: 0, oy: 0, vx: 0, vy: 0, seed: Math.random() }));
     const ease = (u) => (u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2);
     const cycle = hold + fly;
-    let mouse = null; // in canvas px, with the cursor's own velocity so a fast swipe throws dots further
+    let mouse = null; // in card px, with the cursor's own velocity so a fast swipe throws dots further
     card.addEventListener('pointermove', (e) => {
-      if (e.pointerType === 'touch') return;
+      if (e.pointerType === 'touch' || !W) return;
       const r = cv.getBoundingClientRect();
-      const x = (e.clientX - r.left) * (size / r.width), y = (e.clientY - r.top) * (size / r.height);
+      const x = (e.clientX - r.left) * (W / r.width), y = (e.clientY - r.top) * (H / r.height);
       mouse = mouse ? { x, y, vx: x - mouse.x, vy: y - mouse.y } : { x, y, vx: 0, vy: 0 };
     });
     card.addEventListener('pointerleave', () => { mouse = null; });
     let raf = 0, running = false, start = performance.now();
     function frame(now) {
-      if (!shapes) return;
+      if (!shapes || !W || !cv.width) return;
       const t = (now - start) / 1000;
       const k = Math.floor(t / cycle), u = t - k * cycle;
       const A = shapes[k % shapes.length], B = shapes[(k + 1) % shapes.length];
-      const cx = size / 2, cy = size / 2;
-      ctx.clearRect(0, 0, size, size);
+      const { x: cx, y: cy } = centre();
+      ctx.clearRect(0, 0, W, H);
       for (let i = 0; i < n; i++) {
         const p = parts[i], a = A.pts[i], b = B.pts[i];
         // a wave runs top to bottom: each particle starts flying a little later than the one above
@@ -408,7 +430,6 @@
     }
     // logos are ready at once; the portrait joins the loop when its image has loaded and could be read
     shapes = SHAPES.filter((sh) => !sh.img).map((sh) => sampleShape(sh));
-    frame(performance.now());
     const img = new Image();
     img.onload = () => {
       try { shapes = SHAPES.map((sh) => sampleShape(sh, img)); } catch (_) { /* unreadable image: keep the logos only */ }
@@ -417,8 +438,10 @@
     img.src = SHAPES.find((sh) => sh.img).img;
     watch(cv, (active) => {
       cancelAnimationFrame(raf);
+      alloc(active);
       running = active && !reduceMotion;
-      if (running && shapes) raf = requestAnimationFrame(frame);
+      if (running) raf = requestAnimationFrame(frame);
+      else if (active) frame(performance.now()); // reduced motion: one still frame
     });
   }
 
