@@ -1397,7 +1397,9 @@ body.ui-modal-open nav.main-nav { opacity: 0; pointer-events: none; transform: t
 .uic-card--demo img[src$=".gif"],
 .uic-card--demo video[src$=".mp4"] { border-radius: 24px; }
 
-.uic-card--demo img[src$="MVP-11.jpg"] { border-radius: 24px; }
+.uic-card--demo img[src$="MVP-11.jpg"],
+.uic-card--demo img[src$="rgs-hero.png"],
+.uic-card--demo img[src$="infowatch-hero.jpg"] { border-radius: 24px; }
 
 .uic-card--demo video[src$="graphic-dollar.mp4"] { max-height: 40%; max-width: 60%; border-radius: 8px; }
 
@@ -2129,7 +2131,7 @@ html.light .ab { --ab-accent: #E4572E; }
 .ab-strike { position: relative; text-decoration: none; color: var(--gray); }
 .ab-strike svg { position: absolute; left: 0; top: 50%; width: calc(100% + 8px); height: 20px; transform: translateY(-40%); overflow: visible; fill: none; stroke: var(--ab-accent); stroke-width: 4; stroke-linecap: round; }
 .ab-strike path { stroke-dasharray: 220; stroke-dashoffset: 0; }
-.ab-hand { display: block; margin-top: 6px; font-family: 'Caveat', cursive; font-weight: 700; font-size: 62px; line-height: 56px; letter-spacing: 0; color: var(--ab-accent); transform: rotate(-3deg) translateX(40px); }
+.ab-hand { display: block; margin-top: 6px; font-family: 'Caveat', cursive; font-weight: 700; font-size: 62px; line-height: 56px; letter-spacing: 0; color: var(--ab-accent); transform: rotate(-3deg); }
 /* first time the card shows up: the strike is drawn, then the correction is "written" left to right */
 .ab.is-pre .ab-strike path { stroke-dashoffset: 220; }
 .ab.is-pre .ab-hand { clip-path: inset(0 100% 0 0); }
@@ -2156,5 +2158,5 @@ html.light .hand-note { --hand: #E4572E; }
 .msheet-lead { --ab-accent: #FF8A65; font-size: 22px; line-height: 28px; font-weight: 500; letter-spacing: -0.02em; }
 html.light .msheet-lead { --ab-accent: #E4572E; }
 .msheet-lead .ab-strike svg { height: 12px; stroke-width: 3; }
-.msheet-hand { display: block; margin-top: 2px; font-family: 'Caveat', cursive; font-weight: 700; font-size: 30px; line-height: 30px; letter-spacing: 0; color: var(--ab-accent); transform: rotate(-3deg) translateX(16px); }
+.msheet-hand { display: block; margin-top: 2px; font-family: 'Caveat', cursive; font-weight: 700; font-size: 30px; line-height: 30px; letter-spacing: 0; color: var(--ab-accent); transform: rotate(-3deg); }
 .msheet-actions .msheet-btn { flex: 1; }
