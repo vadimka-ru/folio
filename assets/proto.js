@@ -72,9 +72,10 @@
     if (v._watch) return;
     v.removeAttribute('autoplay');
     v.pause();
-    v.preload = 'metadata';
+    // nothing is fetched until the video is actually on screen (the canvas holds 9 copies of every card)
+    if (v.preload !== 'auto') v.preload = 'none';
     watch(v, (active) => {
-      if (active) { const p = v.play(); if (p && p.catch) p.catch(() => {}); }
+      if (active) { v.preload = 'auto'; const p = v.play(); if (p && p.catch) p.catch(() => {}); }
       else v.pause();
     });
   }
