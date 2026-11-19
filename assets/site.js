@@ -653,6 +653,18 @@
   const caseCloseBtn = document.getElementById('case-close');
   if (caseCloseBtn) caseCloseBtn.addEventListener('click', () => { if (modalOpen) closeUiModal(); });
   window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modalOpen) closeUiModal(); });
+  // Tab stays inside the open modal: close button, the case itself, its table of contents, the card stepper
+  window.addEventListener('keydown', (e) => {
+    if (e.key !== 'Tab' || !modalOpen || !modalEl) return;
+    const sel = 'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])';
+    const list = [caseCloseBtn, ...modalEl.querySelectorAll(sel), ...[...document.querySelectorAll('.ca-toc--modal')].flatMap((t) => [...t.querySelectorAll(sel)]), ...cardNav.querySelectorAll(sel)]
+      .filter((el) => el && !el.disabled && el.getClientRects().length && getComputedStyle(el).visibility !== 'hidden');
+    if (!list.length) return;
+    e.preventDefault();
+    const i = list.indexOf(document.activeElement);
+    const next = i < 0 ? (e.shiftKey ? list.length - 1 : 0) : (i + (e.shiftKey ? -1 : 1) + list.length) % list.length;
+    list[next].focus();
+  });
 
   // ===== Keyboard: Tab through cards, Enter/Space opens, focus pans the canvas =====
   let restoringFocus = false;
