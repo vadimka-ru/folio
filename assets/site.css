@@ -2122,7 +2122,7 @@ body.ui-modal-open .zoom-ctl { opacity: 0; pointer-events: none; transform: tran
 .zoom-ctl.dragging .zoom-track { cursor: grabbing; }
 
 /* ---------- about card on the canvas: one centred stack — logos, phrase, signature ---------- */
-.uic-card--about { padding: 42px 56px 54px; align-items: center; justify-content: center; text-align: center; }
+.uic-card--about { padding: 56px; align-items: center; justify-content: center; text-align: center; }
 .ab { width: 100%; display: flex; flex-direction: column; align-items: center; color: var(--text); }
 /* morphing dot cloud: shapes fill ~250px of the canvas; the spare room is for the swirl and scattered dots */
 .ab-morph { display: block; margin: -80px 0 -44px; } /* 440px canvas, same optical gaps as before */
@@ -2143,9 +2143,7 @@ html.light .ab { --ab-accent: #E4572E; }
 .ab.is-pre .ab-hand { clip-path: inset(0 100% 0 0); }
 .ab.is-in .ab-strike path { transition: stroke-dashoffset .45s ease-out .3s; }
 .ab.is-in .ab-hand { transition: clip-path .9s cubic-bezier(.4,0,.2,1) .8s; }
-.ab-sign { margin-top: 28px; display: flex; flex-direction: column; align-items: center; gap: 4px; font-family: var(--font-mono); }
-.ab-name { font-size: 16px; line-height: 20px; font-weight: 500; }
-.ab-role { font-size: 14px; line-height: 18px; color: var(--gray); }
+
 
 /* handwritten hints on the live prototypes: tell people the phones can be tapped */
 .hand-note { --hand: #FF8A65; position: absolute; z-index: 2; pointer-events: none; color: var(--hand);
@@ -2181,3 +2179,13 @@ html.light .ui-canvas .uic-card.is-loading { background-image: linear-gradient(1
   .ui-canvas .uic-card.is-loading { animation: none; }
   .ui-canvas .uic-card img, .ui-canvas .uic-card video { transition: none; }
 }
+
+/* quiet caption in the top-left corner of every canvas tile: what it is, then the category.
+   Meant to be found when you look for it, not to compete with the work. */
+.uic-cap { position: absolute; top: 26px; left: 30px; z-index: 3; display: flex; flex-direction: column; gap: 1px;
+  text-align: left; pointer-events: none; font-family: var(--font-text); }
+.uic-cap b { font-size: 14px; line-height: 18px; font-weight: 500; color: var(--text); opacity: .45; }
+.uic-cap span { font-size: 12px; line-height: 16px; color: var(--gray); opacity: .75; }
+.ui-lightbox-card .uic-cap { display: none; }
+/* NDA mark moves to the top-right so the caption can own the top-left */
+.uic-card[data-nda]::before { left: auto; right: 26px; }
