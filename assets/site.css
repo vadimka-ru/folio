@@ -2222,3 +2222,9 @@ body.case-open .case-close, body.ui-modal-open .case-close, .card-nav.shown { vi
 .cv-flow::before { top: 21px; bottom: 30px; }
 .cv-flow .ca-roadmap-title { font-size: 16px; }
 .ca-section .cv-flow .ca-roadmap-sub { margin-top: 2px; }
+/* Canvas card content is scaled down as one group (the caption stays put); the body repeats the card's own
+   flex layout so every card type keeps its composition. Full size again in the lightbox. */
+.uic-body { position: absolute; inset: 0; box-sizing: border-box; display: flex; flex-direction: inherit;
+  align-items: inherit; justify-content: inherit; gap: inherit; padding: inherit;
+  transform: scale(.82); transform-origin: 50% 50%; }
+.ui-lightbox-card .uic-body { transform: none; }

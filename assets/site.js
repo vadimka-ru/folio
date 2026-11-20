@@ -335,6 +335,14 @@
   [...baseTile.querySelectorAll(':scope > .uic-card')]
     .sort((a, b) => (parseInt(a.style.top) - parseInt(b.style.top)) || (parseInt(a.style.left) - parseInt(b.style.left)))
     .forEach((c) => baseTile.appendChild(c));
+  // card content (everything but the caption) sits in a body layer that is scaled down a bit,
+  // so the tiles breathe when the canvas is zoomed out; text cards (about, OneTwoTrip) keep their size
+  baseTile.querySelectorAll('.uic-card:not(.uic-card--about):not(.uic-card--ott)').forEach((c) => {
+    const body = document.createElement('div');
+    body.className = 'uic-body';
+    [...c.childNodes].forEach((n) => { if (!(n.classList && n.classList.contains('uic-cap'))) body.appendChild(n); });
+    c.insertBefore(body, c.firstChild);
+  });
   // keyboard: every openable base card is a button; data-ki pairs it with its copies in the clones
   baseTile.querySelectorAll('.uic-card').forEach((c, i) => {
     c.dataset.ki = i;
