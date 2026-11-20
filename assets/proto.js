@@ -456,18 +456,11 @@
     if (ab._inited || reduceMotion) return;
     ab._inited = true;
     ab.classList.add('is-pre');
-    // write the correction only once Caveat is in (otherwise it shows in a fallback font, then jumps);
-    // a slow font never holds the phrase back for more than ~1.2s
-    const font = document.fonts && document.fonts.load
-      ? Promise.race([document.fonts.load('700 62px Caveat', 'работающего продукта'), new Promise((r) => setTimeout(r, 1200))]).catch(() => {})
-      : Promise.resolve();
+    // the handwritten phrase is inline SVG (no font to wait for), so it can be written straight away
     watch(ab, (active) => {
-      if (!active || !ab.classList.contains('is-pre') || ab._waiting) return;
-      ab._waiting = true;
-      font.then(() => {
-        ab.classList.add('is-in');
-        requestAnimationFrame(() => ab.classList.remove('is-pre'));
-      });
+      if (!active || !ab.classList.contains('is-pre')) return;
+      ab.classList.add('is-in');
+      requestAnimationFrame(() => ab.classList.remove('is-pre'));
     });
   }
 
@@ -652,4 +645,59 @@
   canvas.addEventListener('wheel', hide, { passive: true, once: true });
   new MutationObserver(() => { if (document.body.classList.contains('ui-modal-open')) hide(); })
     .observe(document.body, { attributes: true, attributeFilter: ['class'] });
+})();
+
+// ---------- desktop: a small label rides next to the cursor over the canvas ----------
+// until the first drag it teaches both moves («тащи или кликни» over a card, «тащи» in the gaps);
+// after that it only says «открыть» over a card. «нажми» over a live prototype key; hidden while dragging
+(function () {
+  const canvas = document.getElementById('ui-canvas');
+  if (!canvas || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  const tip = document.createElement('div');
+  tip.className = 'cursor-tip';
+  tip.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(tip);
+  let x = 0, y = 0, label = '', dragged = false, down = null;
+  const set = (t) => {
+    if (t === label) return;
+    label = t;
+    if (t) tip.textContent = t;
+    tip.classList.toggle('on', !!t);
+  };
+  const labelFor = (el) => {
+    if (!el || !el.closest) return '';
+    if (el.closest('.ph [data-k]')) return 'нажми';
+    if (el.closest('.uic-card a[href]')) return '';
+    const card = el.closest('.uic-card');
+    if (dragged) return card && !card.dataset.nomodal ? 'открыть' : '';
+    return card && !card.dataset.nomodal ? 'тащи или кликни' : 'тащи';
+  };
+  // pinned to the cursor (no easing), it only fades in and out
+  const place = () => { tip.style.transform = 'translate(' + (x + 18) + 'px,' + (y + 20) + 'px)'; };
+  const update = (target) => {
+    if (document.body.classList.contains('ui-modal-open') || canvas.classList.contains('dragging')) set('');
+    else set(labelFor(target || document.elementFromPoint(x, y)));
+  };
+  canvas.addEventListener('pointermove', (e) => {
+    if (e.pointerType !== 'mouse') return;
+    x = e.clientX; y = e.clientY;
+    if (e.buttons && down && Math.hypot(x - down[0], y - down[1]) > 20) dragged = true;
+    place();
+    update(e.buttons ? null : e.target);
+  });
+  // press = the label vanishes at once (no fade trailing behind the drag); release = it comes back right at the cursor
+  canvas.addEventListener('pointerdown', (e) => {
+    down = [e.clientX, e.clientY];
+    if (e.pointerType === 'mouse') tip.classList.add('hold');
+  });
+  window.addEventListener('pointerup', (e) => {
+    if (e.pointerType !== 'mouse' || !tip.classList.contains('hold')) return;
+    x = e.clientX; y = e.clientY; place();
+    tip.classList.remove('hold');
+    update();
+  });
+  canvas.addEventListener('pointerleave', () => set(''));
+  // content slides under a still cursor on wheel pan / zoom
+  canvas.addEventListener('wheel', (e) => { if (!e.ctrlKey && !e.metaKey) dragged = true; requestAnimationFrame(() => update()); }, { passive: true });
+  new MutationObserver(() => update()).observe(document.body, { attributes: true, attributeFilter: ['class'] });
 })();
