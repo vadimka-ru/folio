@@ -2228,3 +2228,6 @@ body.case-open .case-close, body.ui-modal-open .case-close, .card-nav.shown { vi
   align-items: inherit; justify-content: inherit; gap: inherit; padding: inherit;
   transform: scale(.82); transform-origin: 50% 50%; }
 .ui-lightbox-card .uic-body { transform: none; }
+/* a video inside a phone frame keeps the screen's size and corners (the generic figure-grid video rule
+   is later in this file and used to stretch it to the full frame width) */
+.ca-figure-grid .ca-screen-img--phone video { width: 89.34%; height: 95%; border-radius: 9.8% / 4.7%; }
