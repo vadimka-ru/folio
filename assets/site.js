@@ -696,17 +696,18 @@
   canvas.addEventListener('wheel', () => stopPan(false), { passive: true });
 
   // Drag to pan
-  let dragging = false, lastX = 0, lastY = 0, downX = 0, downY = 0, moved = false;
+  // one pointer drives the pan; a second finger hands control to the pinch below
+  let dragging = false, dragId = null, lastX = 0, lastY = 0, downX = 0, downY = 0, moved = false;
   canvas.addEventListener('pointerdown', (e) => {
-    if (modalOpen) return;
-    dragging = true; moved = false;
+    if (modalOpen || dragging || pinch) return;
+    dragging = true; dragId = e.pointerId; moved = false;
     lastX = e.clientX; lastY = e.clientY;
     downX = e.clientX; downY = e.clientY;
     canvas.classList.add('dragging');
     canvas.setPointerCapture(e.pointerId);
   });
   canvas.addEventListener('pointermove', (e) => {
-    if (!dragging) return;
+    if (!dragging || e.pointerId !== dragId) return;
     tx += e.clientX - lastX;
     ty += e.clientY - lastY;
     lastX = e.clientX; lastY = e.clientY;
@@ -714,12 +715,13 @@
     apply();
   });
   function endDrag(e) {
-    if (!dragging) return;
-    dragging = false;
+    if (!dragging || e.pointerId !== dragId) return;
+    dragging = false; dragId = null;
     canvas.classList.remove('dragging');
     try { canvas.releasePointerCapture(e.pointerId); } catch(_) {}
   }
   canvas.addEventListener('pointerup', (e) => {
+    if (e.pointerId !== dragId) return;
     const wasDragging = dragging, didMove = moved;
     endDrag(e);
     if (wasDragging && !didMove && !modalOpen) {
@@ -737,32 +739,40 @@
   canvas.addEventListener('pointercancel', endDrag);
   canvas.addEventListener('pointerleave', endDrag);
 
-  // Pinch-to-zoom (touch)
+  // Pinch-to-zoom (touch): the world point that was under the fingers when the pinch began stays under
+  // their midpoint, so the canvas follows the fingers (zoom and pan together) instead of jumping
   let pinch = null;
+  const pinchGeom = (t) => {
+    const r = canvas.getBoundingClientRect();
+    return {
+      d: Math.max(30, Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY)), // close fingers: no wild ratios
+      x: (t[0].clientX + t[1].clientX) / 2 - r.left,
+      y: (t[0].clientY + t[1].clientY) / 2 - r.top,
+    };
+  };
   canvas.addEventListener('touchstart', (e) => {
-    if (e.touches.length === 2) {
-      pinch = {
-        dist: Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY),
-        scale
-      };
-    }
+    if (e.touches.length !== 2 || modalOpen) return;
+    stopPan(false);
+    // the pan of the first finger stops here; lifting fingers ends the gesture
+    if (dragging) { dragging = false; dragId = null; canvas.classList.remove('dragging'); }
+    moved = true;
+    const g = pinchGeom(e.touches);
+    pinch = { d0: g.d, s0: scale, wx: (g.x - tx) / scale, wy: (g.y - ty) / scale };
   }, { passive: true });
   canvas.addEventListener('touchmove', (e) => {
-    if (e.touches.length === 2 && pinch) {
-      e.preventDefault();
-      const dist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
-      const rect = canvas.getBoundingClientRect();
-      const cx = (e.touches[0].clientX + e.touches[1].clientX) / 2 - rect.left;
-      const cy = (e.touches[0].clientY + e.touches[1].clientY) / 2 - rect.top;
-      const wx = (cx - tx) / pinch.scale;
-      const wy = (cy - ty) / pinch.scale;
-      scale = Math.max(minScale, Math.min(maxScale, pinch.scale * dist / pinch.dist));
-      tx = cx - wx * scale;
-      ty = cy - wy * scale;
-      apply();
-    }
+    if (!pinch || e.touches.length !== 2) return;
+    e.preventDefault();
+    const g = pinchGeom(e.touches);
+    scale = Math.max(minScale, Math.min(maxScale, pinch.s0 * g.d / pinch.d0));
+    tx = g.x - pinch.wx * scale;
+    ty = g.y - pinch.wy * scale;
+    apply();
   }, { passive: false });
-  canvas.addEventListener('touchend', () => { pinch = null; }, { passive: true });
+  const endPinch = (e) => { if (pinch && e.touches.length < 2) pinch = null; };
+  canvas.addEventListener('touchend', endPinch, { passive: true });
+  canvas.addEventListener('touchcancel', endPinch, { passive: true });
+  // iOS Safari: keep its own page-zoom gesture off the canvas
+  canvas.addEventListener('gesturestart', (e) => e.preventDefault());
 
   // Wheel: pan, ctrl+wheel zoom
   canvas.addEventListener('wheel', (e) => {
