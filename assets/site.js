@@ -504,6 +504,7 @@
       m.appendChild(tpl.content.cloneNode(true));
       if (window.protoInit) window.protoInit(m);
       buildModalToc(m);
+      if (window.vcInit) window.vcInit(m);
     } else {
       m.classList.add('ui-modal--lightbox');
       const box = document.createElement('div');
@@ -903,3 +904,304 @@
   tick();
   setInterval(tick, 1000);
 })();
+
+// Business card: experience as a draggable month ruler, and the spec-driven development loop
+window.vcInit = (root) => {
+  const card = root.querySelector('.vc');
+  if (!card) return;
+  const alive = () => document.contains(card);
+
+  // ---- experience ruler ----
+  const data = card.querySelector('.vc-tl-data');
+  if (data) {
+    const MONTHS = ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
+    const MONTHS_FULL = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
+    const MW = 44; // px per month
+    const items = [...data.children].map((li) => {
+      const [y, mo] = li.dataset.at.split('-').map(Number);
+      return { li, idx: y * 12 + (mo - 1), title: li.dataset.title };
+    });
+    const now = new Date();
+    const nowIdx = now.getFullYear() * 12 + now.getMonth();
+    const first = items[0].idx - 10;
+    const last = Math.max(now.getFullYear() * 12 + now.getMonth(), items[items.length - 1].idx) + 26; // the needle sits left, so the ruler runs on to the right edge
+    const x = (idx) => (idx - first) * MW;
+
+    const tl = document.createElement('div');
+    tl.className = 'vc-tl';
+    tl.tabIndex = 0;
+    tl.setAttribute('role', 'listbox');
+    tl.setAttribute('aria-label', 'Опыт работы по годам');
+    const strip = document.createElement('div');
+    strip.className = 'vc-tl-strip';
+    strip.style.width = x(last) + 'px';
+    for (let i = first; i <= last; i++) {
+      const m = i % 12;
+      for (let w = 0; w < 4; w++) {
+        const t = document.createElement('i');
+        t.className = 'vc-tl-tick' + (w === 0 ? ' vc-tl-tick--month' : '') + (i > nowIdx ? ' is-future' : '');
+        t.style.left = x(i) + w * (MW / 4) + 'px';
+        strip.appendChild(t);
+      }
+      const lab = document.createElement('span');
+      lab.className = 'vc-tl-month' + (m === 0 ? ' vc-tl-month--year' : '') + (i > nowIdx ? ' is-future' : '');
+      lab.textContent = m === 0 ? String(Math.floor(i / 12)) : MONTHS[m];
+      lab.style.left = x(i) + 'px';
+      strip.appendChild(lab);
+    }
+    items.forEach((it, k) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'vc-tl-event';
+      b.setAttribute('aria-label', it.title); // a mark on the ruler; the name is shown above it
+      b.style.left = x(it.idx) + 'px';
+      b.setAttribute('role', 'option');
+      b.addEventListener('click', () => go(k));
+      strip.appendChild(b);
+      it.btn = b;
+    });
+    const needle = document.createElement('i');
+    needle.className = 'vc-tl-needle';
+    // hover hints: the half of the ruler left of the needle goes to the previous job, the right half to the next
+    const zone = (side) => {
+      const z = document.createElement('div');
+      z.className = 'vc-tl-zone vc-tl-zone--' + side;
+      const s = document.createElement('span');
+      z.appendChild(s);
+      return [z, s];
+    };
+    const [zonePrev, hintPrev] = zone('prev');
+    const [zoneNext, hintNext] = zone('next');
+    const detail = document.createElement('div');
+    detail.className = 'vc-tl-detail';
+    tl.append(strip, zonePrev, zoneNext, needle);
+    // the active company stands where a heading would be, and changes with the ruler
+    const name = document.createElement('b');
+    name.className = 'vc-tl-name';
+    name.setAttribute('aria-live', 'polite');
+    tl.appendChild(name);
+    data.after(tl, detail);
+    data.hidden = true;
+    const fixHeight = () => {
+      let h = 0;
+      items.forEach((it) => { detail.innerHTML = it.li.innerHTML; h = Math.max(h, detail.offsetHeight); });
+      detail.style.minHeight = h + 'px';
+      if (active >= 0) detail.innerHTML = items[active].li.innerHTML;
+    };
+
+    let pos = x(items[items.length - 1].idx); // strip point under the needle
+    let anchor = 0; // the needle stands under the company name, at the text column's left edge
+    let active = -1;
+    let walkId = 0; // bumps on every move; a running walk stops ticking when it changes
+    const place = (animate, quiet) => {
+      if (!quiet) walkId++;
+      strip.classList.toggle('is-gliding', !!animate);
+      strip.style.transform = `translateX(${anchor - pos}px)`;
+      if (quiet) return;
+      let best = 0;
+      items.forEach((it, k) => { if (Math.abs(x(it.idx) - pos) < Math.abs(x(items[best].idx) - pos)) best = k; });
+      const near = Math.abs(x(items[best].idx) - pos) < MW * 1.5;
+      const k = near ? best : -1;
+      if (k !== active) {
+        active = k;
+        items.forEach((it, j) => it.btn.classList.toggle('is-on', j === k));
+        detail.classList.remove('is-on');
+        hintPrev.textContent = k > 0 ? '← ' + items[k - 1].title : '';
+        hintNext.textContent = k >= 0 && k < items.length - 1 ? items[k + 1].title + ' →' : '';
+        zonePrev.hidden = !(k > 0);
+        zoneNext.hidden = !(k >= 0 && k < items.length - 1);
+        if (k >= 0) {
+          name.textContent = items[k].title;
+          detail.innerHTML = items[k].li.innerHTML;
+          requestAnimationFrame(() => detail.classList.add('is-on'));
+        }
+      }
+    };
+    const sideOf = (e) => (e.clientX - tl.getBoundingClientRect().left < anchor ? 'prev' : 'next');
+    const step = (d) => { const k = active < 0 ? nearest(pos) : active; go(Math.min(items.length - 1, Math.max(0, k + d))); };
+    tl.addEventListener('pointermove', (e) => { if (!drag && e.pointerType === 'mouse') { tl.dataset.side = sideOf(e); hold(); } }); // hovering pauses autoplay
+    tl.addEventListener('pointerleave', () => { delete tl.dataset.side; });
+    // walk = autoplay: the ruler runs forward month by month at an even pace, as if time were passing
+    const MONTH_MS = 140;
+    const go = (k, walk) => {
+      const to = x(items[k].idx);
+      const months = Math.abs(to - pos) / MW;
+      if (walk && to > pos) {
+        strip.style.transitionDuration = Math.round(months * MONTH_MS) + 'ms';
+        strip.style.transitionTimingFunction = 'cubic-bezier(0.3, 0, 0.7, 1)';
+      } else {
+        // a click, or the rewind from the newest job back to the first
+        strip.style.transitionDuration = months > 30 ? '1.4s' : '';
+        strip.style.transitionTimingFunction = '';
+      }
+      pos = to;
+      if (!(walk && to > x(items[0].idx) && strip.style.transitionTimingFunction)) { place(true); return 0; }
+      // walking: the name shows the month passing under the needle, the job appears on arrival
+      const ms = months * MONTH_MS;
+      place(true, true);
+      const id = ++walkId;
+      active = -1;
+      items.forEach((it) => it.btn.classList.remove('is-on'));
+      detail.classList.remove('is-on');
+      zonePrev.hidden = zoneNext.hidden = true;
+      const timer = setInterval(() => {
+        if (id !== walkId || !alive()) { clearInterval(timer); return; }
+        const i = first + Math.round(livePos() / MW);
+        name.textContent = MONTHS_FULL[i % 12] + ' ' + Math.floor(i / 12);
+      }, 40);
+      setTimeout(() => { if (id === walkId) place(false); }, ms + 40);
+      return ms;
+    };
+    const nearest = (p) => {
+      let best = 0;
+      items.forEach((it, k) => { if (Math.abs(x(it.idx) - p) < Math.abs(x(items[best].idx) - p)) best = k; });
+      return best;
+    };
+    // where the strip really is right now (it may be mid-glide)
+    const livePos = () => {
+      const m = new DOMMatrixReadOnly(getComputedStyle(strip).transform);
+      return anchor - m.m41;
+    };
+    // a drag of more than 40px moves to the next job in that direction, like a carousel
+    const snap = (from, dx) => {
+      if (Math.abs(dx) < 40) return go(nearest(pos));
+      const dir = dx < 0 ? 1 : -1;
+      // a long drag can pass several jobs: land on the one after where it was let go
+      const passed = nearest(pos);
+      const next = Math.min(items.length - 1, Math.max(0, nearest(from) + dir));
+      go(dir > 0 ? Math.max(next, passed) : Math.min(next, passed));
+    };
+
+    // full-bleed: the ruler spans the whole modal width
+    const fit = () => {
+      if (!alive()) { window.removeEventListener('resize', fit); return; }
+      const mr = root.getBoundingClientRect();
+      const gr = tl.parentElement.getBoundingClientRect();
+      tl.style.width = mr.width + 'px';
+      tl.style.marginLeft = (mr.left - gr.left) + 'px';
+      anchor = gr.left - mr.left;
+      needle.style.left = anchor + 'px';
+      name.style.left = anchor + 'px';
+      zonePrev.style.width = anchor + 'px';
+      zoneNext.style.left = anchor + 'px';
+      tl.style.setProperty('--fade-l', Math.max(0, anchor - 32) + 'px');
+      detail.style.minHeight = '';
+      fixHeight();
+      place(false);
+    };
+    window.addEventListener('resize', fit);
+    // the modal grows in with an animation, so measure again whenever its size settles
+    if (window.ResizeObserver) new ResizeObserver(() => { if (alive()) fit(); }).observe(root);
+    fit();
+
+    let drag = null;
+    tl.addEventListener('pointerdown', (e) => {
+      if (e.button !== 0) return;
+      e.stopPropagation();
+      pos = livePos();
+      place(false);
+      drag = { x: e.clientX, pos, moved: false, id: e.pointerId };
+    });
+    tl.addEventListener('pointermove', (e) => {
+      if (!drag) return;
+      const dx = e.clientX - drag.x;
+      if (!drag.moved && Math.abs(dx) > 3) { drag.moved = true; tl.setPointerCapture(drag.id); tl.classList.add('is-dragging'); }
+      if (!drag.moved) return;
+      pos = Math.min(x(last), Math.max(0, drag.pos - dx));
+      place(false);
+    });
+    const end = (e) => {
+      if (!drag) return;
+      const d = drag; drag = null;
+      tl.classList.remove('is-dragging');
+      if (d.moved) { snap(d.pos, e.clientX - d.x); return; }
+      // a click on the ruler (not on a job mark) steps to the previous or next job, by the side of the needle
+      if (e.pointerType === 'mouse' && !e.target.closest('.vc-tl-event')) step(sideOf(e) === 'prev' ? -1 : 1);
+    };
+    tl.addEventListener('pointerup', end);
+    tl.addEventListener('pointercancel', end);
+    tl.addEventListener('wheel', (e) => {
+      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+      e.preventDefault();
+      pos = Math.min(x(last), Math.max(0, pos + e.deltaX));
+      place(false);
+      clearTimeout(tl._snap);
+      tl._snap = setTimeout(() => go(nearest(pos)), 160);
+    }, { passive: false });
+    // autoplay: step to the next job every few seconds; any touch of the ruler pauses it for a while
+    const DWELL = 6500, HOLD = 9000; // time to read a job, pause after a manual touch
+    let holdUntil = 0, visible = false;
+    const hold = () => { holdUntil = Date.now() + HOLD; };
+    ['pointerdown', 'wheel', 'keydown'].forEach((ev) => tl.addEventListener(ev, hold, { passive: true }));
+    if (window.IntersectionObserver) new IntersectionObserver(([en]) => { visible = en.isIntersecting; }).observe(tl);
+    else visible = true;
+    const autoplay = () => {
+      if (!alive()) return;
+      let travel = 0;
+      if (visible && !drag && Date.now() >= holdUntil && !document.hidden) {
+        const k = active < 0 ? nearest(pos) : active;
+        travel = go((k + 1) % items.length, true);
+      }
+      setTimeout(autoplay, travel + DWELL);
+    };
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) setTimeout(autoplay, DWELL);
+
+    tl.addEventListener('keydown', (e) => {
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+      e.preventDefault();
+      e.stopPropagation(); // the modal also listens for arrows to switch cards
+      const k = active < 0 ? items.length - 1 : active;
+      go(Math.min(items.length - 1, Math.max(0, k + (e.key === 'ArrowRight' ? 1 : -1))));
+    });
+  }
+
+  // ---- spec-driven development loop ----
+  const sdd = card.querySelector('.sdd');
+  if (sdd) {
+    const node = (s) => sdd.querySelector(`[data-step="${s}"]`);
+    const status = sdd.querySelector('.sdd-status');
+    const loop = sdd.querySelector('.sdd-loop');
+    const placeLoop = () => {
+      const r = sdd.getBoundingClientRect();
+      const a = node('agents').getBoundingClientRect();
+      const t = node('tests').getBoundingClientRect();
+      loop.style.left = (a.left + a.width / 2 - r.left) + 'px';
+      loop.style.width = (t.left + t.width / 2 - a.left - a.width / 2) + 'px';
+      loop.style.top = (a.bottom - r.top + 4) + 'px';
+    };
+    const steps = [
+      ['spec', 'Спека: что строим и как поймём, что готово'],
+      ['plan', 'План: разбивка на шаги'],
+      ['agents', 'Сабагенты пишут код по плану'],
+      ['tests', 'Прогон 1: упали 3 теста', 'fail'],
+      ['loop', 'Возвращаем ошибки сабагентам'],
+      ['agents', 'Сабагенты чинят'],
+      ['tests', 'Прогон 2: упал 1 тест', 'fail'],
+      ['loop', 'Возвращаем ошибки сабагентам'],
+      ['agents', 'Сабагенты чинят'],
+      ['tests', 'Прогон 3: все тесты прошли', 'pass'],
+      ['done', 'Готово: результат совпадает со спекой'],
+    ];
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let i = 0;
+    const show = (k) => {
+      const [s, text, mark] = steps[k];
+      sdd.querySelectorAll('.sdd-node').forEach((n) => n.classList.remove('is-on', 'is-fail', 'is-pass'));
+      loop.classList.toggle('is-on', s === 'loop');
+      if (s === 'loop') node('tests').classList.add('is-fail');
+      else node(s).classList.add('is-on');
+      if (mark) node(s).classList.add(mark === 'fail' ? 'is-fail' : 'is-pass');
+      status.textContent = text;
+    };
+    const tick = () => {
+      if (!alive()) return;
+      placeLoop();
+      show(i);
+      const wait = steps[i][0] === 'done' ? 2600 : 1100;
+      i = (i + 1) % steps.length;
+      setTimeout(tick, wait);
+    };
+    if (reduce) { placeLoop(); show(steps.length - 1); } else tick();
+    window.addEventListener('resize', () => { if (alive()) placeLoop(); });
+  }
+};
