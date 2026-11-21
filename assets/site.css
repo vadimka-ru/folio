@@ -2403,3 +2403,5 @@ html.light .vc { --vc-accent: #E4572E; }
 /* the loop sits in a card the colour of the home screen background */
 .sdd { padding: 24px 24px 20px; border-radius: 16px; background: var(--bg); }
 @media (max-width: 680px) { .sdd { padding: 16px; } }
+.vc.ca-article { padding-top: 184px; } /* 104 + 80 above the name */
+@media (max-width: 680px) { .vc.ca-article { padding-top: 160px; } }
