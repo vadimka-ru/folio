@@ -2301,7 +2301,6 @@ html.light .ca-roadmap:not(.cv-flow) .ca-roadmap-item:not(:last-child)::after { 
 .vc ul li::before { content: none; }
 .vc-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; margin-bottom: 32px; }
 .vc-head > div { display: flex; flex-direction: column; }
-.vc-head [data-clock] { font-variant-numeric: tabular-nums; }
 .vc-intro { max-width: 520px; }
 .vc-intro + .vc-intro { margin-top: 16px; }
 .vc-link { color: inherit; text-decoration: underline; text-underline-offset: 4px;
@@ -2326,7 +2325,6 @@ html.light .ca-roadmap:not(.cv-flow) .ca-roadmap-item:not(:last-child)::after { 
 .vc-row { grid-template-columns: 200px minmax(0, 1fr); }
 .vc-row > .vc-dim { white-space: nowrap; }
 @media (max-width: 680px) { .vc-row { grid-template-columns: minmax(0, 1fr); } }
-.vc-head > .vc-dim { white-space: nowrap; }
 
 /* business card: experience ruler (after jacobschneider.design/about) */
 .vc { --vc-accent: #FF8A65; }
@@ -2360,13 +2358,8 @@ html.light .vc { --vc-accent: #E4572E; }
 .sdd-node.is-fail { color: var(--case-text); border-color: var(--vc-accent); }
 .sdd-node.is-pass { color: var(--case-text); border-color: var(--case-text); }
 .sdd-arrow { font-style: normal; color: var(--case-text-dim); }
-.sdd-loop { position: absolute; height: 24px; overflow: visible; fill: none; stroke: color-mix(in srgb, var(--case-text) 25%, transparent); stroke-width: 1.5;
-  vector-effect: non-scaling-stroke; transition: stroke 0.25s; }
-.sdd-loop path { vector-effect: non-scaling-stroke; }
-.sdd-loop.is-on { stroke: var(--vc-accent); }
 .sdd-status { margin-top: 36px; }
 @media (max-width: 680px) {
-  .sdd-loop { display: none; }
   .sdd-status { margin-top: 12px; }
 }
 .sdd-row { gap: 6px; }
@@ -2405,3 +2398,39 @@ html.light .vc { --vc-accent: #E4572E; }
 @media (max-width: 680px) { .sdd { padding: 16px; } }
 .vc.ca-article { padding-top: 184px; } /* 104 + 80 above the name */
 @media (max-width: 680px) { .vc.ca-article { padding-top: 160px; } }
+/* spec-driven scheme: blocks joined by connector lines that draw themselves in; a loop runs back under the row */
+.sdd { padding: 28px 24px 24px; }
+.sdd-row { position: relative; z-index: 1; gap: 32px; }
+.sdd-pair { gap: 0; }
+.sdd-arrow { display: none; }
+.sdd-node { position: relative; background: var(--bg); }
+.sdd-node.is-done { color: color-mix(in srgb, var(--case-text) 80%, transparent); border-color: color-mix(in srgb, var(--case-text) 28%, transparent); background: var(--bg); }
+.sdd-node.is-on { color: var(--case-text); border-color: color-mix(in srgb, var(--case-text) 70%, transparent); background: color-mix(in srgb, var(--case-text) 7%, var(--bg)); }
+.sdd-node.is-fail { border-color: var(--vc-accent); }
+.sdd-node.is-pass { border-color: var(--case-text); }
+.sdd-lines { position: absolute; left: 0; top: 0; pointer-events: none; overflow: visible; }
+.sdd-line { fill: none; stroke: color-mix(in srgb, var(--case-text) 16%, transparent); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.sdd-line--live { stroke: color-mix(in srgb, var(--case-text) 75%, transparent); transition: stroke-dashoffset 0.52s cubic-bezier(0.4, 0, 0.2, 1); }
+g:last-of-type .sdd-line--live { stroke: var(--vc-accent); } /* the loop back is the accent line */
+.sdd-tip { fill: none; stroke: color-mix(in srgb, var(--case-text) 16%, transparent); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; transition: stroke 0.2s 0.4s; }
+.sdd-tip.is-on { stroke: color-mix(in srgb, var(--case-text) 75%, transparent); }
+g:last-of-type .sdd-tip.is-on { stroke: var(--vc-accent); }
+.sdd-loop-label { font: 14px/1 var(--font-text); fill: var(--case-text-dim); text-anchor: middle; transition: fill 0.2s; }
+.sdd-loop-label.is-on { fill: var(--vc-accent); }
+.sdd-status { margin-top: 56px; }
+.sdd.is-wrapped .sdd-lines { display: none; }
+.sdd.is-wrapped .sdd-row { gap: 6px; }
+.sdd.is-wrapped .sdd-pair { gap: 6px; }
+.sdd.is-wrapped .sdd-arrow { display: inline; }
+.sdd.is-wrapped .sdd-status { margin-top: 12px; }
+/* job block under the ruler: company and dates as one pair, then the role and what was done as another */
+.vc-tl-detail { margin-top: 28px; }
+.vc-tl-detail .vc-tl-co { font-weight: 600; color: var(--case-text); }
+.vc-tl-detail .vc-tl-co + span { margin-top: 0; }
+.vc-tl-detail .vc-tl-co ~ b { margin-top: 16px; font-weight: 400; color: var(--case-text); }
+.vc-tl-detail p { margin-top: 4px; }
+/* while the ruler walks, the month passing under the needle shows above it */
+.vc-tl-name.is-walking { font-weight: 400; color: var(--case-text-dim); }
+.vc-group--exp { margin-top: 96px; }
+.vc-group--exp { margin-top: 56px; } /* the ruler has 48px of room for the walking month above its ticks */
+.vc-tl-detail .vc-tl-co ~ b { font-weight: 600; } /* the role reads as a heading too */

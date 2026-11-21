@@ -892,18 +892,6 @@
   window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
 })();
 
-// Moscow time on the business card, ticking every second while it is open
-(() => {
-  const fmt = new Intl.DateTimeFormat('ru-RU', { timeZone: 'Europe/Moscow', hour: '2-digit', minute: '2-digit', second: '2-digit' });
-  const tick = () => {
-    const els = document.querySelectorAll('[data-clock]');
-    if (!els.length) return;
-    const now = fmt.format(new Date());
-    els.forEach((el) => { el.textContent = now; });
-  };
-  tick();
-  setInterval(tick, 1000);
-})();
 
 // Business card: experience as a draggable month ruler, and the spec-driven development loop
 window.vcInit = (root) => {
@@ -982,11 +970,12 @@ window.vcInit = (root) => {
     tl.appendChild(name);
     data.after(tl, detail);
     data.hidden = true;
+    const job = (it) => `<b class="vc-tl-co">${it.title}</b>${it.li.innerHTML}`;
     const fixHeight = () => {
       let h = 0;
-      items.forEach((it) => { detail.innerHTML = it.li.innerHTML; h = Math.max(h, detail.offsetHeight); });
+      items.forEach((it) => { detail.innerHTML = job(it); h = Math.max(h, detail.offsetHeight); });
       detail.style.minHeight = h + 'px';
-      if (active >= 0) detail.innerHTML = items[active].li.innerHTML;
+      if (active >= 0) detail.innerHTML = job(items[active]);
     };
 
     let pos = x(items[items.length - 1].idx); // strip point under the needle
@@ -1010,9 +999,10 @@ window.vcInit = (root) => {
         hintNext.textContent = k >= 0 && k < items.length - 1 ? items[k + 1].title + ' →' : '';
         zonePrev.hidden = !(k > 0);
         zoneNext.hidden = !(k >= 0 && k < items.length - 1);
+        name.textContent = ''; // the ruler shows a month only while it walks; the company is in the block below
+        name.classList.remove('is-walking');
         if (k >= 0) {
-          name.textContent = items[k].title;
-          detail.innerHTML = items[k].li.innerHTML;
+          detail.innerHTML = job(items[k]);
           requestAnimationFrame(() => detail.classList.add('is-on'));
         }
       }
@@ -1048,6 +1038,7 @@ window.vcInit = (root) => {
         if (id !== walkId || !alive()) { clearInterval(timer); return; }
         const i = first + Math.round(livePos() / MW);
         name.textContent = MONTHS_FULL[i % 12] + ' ' + Math.floor(i / 12);
+        name.classList.add('is-walking');
       }, 40);
       setTimeout(() => { if (id === walkId) place(false); }, ms + 40);
       return ms;
@@ -1156,52 +1147,126 @@ window.vcInit = (root) => {
   }
 
   // ---- spec-driven development loop ----
+  // Blocks joined by real connector lines. A step "happens" when the line into it draws itself in;
+  // from the tests a connector loops back under the row to the subagents until the tests pass.
   const sdd = card.querySelector('.sdd');
   if (sdd) {
+    const NS = 'http://www.w3.org/2000/svg';
+    const ORDER = ['spec', 'plan', 'agents', 'tests', 'review', 'done'];
     const node = (s) => sdd.querySelector(`[data-step="${s}"]`);
     const status = sdd.querySelector('.sdd-status');
-    const loop = sdd.querySelector('.sdd-loop');
-    const placeLoop = () => {
+    const svg = document.createElementNS(NS, 'svg');
+    svg.setAttribute('class', 'sdd-lines');
+    sdd.prepend(svg);
+    const links = {}; // key -> { base, live }
+
+    const draw = () => {
+      svg.innerHTML = '';
       const r = sdd.getBoundingClientRect();
-      const a = node('agents').getBoundingClientRect();
-      const t = node('tests').getBoundingClientRect();
-      loop.style.left = (a.left + a.width / 2 - r.left) + 'px';
-      loop.style.width = (t.left + t.width / 2 - a.left - a.width / 2) + 'px';
-      loop.style.top = (a.bottom - r.top + 4) + 'px';
+      const b = {};
+      ORDER.forEach((s) => { const q = node(s).getBoundingClientRect(); b[s] = { l: q.left - r.left, r: q.right - r.left, t: q.top - r.top, bt: q.bottom - r.top, cx: q.left + q.width / 2 - r.left, cy: q.top + q.height / 2 - r.top }; });
+      const oneRow = ORDER.every((s) => Math.abs(b[s].cy - b.spec.cy) < 2);
+      sdd.classList.toggle('is-wrapped', !oneRow);
+      svg.setAttribute('width', r.width);
+      svg.setAttribute('height', r.height);
+      if (!oneRow) return;
+      const add = (key, d, head) => {
+        const g = document.createElementNS(NS, 'g');
+        const base = document.createElementNS(NS, 'path');
+        base.setAttribute('d', d);
+        base.setAttribute('class', 'sdd-line');
+        const live = document.createElementNS(NS, 'path');
+        live.setAttribute('d', d);
+        live.setAttribute('class', 'sdd-line sdd-line--live');
+        const tip = document.createElementNS(NS, 'path');
+        tip.setAttribute('d', head);
+        tip.setAttribute('class', 'sdd-tip');
+        g.append(base, live, tip);
+        svg.appendChild(g);
+        const len = live.getTotalLength();
+        live.style.strokeDasharray = len;
+        live.style.strokeDashoffset = len;
+        links[key] = { live, tip, len };
+      };
+      for (let i = 0; i < ORDER.length - 1; i++) {
+        const a = b[ORDER[i]], c = b[ORDER[i + 1]], y = a.cy, x1 = a.r + 4, x2 = c.l - 4;
+        add(ORDER[i] + '>' + ORDER[i + 1], `M${x1} ${y} H${x2}`, `M${x2 - 5} ${y - 4} L${x2} ${y} L${x2 - 5} ${y + 4}`);
+      }
+      // the loop: down from the tests, left under the row, up into the subagents, with rounded corners
+      const te = b.tests, ag = b.agents, yb = te.bt + 4, yl = te.bt + 22, rr = 8;
+      add('tests>agents',
+        `M${te.cx} ${yb} V${yl - rr} Q${te.cx} ${yl} ${te.cx - rr} ${yl} H${ag.cx + rr} Q${ag.cx} ${yl} ${ag.cx} ${yl - rr} V${ag.bt + 4}`,
+        `M${ag.cx - 4} ${ag.bt + 9} L${ag.cx} ${ag.bt + 4} L${ag.cx + 4} ${ag.bt + 9}`);
+      const lab = document.createElementNS(NS, 'text');
+      lab.setAttribute('x', (te.cx + ag.cx) / 2);
+      lab.setAttribute('y', yl + 18);
+      lab.setAttribute('class', 'sdd-loop-label');
+      lab.textContent = 'не прошли';
+      svg.appendChild(lab);
+      links.loopLabel = lab;
     };
-    const steps = [
-      ['spec', 'Спека: что строим и как поймём, что готово'],
-      ['plan', 'План: разбивка на шаги'],
-      ['agents', 'Сабагенты пишут код по плану'],
-      ['tests', 'Прогон 1: упали 3 теста', 'fail'],
-      ['loop', 'Возвращаем ошибки сабагентам'],
-      ['agents', 'Сабагенты чинят'],
-      ['tests', 'Прогон 2: упал 1 тест', 'fail'],
-      ['loop', 'Возвращаем ошибки сабагентам'],
-      ['agents', 'Сабагенты чинят'],
-      ['tests', 'Прогон 3: все тесты прошли', 'pass'],
-      ['done', 'Готово: результат совпадает со спекой'],
+
+    const setLink = (key, on, instant) => {
+      const k = links[key];
+      if (!k) return;
+      k.live.style.transition = instant ? 'none' : '';
+      k.live.style.strokeDashoffset = on ? 0 : k.len;
+      k.tip.classList.toggle('is-on', on);
+      if (key === 'tests>agents' && links.loopLabel) links.loopLabel.classList.toggle('is-on', on);
+    };
+    const state = (s, cls) => {
+      const n = node(s);
+      n.classList.remove('is-on', 'is-done', 'is-fail', 'is-pass');
+      if (cls) n.classList.add(...cls.split(' '));
+    };
+    const reset = () => {
+      ORDER.forEach((s) => state(s, ''));
+      Object.keys(links).forEach((k) => k !== 'loopLabel' && setLink(k, false, true));
+    };
+    const wait = (ms) => new Promise((res) => setTimeout(res, ms));
+    const LINE = 520; // ms for a connector to draw in (matches the CSS transition)
+
+    const script = [
+      ['spec', null, 'Спека: что строим и как поймём, что готово'],
+      ['plan', 'spec>plan', 'План: разбивка на задачи'],
+      ['agents', 'plan>agents', 'Сабагенты пишут код по плану'],
+      ['tests', 'agents>tests', 'Прогон 1: упали 3 теста', 'fail'],
+      ['agents', 'tests>agents', 'Ошибки вернулись сабагентам'],
+      ['tests', 'agents>tests', 'Прогон 2: упал 1 тест', 'fail'],
+      ['agents', 'tests>agents', 'Сабагенты чинят последнее'],
+      ['tests', 'agents>tests', 'Прогон 3: все тесты прошли', 'pass'],
+      ['review', 'tests>review', 'Ревью: результат сверяется со спекой'],
+      ['done', 'review>done', 'Готово'],
     ];
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let i = 0;
-    const show = (k) => {
-      const [s, text, mark] = steps[k];
-      sdd.querySelectorAll('.sdd-node').forEach((n) => n.classList.remove('is-on', 'is-fail', 'is-pass'));
-      loop.classList.toggle('is-on', s === 'loop');
-      if (s === 'loop') node('tests').classList.add('is-fail');
-      else node(s).classList.add('is-on');
-      if (mark) node(s).classList.add(mark === 'fail' ? 'is-fail' : 'is-pass');
-      status.textContent = text;
+    const run = async () => {
+      while (alive()) {
+        draw();
+        reset();
+        let prev = null;
+        for (const [s, link, text, mark] of script) {
+          if (!alive()) return;
+          if (link) {
+            // re-running a connector (the loop goes round again): clear it first, then draw it in
+            setLink(link, false, true);
+            await wait(30);
+            setLink(link, true);
+            if (link === 'agents>tests') setLink('tests>agents', false);
+            await wait(LINE);
+          }
+          if (prev) state(prev, 'is-done' + (prev === 'tests' && mark !== 'pass' && s === 'agents' ? ' is-fail' : ''));
+          state(s, 'is-on' + (mark === 'fail' ? ' is-fail' : mark === 'pass' ? ' is-pass' : ''));
+          status.textContent = text;
+          prev = s;
+          await wait(s === 'done' ? 2800 : 1100);
+        }
+      }
     };
-    const tick = () => {
-      if (!alive()) return;
-      placeLoop();
-      show(i);
-      const wait = steps[i][0] === 'done' ? 2600 : 1100;
-      i = (i + 1) % steps.length;
-      setTimeout(tick, wait);
-    };
-    if (reduce) { placeLoop(); show(steps.length - 1); } else tick();
-    window.addEventListener('resize', () => { if (alive()) placeLoop(); });
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      draw();
+      ORDER.forEach((s) => state(s, 'is-done'));
+      Object.keys(links).forEach((k) => k !== 'loopLabel' && setLink(k, true, true));
+      status.textContent = 'Тесты гоняются по кругу, пока не пройдут, потом ревью';
+    } else run();
+    window.addEventListener('resize', () => { if (alive()) { draw(); } });
   }
 };
