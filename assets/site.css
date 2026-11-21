@@ -1816,7 +1816,7 @@ nav.main-nav a, .case-close .inner, .pill-tile { border-radius: 999px; }
 .ph-slot { contain: layout paint; }
 
 /* Games case: phone videos with captions, Telegram digest */
-.gc-row { display: flex; justify-content: center; gap: 48px; flex-wrap: wrap; margin: 8px auto 56px; max-width: 760px; }
+.gc-row { display: flex; justify-content: center; gap: 48px; flex-wrap: wrap; margin: 40px auto 56px; max-width: 760px; }
 .gc-item { display: flex; flex-direction: column; align-items: center; gap: 14px; margin: 0; }
 .gc-item .gc-phone { height: 560px; }
 .gc-item figcaption { font-size: 13px; line-height: 18px; color: var(--case-text-dim, var(--gray)); text-align: center; max-width: 240px; }
@@ -1962,8 +1962,10 @@ nav.main-nav a, .cv-button { font-size: 15px; font-weight: 500; }
 .ca-quote { margin: 32px 0; padding: 4px 0 4px 24px; border-left: 2px solid color-mix(in srgb, var(--case-text) 35%, transparent);
   font-size: 22px; line-height: 1.5; font-style: normal; font-weight: 500; letter-spacing: -0.01em; color: var(--case-text); opacity: 1; }
 
-.ca-figure { margin: 48px 0; }
-.ca-metrics { gap: 12px; margin-top: 4px; }
+.ca-figure { margin: 40px 0; }
+.ca-metrics { gap: 12px; margin: 32px 0; }
+.ca-section h2 + .ca-metrics { margin-top: 0; }
+.ca-section > :last-child { margin-bottom: 0; }
 .ca-metric { padding: 22px 22px 20px; border-radius: 16px; }
 .ca-metric-value { font-size: 26px; line-height: 1.15; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 8px; }
 .ca-metric-label { font-size: 14px; line-height: 1.5; }
