@@ -2247,3 +2247,13 @@ body.case-open .case-close, body.ui-modal-open .case-close, .card-nav.shown { vi
 .hand-svg { display: block; width: 8.431em; height: 1.26em; overflow: visible; }
 .ab-hand .hand-svg { margin: calc((56px - 1.26em) / 2) auto; }
 .msheet-hand .hand-svg { margin: calc((30px - 1.26em) / 2) 0; }
+
+/* Case typography: two text sizes (body 18 / 17 on phones, small 14) and two heading sizes (title, h2).
+   The lede and quotes are body size; metric titles are body size in bold. */
+.ca-lede, .ca-quote, .ca-section p, .ca-section ul li { font-size: 18px; line-height: 1.7; letter-spacing: -0.003em; }
+.ca-lede { color: color-mix(in srgb, var(--case-text) 86%, transparent); }
+.ca-metric-value { font-size: 18px; line-height: 1.4; letter-spacing: -0.005em; margin-bottom: 6px; }
+.ca-meta, .ca-metric-label, .ca-article figcaption { font-size: 14px; line-height: 1.5; }
+@media (max-width: 680px) {
+  .ca-lede, .ca-quote, .ca-section p, .ca-section ul li, .ca-metric-value { font-size: 17px; }
+}
