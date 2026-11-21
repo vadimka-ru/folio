@@ -890,3 +890,16 @@
   panel.addEventListener('click', (e) => e.stopPropagation());
   window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
 })();
+
+// Moscow time on the business card, ticking every second while it is open
+(() => {
+  const fmt = new Intl.DateTimeFormat('ru-RU', { timeZone: 'Europe/Moscow', hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  const tick = () => {
+    const els = document.querySelectorAll('[data-clock]');
+    if (!els.length) return;
+    const now = fmt.format(new Date());
+    els.forEach((el) => { el.textContent = now; });
+  };
+  tick();
+  setInterval(tick, 1000);
+})();
