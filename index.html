@@ -18,7 +18,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="apple-touch-icon" href="favicon.png">
-  <link rel="stylesheet" href="assets/site.css?v=20261122-0015">
+  <link rel="stylesheet" href="assets/site.css?v=20261122-0045">
 </head>
 <body>
   <!-- «работающего продукта» drawn from Caveat Bold outlines: looks the same everywhere, no font to wait for -->
@@ -220,7 +220,7 @@
           <span class="ca-dot">·</span>
           <span>2025&nbsp;— 2026</span>
           <span class="ca-dot">·</span>
-          <span>Дизайн-система · Tooling</span>
+          <span>Дизайн-система · Инструменты</span>
         </div>
         <h1 class="ca-title">Synapse UI</h1>
         <p class="ca-lede">
@@ -231,21 +231,21 @@
 
       <section class="ca-section" data-toc="context">
         <h2>Контекст</h2>
-        <p>Synapse UI&nbsp;— собственный продукт. Стартап-френдли DS-шаблон + парсер Figma → код для&nbsp;B2B/B2C-команд. Целевая аудитория&nbsp;— маленькие продуктовые команды, где нет ресурса на&nbsp;отдельного DS-инженера. Делаем вдвоём с&nbsp;ко-фаундером&nbsp;— Full Stack-разработчиком с&nbsp;20-летним опытом. Парсер уже обкатан в&nbsp;продакшене InfoWatch.</p>
+        <p>Собственный продукт: шаблон дизайн-системы и&nbsp;парсер Figma → код для&nbsp;маленьких команд, где нет отдельного DS-инженера. Делали вдвоём с&nbsp;ко-фаундером, Full Stack-разработчиком с&nbsp;20-летним опытом.</p>
         <p>Обычный DS-процесс в&nbsp;командах, которые я&nbsp;видел:</p>
       </section>
 
       <figure class="ca-figure">
         <div class="ca-flow">
-          <div class="ca-flow-step"><div class="ca-flow-icon">Jira</div><div class="ca-flow-label">Design&nbsp;task</div></div>
+          <div class="ca-flow-step"><div class="ca-flow-icon">Jira</div><div class="ca-flow-label">Задача на&nbsp;дизайн</div></div>
           <span class="ca-flow-arrow">→</span>
-          <div class="ca-flow-step"><div class="ca-flow-icon">Figma</div><div class="ca-flow-label">Design</div></div>
+          <div class="ca-flow-step"><div class="ca-flow-icon">Figma</div><div class="ca-flow-label">Дизайн</div></div>
           <span class="ca-flow-arrow">→</span>
-          <div class="ca-flow-step"><div class="ca-flow-icon">Jira</div><div class="ca-flow-label">Dev&nbsp;task</div></div>
+          <div class="ca-flow-step"><div class="ca-flow-icon">Jira</div><div class="ca-flow-label">Задача в&nbsp;разработку</div></div>
           <span class="ca-flow-arrow">→</span>
-          <div class="ca-flow-step"><div class="ca-flow-icon">Code</div><div class="ca-flow-label">Dev</div></div>
+          <div class="ca-flow-step"><div class="ca-flow-icon">Code</div><div class="ca-flow-label">Разработка</div></div>
           <span class="ca-flow-arrow">→</span>
-          <div class="ca-flow-step"><div class="ca-flow-icon">✓</div><div class="ca-flow-label">Review&nbsp;&amp;&nbsp;Prod</div></div>
+          <div class="ca-flow-step"><div class="ca-flow-icon">✓</div><div class="ca-flow-label">Ревью и&nbsp;прод</div></div>
         </div>
       </figure>
 
@@ -256,7 +256,7 @@
 
       <section class="ca-section">
         <h2>Проблема</h2>
-        <p>DS постоянно расходятся: код и&nbsp;Figma живут отдельно, дизайнеры правят макеты, не&nbsp;понимая последствий, разработчики реализуют компоненты несогласованно. Существующие Figma-to-code инструменты либо генерируют неаккуратный JSX, либо опираются на&nbsp;нестабильный AI, либо не&nbsp;годятся для&nbsp;продакшена. Любое изменение в&nbsp;DS&nbsp;— даже мелкое&nbsp;— погружает команду в&nbsp;бюрократию.</p>
+        <p>Дизайн-системы расходятся: код и&nbsp;Figma живут отдельно, дизайнеры правят макеты, не&nbsp;понимая последствий, разработчики собирают компоненты по-своему. Существующие Figma-to-code инструменты либо генерируют неаккуратный JSX, либо опираются на&nbsp;нестабильный AI.</p>
       </section>
 
       <section class="ca-section" data-toc="hypothesis">
@@ -268,20 +268,18 @@
           <li>снизить ручную работу и&nbsp;упростить процессы.</li>
         </ul>
         <p class="ca-quote">
-          Design&nbsp;System ⇄ Synapse&nbsp;Link → Parser → CSS&nbsp;Store → Components&nbsp;Lib&nbsp;(npm)
+          Дизайн-система ⇄ Synapse&nbsp;Link → парсер → хранилище стилей → библиотека компонентов (npm)
         </p>
       </section>
 
       <section class="ca-section" data-toc="research">
         <h2>Исследование и&nbsp;тестирование</h2>
         <p>Чтобы подтвердить концепцию, парсер встроили в&nbsp;продакшен-процесс в&nbsp;InfoWatch&nbsp;— вместе с&nbsp;тем самым ко-фаундером. Связка нарочно простая: структура компонентов жёстко зафиксирована во&nbsp;внутренней npm-библиотеке, локальный парсер вытаскивает CSS из&nbsp;Figma и&nbsp;автоматически применяет к&nbsp;этой структуре.</p>
-        <p>Без&nbsp;собственной схемы и&nbsp;без&nbsp;AI-логики&nbsp;— только фиксированная архитектура компонентов плюс автоматическая прокачка стилей.</p>
-        <p>После интеграции время на&nbsp;реализацию компонента сократилось примерно в&nbsp;2 раза при&nbsp;сохранении согласованности между Figma и&nbsp;кодом. Эксперимент показал: даже минимальный парсерный подход реально ускоряет разработку UI в&nbsp;реальных условиях.</p>
+        <p>После интеграции компонент стал реализовываться примерно вдвое быстрее, без&nbsp;расхождений между Figma и&nbsp;кодом.</p>
       </section>
 
       <section class="ca-section" data-toc="outcomes">
         <h2>Дорожная карта</h2>
-        <p>После успешной интеграции в&nbsp;продакшен у&nbsp;нас сформировалось чёткое понимание продукта и&nbsp;аудитории. Решение уже обкатано в&nbsp;реальной среде&nbsp;— следующий шаг превратить локальный инструмент в&nbsp;самостоятельный продукт: обернуть парсер в&nbsp;интерфейс и&nbsp;сделать его доступным другим командам.</p>
         <p><strong>1. Стартовая дизайн-система.</strong> Простой шаблон DS&nbsp;— и&nbsp;в&nbsp;Figma, и&nbsp;в&nbsp;коде. Кодовая база структурирована так, чтобы парсер надёжно применял стили к&nbsp;фиксированной архитектуре. Эта система&nbsp;— основа для&nbsp;демонстрации и&nbsp;масштабирования решения.</p>
       </section>
 
@@ -306,20 +304,12 @@
         </div>
       </figure>
 
-      <section class="ca-section">
-        <h2>Результаты</h2>
-        <p>На&nbsp;текущем этапе собрана полная стартовая дизайн-система&nbsp;— и&nbsp;в&nbsp;Figma, и&nbsp;в&nbsp;коде. Компоненты интегрированы с&nbsp;парсером и&nbsp;поддерживают структурированную передачу стилей в&nbsp;React/Angular.</p>
-      </section>
-
       <figure class="ca-figure">
         <div class="ca-figure-grid ca-figure-grid--full">
           <video src="cases/synapse/parser-anim.mp4" aria-label="Демонстрация работы парсера: Figma → код" autoplay loop muted playsinline></video>
         </div>
       </figure>
 
-      <section class="ca-section">
-        <p>Параллельно мы начали сервисный слой&nbsp;— связывание компонентов, проверку передачи стилей и&nbsp;поддержку согласованности design-to-code. До&nbsp;запуска его так и&nbsp;не&nbsp;довели.</p>
-      </section>
 
       <section class="ca-section">
         <h2>Таймлайн</h2>
@@ -327,51 +317,47 @@
           <div class="ca-roadmap-item ca-roadmap-item--done">
             <div class="ca-roadmap-dot"></div>
             <div class="ca-roadmap-meta">
-              <span class="ca-roadmap-date">Aug 2025</span>
-              <span class="ca-roadmap-pill ca-roadmap-pill--done">Done</span>
+              <span class="ca-roadmap-date">Август 2025</span>
+              <span class="ca-roadmap-pill ca-roadmap-pill--done">Готово</span>
             </div>
-            <h4 class="ca-roadmap-title">Design-System release</h4>
+            <h4 class="ca-roadmap-title">Релиз дизайн-системы</h4>
           </div>
           <div class="ca-roadmap-item ca-roadmap-item--done">
             <div class="ca-roadmap-dot"></div>
             <div class="ca-roadmap-meta">
-              <span class="ca-roadmap-date">Oct 2025</span>
-              <span class="ca-roadmap-pill ca-roadmap-pill--done">Done</span>
+              <span class="ca-roadmap-date">Октябрь 2025</span>
+              <span class="ca-roadmap-pill ca-roadmap-pill--done">Готово</span>
             </div>
-            <h4 class="ca-roadmap-title">Tokens &amp; Light theme</h4>
+            <h4 class="ca-roadmap-title">Токены и&nbsp;светлая тема</h4>
           </div>
           <div class="ca-roadmap-item ca-roadmap-item--done">
             <div class="ca-roadmap-dot"></div>
             <div class="ca-roadmap-meta">
-              <span class="ca-roadmap-date">Oct 2025</span>
-              <span class="ca-roadmap-pill ca-roadmap-pill--done">Done</span>
+              <span class="ca-roadmap-date">Октябрь 2025</span>
+              <span class="ca-roadmap-pill ca-roadmap-pill--done">Готово</span>
             </div>
-            <h4 class="ca-roadmap-title">Design-system through a parser</h4>
+            <h4 class="ca-roadmap-title">Дизайн-система через парсер</h4>
           </div>
           <div class="ca-roadmap-item ca-roadmap-item--next">
             <div class="ca-roadmap-dot"></div>
             <div class="ca-roadmap-meta">
-              <span class="ca-roadmap-date">Nov 2025&nbsp;— Mar 2026</span>
-              <span class="ca-roadmap-pill ca-roadmap-pill--next">Stopped</span>
+              <span class="ca-roadmap-date">Ноябрь 2025&nbsp;— март 2026</span>
+              <span class="ca-roadmap-pill ca-roadmap-pill--next">Остановлено</span>
             </div>
-            <h4 class="ca-roadmap-title">Detailed documentation</h4>
+            <h4 class="ca-roadmap-title">Подробная документация</h4>
           </div>
           <div class="ca-roadmap-item ca-roadmap-item--done">
             <div class="ca-roadmap-dot"></div>
             <div class="ca-roadmap-meta">
-              <span class="ca-roadmap-date">Nov 2025&nbsp;— May 2026</span>
-              <span class="ca-roadmap-pill ca-roadmap-pill--done">Cancelled</span>
+              <span class="ca-roadmap-date">Ноябрь 2025&nbsp;— май 2026</span>
+              <span class="ca-roadmap-pill ca-roadmap-pill--done">Отменено</span>
             </div>
             <h4 class="ca-roadmap-title">Synapse UI Bridge</h4>
-            <div class="ca-roadmap-sub">Product-wrapped parser</div>
+            <div class="ca-roadmap-sub">Парсер, упакованный в&nbsp;продукт</div>
           </div>
         </div>
       </section>
 
-      <section class="ca-section" data-toc="result">
-        <h2>Итоги и&nbsp;эффект</h2>
-        <p>Парсер обкатан на&nbsp;реальном B2B-продукте&nbsp;— реализация компонента ускорилась ~2× при&nbsp;сохранении согласованности Figma↔код. DS-шаблон собран в&nbsp;Figma и&nbsp;в&nbsp;коде.</p>
-      </section>
       <section class="ca-section" data-toc="closed" data-toc-label="Почему закрыли">
         <h2>Почему закрыли</h2>
         <p>Пока мы делали Synapse, AI-инструменты научились переносить дизайн в&nbsp;код сами: генерировать компоненты по&nbsp;макетам, читать Figma и&nbsp;собирать интерфейсы по&nbsp;описанию. Ниша «аккуратный парсер Figma → код» сжалась на&nbsp;глазах, и&nbsp;мы перестали верить, что&nbsp;продукт найдёт своё место. Решили остановиться и&nbsp;не&nbsp;доводить Synapse UI Bridge до&nbsp;запуска.</p>
@@ -400,25 +386,24 @@
 
       <section class="ca-section" data-toc="context">
         <h2>Контекст</h2>
-        <p>Перед стартом прошёлся по&nbsp;конкурентам&nbsp;— онлайн-нардам и&nbsp;карточным играм в&nbsp;Telegram, ВК и&nbsp;Яндекс Играх. Почти везде одно и&nbsp;то же: тяжёлые текстуры «под&nbsp;дерево и&nbsp;сукно», дёрганые анимации, мелкие кнопки, реклама поверх партии. Интерфейсы будто из&nbsp;2010-х.</p>
-        <p>При&nbsp;этом механику не&nbsp;отличишь: правила нард и&nbsp;дурака одни на&nbsp;всех.</p>
+        <p>Посмотрел конкурентов в&nbsp;Telegram, ВК и&nbsp;Яндекс Играх: тяжёлые текстуры «под&nbsp;дерево и&nbsp;сукно», дёрганые анимации, мелкие кнопки, реклама поверх партии. При&nbsp;этом правила у&nbsp;всех одинаковые.</p>
       </section>
 
       <section class="ca-section" data-toc="hypothesis">
         <h2>Гипотеза</h2>
         <p class="ca-quote">Раз игры не&nbsp;отличаются правилами, отличаться можно ощущением. Красивый и&nbsp;плавный интерфейс сам по&nbsp;себе&nbsp;— причина выбрать игру и&nbsp;вернуться в&nbsp;неё.</p>
-        <p>Поэтому я&nbsp;вкладывался не&nbsp;в&nbsp;новые режимы, а&nbsp;в&nbsp;то, как&nbsp;игра выглядит и&nbsp;двигается: каждый переход, покупка и&nbsp;ход анимированы.</p>
+        <p>Поэтому вкладывался не&nbsp;в&nbsp;новые режимы, а&nbsp;в&nbsp;то, как&nbsp;игра выглядит и&nbsp;двигается.</p>
       </section>
 
       <section class="ca-section" data-toc="shop" data-toc-label="Скины">
         <h2>Магазин скинов</h2>
-        <p>Свайп вниз с&nbsp;главной&nbsp;— и&nbsp;экран перетекает в&nbsp;магазин. Скины крутятся на&nbsp;колесе, их можно примерить до&nbsp;покупки. Покупка за&nbsp;игровые монеты: монеты сыплются, экран взрывается конфетти, скин сразу можно надеть.</p>
+        <p>Свайп вниз с&nbsp;главной&nbsp;— и&nbsp;экран перетекает в&nbsp;магазин. Скины крутятся на&nbsp;колесе, их можно примерить до&nbsp;покупки, а&nbsp;покупка заканчивается дождём монет и&nbsp;конфетти.</p>
       </section>
       <div class="gc-row"><figure class="gc-item"><div class="uic-phone gc-phone"><video src="projects/games/durak-shop.mp4" poster="projects/games/durak-shop.jpg" autoplay loop muted playsinline></video></div><figcaption>Дурак: переход в&nbsp;магазин и&nbsp;покупка скина</figcaption></figure><figure class="gc-item"><div class="uic-phone gc-phone"><video src="projects/games/nardy-league.mp4" poster="projects/games/nardy-league.jpg" autoplay loop muted playsinline></video></div><figcaption>Нарды: лига на&nbsp;главной, лестница лиг и&nbsp;магазин фишек</figcaption></figure></div>
 
       <section class="ca-section">
         <h2>Скины оживают в&nbsp;партии</h2>
-        <p>В&nbsp;дураке и&nbsp;покере скин&nbsp;— это&nbsp;не&nbsp;просто аватарка. Тапаешь по&nbsp;себе за&nbsp;столом, выбираешь одну из&nbsp;шести эмоций, и&nbsp;скин вырастает из&nbsp;места и&nbsp;отыгрывает её&nbsp;— у&nbsp;всех за&nbsp;столом. У&nbsp;каждого скина свои эмоции.</p>
+        <p>В&nbsp;дураке и&nbsp;покере тапаешь по&nbsp;себе за&nbsp;столом, выбираешь эмоцию, и&nbsp;скин вырастает из&nbsp;места и&nbsp;отыгрывает её у&nbsp;всех за&nbsp;столом.</p>
       </section>
       <div class="gc-row"><figure class="gc-item"><div class="uic-phone gc-phone"><video src="projects/games/durak-emo.mp4" poster="projects/games/durak-emo.jpg" autoplay loop muted playsinline></video></div><figcaption>Дурак: эмоции скина во&nbsp;время партии</figcaption></figure><figure class="gc-item"><div class="uic-phone gc-phone"><video src="projects/games/poker-emo.mp4" poster="projects/games/poker-emo.jpg" autoplay loop muted playsinline></video></div><figcaption>Покер: эмоции скина за&nbsp;столом</figcaption></figure></div>
 
@@ -440,7 +425,7 @@
 
       <section class="ca-section" data-toc="analytics" data-toc-label="Аналитика">
         <h2>Аналитика</h2>
-        <p>Подключил аналитику: сервер записывает заходы, партии и&nbsp;движение монет, а&nbsp;мой бот в&nbsp;Telegram каждое утро присылает сводку за&nbsp;вчера&nbsp;— новые игроки, сколько вернулись на&nbsp;следующий день, партии с&nbsp;ботом и&nbsp;онлайн, монеты и&nbsp;кто играет прямо сейчас. По&nbsp;команде&nbsp;— за&nbsp;сегодня или&nbsp;за&nbsp;неделю.</p>
+        <p>Сервер записывает заходы, партии и&nbsp;движение монет, а&nbsp;мой бот в&nbsp;Telegram каждое утро присылает сводку за&nbsp;вчера.</p>
       </section>
       <figure class="ca-figure"><div class="tg-msg">
         <div class="tg-msg-head"><span class="tg-msg-ava">P</span><b>Poku stats</b><span>09:00</span></div>
@@ -465,20 +450,19 @@
 
       <section class="ca-section" data-toc="money" data-toc-label="Экономика">
         <h2>Сколько это&nbsp;может зарабатывать</h2>
-        <p>Модель как&nbsp;у&nbsp;Дурак Онлайн: играть бесплатно, деньги&nbsp;— с&nbsp;покупок монет и&nbsp;скинов (звёзды Telegram, голоса ВК, яны Яндекса) и&nbsp;с&nbsp;рекламы во&nbsp;ВК и&nbsp;Яндекс Играх. До&nbsp;запуска посчитал по&nbsp;рыночным бенчмаркам, сколько нужно игроков, чтобы игры приносили 300 тысяч рублей в&nbsp;месяц.</p>
+        <p>Модель как&nbsp;у&nbsp;Дурак Онлайн: играть бесплатно, деньги с&nbsp;покупок и&nbsp;рекламы. До&nbsp;запуска посчитал, сколько нужно игроков, чтобы игры приносили 300 тысяч рублей в&nbsp;месяц.</p>
         <div class="ca-metrics">
           <div class="ca-metric"><div class="ca-metric-value">~2 ₽</div><div class="ca-metric-label">приносит один игрок в&nbsp;день после комиссий площадок&nbsp;— в&nbsp;среднем, включая тех, кто не&nbsp;платит</div></div>
           <div class="ca-metric"><div class="ca-metric-value">6 000</div><div class="ca-metric-label">игроков в&nbsp;день нужно на&nbsp;три игры вместе&nbsp;— это&nbsp;25–30 тысяч в&nbsp;месяц</div></div>
           <div class="ca-metric"><div class="ca-metric-value">1–2%</div><div class="ca-metric-label">платят: 300–600 человек в&nbsp;месяц. Остальные играют бесплатно и&nbsp;видят рекламу</div></div>
           <div class="ca-metric"><div class="ca-metric-value">50 / 50</div><div class="ca-metric-label">делят доход реклама и&nbsp;покупки</div></div>
         </div>
-        <p>Сверился с&nbsp;Дурак Онлайн: около 390 млн ₽ в&nbsp;год дают тот же порядок, 2–3 ₽ на&nbsp;игрока в&nbsp;день. Моя цель&nbsp;— примерно 1% их масштаба.</p>
-        <p>Отсюда два приоритета. Реклама растёт с&nbsp;числом игроков, а&nbsp;число игроков в&nbsp;каталоге Яндекса зависит от&nbsp;того, сколько новичков вернулись на&nbsp;второй день,&nbsp;— поэтому слежу за&nbsp;возвратом каждое утро. А&nbsp;покупки делают несколько сотен человек&nbsp;— им нужно, на&nbsp;что&nbsp;тратить, поэтому так много сил ушло в&nbsp;скины и&nbsp;магазин.</p>
+        <p>Отсюда два приоритета: возврат новичков на&nbsp;второй день, от&nbsp;него зависит трафик из&nbsp;каталога, и&nbsp;магазин скинов для&nbsp;нескольких сотен платящих.</p>
       </section>
 
       <section class="ca-section" data-toc="status" data-toc-label="Где сейчас">
         <h2>Где сейчас</h2>
-        <p>Игры только-только запускаются на&nbsp;площадках, игроков пока мало&nbsp;— хвастаться цифрами рано. Зато каждый день вижу, что&nbsp;происходит: откуда приходят, где отваливаются, сколько возвращаются. И&nbsp;по&nbsp;этим данным докручиваю игры.</p>
+        <p>Игры только запускаются, игроков пока мало. По&nbsp;ежедневной сводке вижу, откуда приходят и&nbsp;где отваливаются, и&nbsp;по&nbsp;этим данным докручиваю игры.</p>
       </section>
     </article>
   </template>
@@ -501,7 +485,7 @@
                     <span class="ca-dot">·</span>
                     <span>Август 2025&nbsp;— Июль 2026</span>
                     <span class="ca-dot">·</span>
-                    <span>Мобильное приложение · FinTech</span>
+                    <span>Мобильное приложение · Финтех</span>
                   </div>
                   <h1 class="ca-title">AHA · Fingular</h1>
                   <p class="ca-lede">
@@ -512,7 +496,7 @@
 
                 <section class="ca-section" data-toc="context">
                   <h2>Контекст компании</h2>
-                  <p>Fingular&nbsp;— финтех-стартап на&nbsp;малайзийском рынке. На&nbsp;старте у&nbsp;компании было два независимых продукта: кредитная линия <strong>Tambadana</strong> (основной источник дохода) и&nbsp;BNPL-сервис <strong>AhaPay</strong>. Целевая аудитория&nbsp;— местные пользователи с&nbsp;ограниченным доступом к&nbsp;классическим банкам. Проект финансировался как&nbsp;стартап с&nbsp;жёстким сроком 3 месяца на&nbsp;требования и&nbsp;дизайн до&nbsp;передачи в&nbsp;разработку.</p>
+                  <p>Fingular&nbsp;— финтех-стартап в&nbsp;Малайзии с&nbsp;двумя продуктами: кредитной линией Tambadana (основной доход) и&nbsp;BNPL-сервисом AhaPay. На&nbsp;требования и&nbsp;дизайн до&nbsp;передачи в&nbsp;разработку было 3 месяца.</p>
                 </section>
 
                 <section class="ca-section" data-toc="task">
@@ -528,7 +512,7 @@
                     </div>
                     <div class="ca-screen">
                       <div class="ca-screen-img" data-label="Tambadana"><img src="cases/fingular/tambadana.png" alt="Tambadana Credit Line" onerror="this.parentElement.classList.add('ca-screen-img--placeholder'); this.remove();"></div>
-                      <figcaption>Текущее приложение Credit Line (Tambadana)</figcaption>
+                      <figcaption>Текущее приложение кредитной линии (Tambadana)</figcaption>
                     </div>
                   </div>
                 </figure>
@@ -541,7 +525,6 @@
                 <section class="ca-section" data-toc="research">
                   <h2>Исследование и&nbsp;тестирование</h2>
                   <p>Протестировал 3 концепции главного экрана с&nbsp;малайзийскими пользователями. Итерация 1&nbsp;— пользователи путали кредит и&nbsp;кошелёк (отклонено). Итерация 2&nbsp;— развёл финансовые и&nbsp;долговые действия, но&nbsp;иерархия сценариев осталась размытой (отклонено). Итерация 3&nbsp;— кошелёк стал хабом, ментальная модель сошлась.</p>
-                  <p>Дизайн-систему расширял по&nbsp;ходу&nbsp;— упрощал там, где сроки не&nbsp;давали довести до&nbsp;идеала, и&nbsp;фиксировал технический долг отдельно.</p>
                 </section>
 
                 <figure class="ca-figure">
@@ -563,7 +546,6 @@
 
                 <section class="ca-section">
                   <h2>Эволюция MVP&nbsp;— от&nbsp;основного дохода к&nbsp;финансовой экосистеме</h2>
-                  <p>Продукт запускали поэтапно в&nbsp;условиях жёстких ограничений по&nbsp;времени и&nbsp;ресурсам.</p>
                   <p><strong>MVP 1.0.</strong> Сконцентрировался на&nbsp;основном источнике дохода&nbsp;— кредитной линии: онбординг и&nbsp;KYC, подписание кредитного договора, погашение долга. Приоритетами были ясность, снижение трения и&nbsp;оптимизация сценариев, ориентированных на&nbsp;выручку.</p>
                 </section>
 
@@ -607,19 +589,14 @@
                   <div class="ca-figure-grid ca-figure-grid--1">
                     <div class="ca-screen">
                       <div class="ca-screen-img ca-screen-img--phone" data-label="NeoBank"><video src="cases/fingular/mvp3-neobank.mp4" aria-label="Результирующий NeoBank App" autoplay loop muted playsinline></video></div>
-                      <figcaption>Результирующий NeoBank App&nbsp;— единая логика главной</figcaption>
+                      <figcaption>Итоговое приложение NeoBank&nbsp;— единая логика главной</figcaption>
                     </div>
                   </div>
                 </figure>
 
                 <section class="ca-section">
-                  <h2>Эволюция дизайн-системы</h2>
-                  <p>Дизайн-система уже существовала&nbsp;— на&nbsp;ней были построены Tambadana и&nbsp;AhaPay,&nbsp;— но&nbsp;требовала доработки под&nbsp;единый нео-банк. Расширил библиотеку компонентов, улучшил интерфейс и&nbsp;заложил правила масштабирования при&nbsp;росте продукта.</p>
-                </section>
-
-                <section class="ca-section">
                   <h2>Кросс-функциональная работа</h2>
-                  <p>Параллельные дизайн-треки MVP 1/2/3 не&nbsp;блокировали инженерию: сначала отдавал в&nbsp;разработку погашение и&nbsp;подписание кредита, параллельно проектировал кошелёк и&nbsp;архитектуру суперапп. С&nbsp;продактами&nbsp;— приоритизация по&nbsp;выручке, с&nbsp;разработкой&nbsp;— фиксация архитектуры до&nbsp;handoff, с&nbsp;локальными пользователями&nbsp;— валидация ментальной модели.</p>
+                  <p>Треки MVP шли параллельно и&nbsp;не&nbsp;блокировали разработку: пока кредитные сценарии уходили в&nbsp;разработку, я&nbsp;проектировал кошелёк и&nbsp;архитектуру суперапп.</p>
                 </section>
 
                 <section class="ca-section" data-toc="outcomes">
@@ -634,7 +611,7 @@
 
                 <section class="ca-section" data-toc="result">
                   <h2>Эффект и&nbsp;ожидаемые метрики</h2>
-                  <p>Запуск NeoBank на&nbsp;малайзийском рынке&nbsp;— в&nbsp;ближайшие месяцы. Целевые метрики, которые будем мерить после запуска: конверсия «заявка → выдача кредита», удержание (D7/D30), доля пользователей, использующих более одного продукта (cross-product activation).</p>
+                  <p>Запуск NeoBank на&nbsp;малайзийском рынке&nbsp;— в&nbsp;ближайшие месяцы. Целевые метрики, которые будем мерить после запуска: конверсия «заявка → выдача кредита», удержание (D7/D30), доля пользователей, использующих более одного продукта.</p>
                 </section>
               </article>
   </template>
@@ -651,19 +628,19 @@
                   </div>
                   <h1 class="ca-title">InfoWatch</h1>
                   <p class="ca-lede">
-                    Собрал дизайн-систему и&nbsp;UX-процессы для&nbsp;8 B2B-продуктов кибербезопасности. Time-to-market ускорился ~1,5×.
+                    Собрал дизайн-систему и&nbsp;UX-процессы для&nbsp;8 B2B-продуктов кибербезопасности. Вывод фич на&nbsp;рынок ускорился ~1,5×.
                   </p>
                 </header>
 
 
                 <section class="ca-section" data-toc="context">
                   <h2>Контекст компании</h2>
-                  <p>InfoWatch&nbsp;— российская B2B-компания в&nbsp;области DLP и&nbsp;кибербезопасности. Экосистема из&nbsp;8 независимых продуктов для&nbsp;корпоративных заказчиков (банки, госкомпании, промышленность). Интерфейсы&nbsp;— высоконагруженные, аналитические, под&nbsp;операторов SOC и&nbsp;безопасников. На&nbsp;старте дизайн был фрагментирован, дизайн-системы не&nbsp;было, процессы рассогласованы.</p>
+                  <p>B2B-компания в&nbsp;кибербезопасности: 8 продуктов для&nbsp;банков, госкомпаний и&nbsp;промышленности, сложные аналитические интерфейсы для&nbsp;безопасников. Дизайн-системы не&nbsp;было, процессы не&nbsp;были согласованы.</p>
                 </section>
 
                 <section class="ca-section" data-toc="task">
                   <h2>Задача</h2>
-                  <p class="ca-quote">Свести 8 продуктов в&nbsp;единый UX-контур и&nbsp;встроить дизайн-ревью + user research в&nbsp;процесс, не&nbsp;имея дизайн-культуры на&nbsp;старте.</p>
+                  <p class="ca-quote">Свести 8 продуктов в&nbsp;единый UX-контур и&nbsp;встроить дизайн-ревью и&nbsp;исследования с&nbsp;пользователями в&nbsp;процесс, не&nbsp;имея дизайн-культуры на&nbsp;старте.</p>
                 </section>
 
                 <section class="ca-section">
@@ -672,7 +649,6 @@
                     <li>Решения принимались без&nbsp;тестирования на&nbsp;пользователях&nbsp;— высокий риск неэффективных изменений.</li>
                     <li>Дизайн-системы не&nbsp;было&nbsp;— визуальные и&nbsp;функциональные расхождения между продуктами.</li>
                     <li>Дизайн-ревью не&nbsp;встроено в&nbsp;процесс.</li>
-                    <li>UX-методологии не&nbsp;воспринимались как&nbsp;значимый фактор решений.</li>
                   </ul>
                 </section>
 
@@ -685,7 +661,7 @@
                 <section class="ca-section" data-toc="hypothesis">
                   <h2>Гипотеза</h2>
                   <p>Перед изменением UX разумно его проверить&nbsp;— это&nbsp;снижает риск плохих решений в&nbsp;продакшене и&nbsp;экономит на&nbsp;дорогой переделке.</p>
-                  <p>Параллельно я&nbsp;заметил, что&nbsp;продуктовая культура в&nbsp;компании не&nbsp;развита, и&nbsp;решил выращивать её сам. Но&nbsp;сначала нужно было привести в&nbsp;порядок Figma.</p>
+                  <p>Продуктовой культуры в&nbsp;компании не&nbsp;было, и&nbsp;я&nbsp;начал выращивать её сам, но&nbsp;сначала навёл порядок в&nbsp;Figma.</p>
                 </section>
 
                 <section class="ca-section">
@@ -721,7 +697,7 @@
 
                 <section class="ca-section">
                   <h2>Появилось дизайн-ревью</h2>
-                  <p>Раньше дизайн-ревью не&nbsp;проводились&nbsp;— решения оставались сырыми, интерфейсы выглядели неаккуратно. Мы предложили формат ревью и&nbsp;встроили его в&nbsp;процесс.</p>
+                  <p>Раньше дизайн-ревью не&nbsp;было. Предложил формат и&nbsp;встроил его в&nbsp;процесс.</p>
                 </section>
 
                 <figure class="ca-figure">
@@ -732,8 +708,8 @@
 
                 <section class="ca-section" data-toc="research">
                   <h2>И&nbsp;самое важное изменение</h2>
-                  <p>Удалось запустить тестирование интерфейса&nbsp;— пока на&nbsp;одном продукте. Хотел продемонстрировать ценность подхода именно на&nbsp;нём.</p>
-                  <p>Один из&nbsp;product owner’ов выделил ресурсы. В&nbsp;процессе тестирования стало ясно, что&nbsp;не&nbsp;все идеи работают, и&nbsp;макеты постепенно дорабатывались. Исследование шло на&nbsp;кликабельных прототипах&nbsp;— это&nbsp;были первые шаги в&nbsp;user research:</p>
+                  <p>Запустил тестирование интерфейса на&nbsp;одном продукте, чтобы показать ценность подхода.</p>
+                  <p>Один из&nbsp;владельцев продукта выделил ресурсы. Тестирование показало, что&nbsp;не&nbsp;все идеи работают, и&nbsp;макеты дорабатывались по&nbsp;его итогам. Это&nbsp;были первые исследования с&nbsp;пользователями на&nbsp;кликабельных прототипах:</p>
                 </section>
 
                 <figure class="ca-figure">
@@ -744,12 +720,12 @@
 
                 <section class="ca-section" data-toc="outcomes">
                   <h2>Что&nbsp;не&nbsp;получилось&nbsp;— и&nbsp;чему научился</h2>
-                  <p>Полностью масштабировать research и&nbsp;UX-метрики на&nbsp;все 8 продуктов не&nbsp;успел: B2B с&nbsp;длинными циклами и&nbsp;устоявшимися процессами не&nbsp;даёт «прийти и&nbsp;переделать». Урок&nbsp;— изменения вшиваются через бизнес-приоритеты конкретных PO, а&nbsp;не&nbsp;через декларации. Заложил фундамент, дальше команда продолжает.</p>
+                  <p>Масштабировать исследования на&nbsp;все 8 продуктов не&nbsp;успел: в&nbsp;B2B с&nbsp;длинными циклами нельзя прийти и&nbsp;всё переделать. Урок: изменения проходят через бизнес-приоритеты конкретных владельцев продукта.</p>
                 </section>
 
                 <section class="ca-section" data-toc="result">
                   <h2>Итоги и&nbsp;эффект</h2>
-                  <p>Все 8 продуктов в&nbsp;едином дизайн-контуре. Time-to-market ~1,5×. Дизайн-ревью&nbsp;— встроенный процесс. User research на&nbsp;прототипах&nbsp;— рабочая практика на&nbsp;пилотном продукте.</p>
+                  <p>Все 8 продуктов в&nbsp;едином дизайн-контуре. Вывод фич на&nbsp;рынок ~1,5×. Дизайн-ревью&nbsp;— встроенный процесс. Исследования с&nbsp;пользователями на&nbsp;прототипах&nbsp;— рабочая практика на&nbsp;пилотном продукте.</p>
                 </section>
               </article>
   </template>
@@ -773,7 +749,7 @@
 
                 <section class="ca-section" data-toc="context">
                   <h2>Контекст компании</h2>
-                  <p>Росгосстрах&nbsp;— крупнейшая страховая компания РФ с&nbsp;сетью выездных агентов по&nbsp;всей стране. Основная аудитория продукта&nbsp;— страховые агенты, часто 50+, со&nbsp;скромным опытом современных интерфейсов. На&nbsp;выезде агенты заполняли полис на&nbsp;бумаге, в&nbsp;конце дня переносили данные в&nbsp;устаревшие внутренние системы&nbsp;— двойная работа и&nbsp;риск ошибок.</p>
+                  <p>Крупнейшая страховая компания РФ с&nbsp;выездными агентами по&nbsp;всей стране, часто 50+. На&nbsp;выезде агенты заполняли полис на&nbsp;бумаге, а&nbsp;вечером переносили данные во&nbsp;внутренние системы: двойная работа и&nbsp;ошибки.</p>
                 </section>
 
                 <section class="ca-section" data-toc="task">
@@ -783,35 +759,33 @@
 
                 <section class="ca-section">
                   <h2>Исследования пользователей</h2>
-                  <p>Начал проект с&nbsp;пользовательского исследования: ~20 очных интервью со&nbsp;страховыми агентами в&nbsp;московском офисе Росгосстраха. Цель интервью&nbsp;— понять:</p>
+                  <p>Начал с&nbsp;~20 очных интервью с&nbsp;агентами, чтобы понять:</p>
                   <ul>
                     <li>как&nbsp;проходит типичный рабочий день агента;</li>
                     <li>как&nbsp;происходит оформление страховки;</li>
                     <li>какие проблемы возникают при&nbsp;работе с&nbsp;текущей системой.</li>
                   </ul>
-                  <p>Основная аудитория&nbsp;— выездные страховые агенты, многие из&nbsp;которых работают в&nbsp;компании годами и&nbsp;имеют небольшой опыт с&nbsp;современными интерфейсами.</p>
                 </section>
 
                 <section class="ca-section">
                   <h2>CJM</h2>
-                  <p>На&nbsp;основе интервью собрал customer journey map процесса оформления страховки&nbsp;— описывает ежедневный сценарий агента.</p>
+                  <p>На&nbsp;основе интервью собрал карту пути клиента (CJM) для&nbsp;процесса оформления страховки&nbsp;— описывает ежедневный сценарий агента.</p>
                 </section>
 
                 <section class="ca-section" data-toc="hypothesis">
                   <h2>Проблема с&nbsp;оформлением полиса</h2>
-                  <p class="ca-quote">Для&nbsp;выездных агентов доверие клиента&nbsp;— ключевой фактор продажи. Любое неожиданное изменение цены в&nbsp;конце процесса подрывало доверие и&nbsp;усложняло закрытие сделки.</p>
-                  <p>Поэтому важно работать с&nbsp;интерфейсом в&nbsp;нужный момент времени, чтобы оперативно закрывать эту проблему. Предложил такие решения:</p>
+                  <p class="ca-quote">Для&nbsp;агента доверие клиента решает продажу, а&nbsp;неожиданное изменение цены в&nbsp;конце оформления его подрывает.</p>
+                  <p>Предложил:</p>
                   <ul>
                     <li>возможность согласовать скидку при&nbsp;пролонгации;</li>
                     <li>советы по&nbsp;работе с&nbsp;возражениями прямо в&nbsp;интерфейсе;</li>
                     <li>в&nbsp;личном кабинете клиента&nbsp;— преимущества полного покрытия.</li>
                   </ul>
-                  <p>Так хотел повлиять на&nbsp;конверсию успешно оформленных полисов.</p>
                 </section>
 
                 <section class="ca-section" data-toc="research">
                   <h2>Прототипирование и&nbsp;тестирование</h2>
-                  <p>Собрал несколько прототипов и&nbsp;провёл ~10 удалённых юзабилити-тестов. Тесты показали: в&nbsp;целом пользователи успешно справляются с&nbsp;задачами оформления полиса, но&nbsp;с&nbsp;нюансами. Пример скрипта, по&nbsp;которому вёл пользователя:</p>
+                  <p>Собрал прототипы и&nbsp;провёл ~10 удалённых юзабилити-тестов: с&nbsp;оформлением пользователи справляются, но&nbsp;с&nbsp;нюансами. Пример скрипта:</p>
                 </section>
 
                 <figure class="ca-figure">
@@ -834,7 +808,7 @@
                 <section class="ca-section" data-toc="outcomes">
                   <h2>Итоги и&nbsp;эффект</h2>
                   <p>Несколько внутренних сервисов сведены в&nbsp;один интерфейс. Бумажные бланки убраны из&nbsp;сценария&nbsp;— оформление проходит при&nbsp;встрече с&nbsp;клиентом. Релиз ушёл на&nbsp;реальных агентов.</p>
-                  <p>Продуктовая аналитика в&nbsp;проекте не&nbsp;внедрялась&nbsp;— поэтому фиксирую метрики, по&nbsp;которым решение можно оценивать после внедрения трекинга: конверсия «встреча → оформленный полис», время оформления, CSI агентов, доля сделок без&nbsp;бумажного бланка.</p>
+                  <p>Аналитику в&nbsp;проекте не&nbsp;внедряли, поэтому зафиксировал метрики для&nbsp;оценки после запуска трекинга: конверсия «встреча → полис», время оформления, доля сделок без&nbsp;бумаги.</p>
 
                 </section>
               </article>
@@ -893,7 +867,7 @@
   <template id="ui-case-ott">
     <article class="ca-article">
       <header class="ca-hero">
-        <div class="ca-meta"><span>Продуктовый дизайнер</span><span class="ca-dot">·</span><span>Июль 2026&nbsp;— н. в.</span><span class="ca-dot">·</span><span>Travel · Design process · AI</span></div>
+        <div class="ca-meta"><span>Продуктовый дизайнер</span><span class="ca-dot">·</span><span>Июль 2026&nbsp;— н. в.</span><span class="ca-dot">·</span><span>Путешествия · Процесс дизайна · ИИ</span></div>
         <h1 class="ca-title">OneTwoTrip</h1>
         <p class="ca-lede">Вошёл в&nbsp;продукт через перенос интерфейса на&nbsp;новый UI, а&nbsp;параллельно встроил AI в&nbsp;процесс дизайна и&nbsp;упаковал его в&nbsp;скилл, которым могут пользоваться другие дизайнеры.</p>
       </header>
@@ -910,7 +884,7 @@
 
       <section class="ca-section" data-toc="onboarding" data-toc-label="Онбординг">
         <h2>Онбординг</h2>
-        <p>Первые задачи&nbsp;— перенос существующих экранов на&nbsp;новый UI. Это&nbsp;оказался лучший способ войти в&nbsp;продукт: за&nbsp;каждым экраном стоят сценарии, состояния и&nbsp;правила, которые не&nbsp;видны в&nbsp;макетах. Чтобы перенести экран честно, их приходится раскопать&nbsp;— и&nbsp;так я&nbsp;быстро разобрался в&nbsp;продукте и&nbsp;компонентах.</p>
+        <p>Первые задачи&nbsp;— перенос экранов на&nbsp;новый UI. За&nbsp;каждым экраном стоят сценарии и&nbsp;состояния, которых не&nbsp;видно в&nbsp;макетах: раскапывая их, я&nbsp;быстро разобрался в&nbsp;продукте.</p>
       </section>
 
       <figure class="ca-figure"><div class="shot-row shot-row--desk"><figure class="shot-item"><div class="shot-desk"><div class="shot-desk-bar"><i></i><i></i><i></i></div><div class="shot-ph">Скриншот<br>скоро</div></div><figcaption>Десктоп · было</figcaption></figure><figure class="shot-item"><div class="shot-desk"><div class="shot-desk-bar"><i></i><i></i><i></i></div><div class="shot-ph">Скриншот<br>скоро</div></div><figcaption>Десктоп · стало</figcaption></figure></div></figure>
@@ -918,7 +892,7 @@
 
       <section class="ca-section" data-toc="problem" data-toc-label="Проблема">
         <h2>Проблема</h2>
-        <p>И&nbsp;при&nbsp;переносе, и&nbsp;в&nbsp;новых фичах больше всего времени уходит не&nbsp;на&nbsp;ключевые экраны, а&nbsp;на&nbsp;то, чего в&nbsp;них нет: ошибки API, редкие значения, флаги, расхождения текстов между платформами. Обычно такие кейсы всплывают уже в&nbsp;разработке&nbsp;— и&nbsp;макеты дорисовываются в&nbsp;спешке.</p>
+        <p>Больше всего времени уходит не&nbsp;на&nbsp;ключевые экраны, а&nbsp;на&nbsp;то, чего в&nbsp;них нет: ошибки API, редкие значения, флаги, разные тексты на&nbsp;платформах. Обычно это&nbsp;всплывает уже в&nbsp;разработке.</p>
       </section>
 
       <section class="ca-section" data-toc="hypothesis">
@@ -928,7 +902,7 @@
 
       <section class="ca-section" data-toc="process" data-toc-label="Процесс">
         <h2>Процесс</h2>
-        <p>Собрал процесс из&nbsp;девяти шагов, где у&nbsp;агента и&nbsp;у&nbsp;дизайнера свои роли. Агент исследует код до&nbsp;и&nbsp;после макетов, ищет корнер-кейсы, дорисовывает состояния в&nbsp;Фигме и&nbsp;собирает спеку. Дизайнер делает концепт и&nbsp;принимает решения. Переходить к&nbsp;следующему шагу решает человек.</p>
+        <p>Девять шагов с&nbsp;разными ролями: агент исследует код, ищет корнер-кейсы, дорисовывает состояния и&nbsp;собирает спеку, дизайнер делает концепт и&nbsp;решает, когда идти дальше.</p>
       </section>
       <div class="ca-section"><div class="ca-roadmap ott-roadmap">
           <div class="ca-roadmap-item ott-rm--ai">
@@ -991,16 +965,14 @@
         <h2>Правила для&nbsp;агента</h2>
         <ul>
           <li><strong>Только находки со&nbsp;ссылкой на&nbsp;код.</strong> Без&nbsp;ссылки&nbsp;— гипотеза, а&nbsp;не&nbsp;факт.</li>
-          <li><strong>Не&nbsp;писать очевидное.</strong> «В&nbsp;коде нет API для&nbsp;новой фичи»&nbsp;— не&nbsp;находка. Ценно то, что&nbsp;не&nbsp;видно: фича уже частично сделана, готовые неиспользуемые тексты и&nbsp;поля, состояние, где новой кнопке негде встать.</li>
           <li><strong>Агент предлагает, дизайнер решает.</strong> Решения фиксируются с&nbsp;датой.</li>
           <li><strong>Только дизайн-система.</strong> Никаких ручных цветов и&nbsp;размеров&nbsp;— токены и&nbsp;стили библиотеки. Фреймы дизайнера не&nbsp;трогать: работать копиями рядом.</li>
-          <li><strong>Репозитории только на&nbsp;чтение.</strong> Никаких пушей и&nbsp;веток.</li>
         </ul>
       </section>
 
       <section class="ca-section" data-toc="skill" data-toc-label="Скилл">
         <h2>Скилл</h2>
-        <p>Чтобы процессом могли пользоваться другие дизайнеры, а&nbsp;не&nbsp;только я, упаковал его в&nbsp;скилл для&nbsp;Claude Code. Установка&nbsp;— скопировать папку. При&nbsp;первой задаче агент сам задаёт несколько вопросов о&nbsp;разделе&nbsp;— где код, какие файлы Фигмы&nbsp;— и&nbsp;сохраняет ответы в&nbsp;профиль раздела. Дальше берёт всё оттуда, поэтому один скилл подходит и&nbsp;отелям, и&nbsp;авиа, и&nbsp;ж/д.</p>
+        <p>Чтобы процессом пользовались и&nbsp;другие дизайнеры, упаковал его в&nbsp;скилл для&nbsp;Claude Code. Ставится копированием папки; при&nbsp;первой задаче агент спрашивает, где код и&nbsp;файлы Фигмы раздела, и&nbsp;дальше работает и&nbsp;для&nbsp;отелей, и&nbsp;для&nbsp;авиа, и&nbsp;для&nbsp;ж/д.</p>
       </section>
       <figure class="ca-figure"><div class="ott-tree"><pre>ott-design-process/
 ├─ SKILL.md            процесс и&nbsp;правила
@@ -1014,7 +986,7 @@
 
       <section class="ca-section" data-toc="outcomes" data-toc-label="Для разработки">
         <h2>Что&nbsp;получает разработка</h2>
-        <p>Спеку прямо в&nbsp;Фигме, рядом с&nbsp;макетами: описание, все состояния и&nbsp;корнер-кейсы со&nbsp;ссылками на&nbsp;узлы макета и&nbsp;на&nbsp;место в&nbsp;коде. Разработка внедряет по&nbsp;ней своим агентом, а&nbsp;HTML нужен только для&nbsp;новой анимации.</p>
+        <p>Спеку в&nbsp;Фигме рядом с&nbsp;макетами: все состояния и&nbsp;корнер-кейсы со&nbsp;ссылками на&nbsp;макет и&nbsp;на&nbsp;место в&nbsp;коде. Разработка внедряет по&nbsp;ней своим агентом.</p>
       </section>
     </article>
   </template>
@@ -1058,7 +1030,7 @@
 
   <template id="ui-case-fingular2"><article class="ca-article">
       <header class="ca-hero">
-        <div class="ca-meta"><span>Senior продуктовый дизайнер</span><span class="ca-dot">·</span><span>Август 2025&nbsp;— Июль 2026</span><span class="ca-dot">·</span><span>Мобильное приложение · Lending</span></div>
+        <div class="ca-meta"><span>Senior продуктовый дизайнер</span><span class="ca-dot">·</span><span>Август 2025&nbsp;— Июль 2026</span><span class="ca-dot">·</span><span>Мобильное приложение · Кредиты</span></div>
         <h1 class="ca-title">Trust Paisa · Fingular</h1>
         <p class="ca-lede">Trust Paisa&nbsp;— индийское приложение с&nbsp;займами, основной продукт компании Fingular. Переделал в&nbsp;нём экран с&nbsp;предложением займа. Новая версия дала +5% конверсии. Параллельно наладил с&nbsp;продактами постановку задач и&nbsp;открыл метрики продукта всей команде.</p>
       </header>
@@ -1066,7 +1038,7 @@
 
       <section class="ca-section" data-toc="context">
         <h2>Контекст</h2>
-        <p>Основной продукт Fingular&nbsp;— приложение с&nbsp;займами. После одобрения заявки пользователь попадает на&nbsp;экран оффера: видит сумму, срок и&nbsp;комиссию и&nbsp;решает, брать деньги или&nbsp;нет. От&nbsp;этого экрана напрямую зависит выручка, поэтому любое улучшение конверсии здесь заметно в&nbsp;деньгах.</p>
+        <p>После одобрения заявки пользователь попадает на&nbsp;экран оффера и&nbsp;решает, брать ли деньги. От&nbsp;этого экрана напрямую зависит выручка.</p>
       </section>
 
       <section class="ca-section" data-toc="task">
@@ -1103,22 +1075,14 @@
 
       <section class="ca-section" data-toc="process" data-toc-label="Процесс">
         <h2>Процесс</h2>
-        <p><strong>Постановка задач.</strong> Договорился с&nbsp;продактами, что&nbsp;задача на&nbsp;дизайн приходит с&nbsp;проблемой, метрикой и&nbsp;ограничениями, а&nbsp;не&nbsp;с&nbsp;готовым решением. Так дизайн начинается с&nbsp;вопроса «что&nbsp;мы хотим изменить», а&nbsp;не&nbsp;с&nbsp;перерисовки чужого скетча.</p>
-        <p><strong>Метрики для&nbsp;команды.</strong> Договорился с&nbsp;продактами, что&nbsp;метрики продукта доступны всей команде. Дизайнеры видят, как&nbsp;их решения влияют на&nbsp;воронку, и&nbsp;могут сами проверить результат, как&nbsp;с&nbsp;+5% на&nbsp;экране оффера.</p>
+        <p><strong>Постановка задач.</strong> Договорился с&nbsp;продактами, что&nbsp;задача на&nbsp;дизайн приходит с&nbsp;проблемой, метрикой и&nbsp;ограничениями, а&nbsp;не&nbsp;с&nbsp;готовым решением.</p>
+        <p><strong>Метрики для&nbsp;команды.</strong> Метрики продукта открыты всей команде: дизайнеры сами видят, как&nbsp;их решения влияют на&nbsp;воронку.</p>
       </section>
 
-      <section class="ca-section" data-toc="outcomes">
-        <h2>Итоги</h2>
-        <ul>
-          <li>Редизайн экрана оффера в&nbsp;основном продукте дал +5% конверсии.</li>
-          <li>Задачи на&nbsp;дизайн ставятся через проблему и&nbsp;метрику.</li>
-          <li>Метрики продукта открыты всей команде.</li>
-        </ul>
-      </section>
     </article>
   </template>
 
-  <script src="assets/site.js?v=20261122-0015"></script>
-  <script src="assets/proto.js?v=20261122-0015"></script>
+  <script src="assets/site.js?v=20261122-0045"></script>
+  <script src="assets/proto.js?v=20261122-0045"></script>
 </body>
 </html>
