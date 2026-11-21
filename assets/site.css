@@ -2340,12 +2340,11 @@ html.light .vc { --vc-accent: #E4572E; }
 .sdd-loop-label { font: 14px/1 var(--font-text); fill: var(--case-text-dim); text-anchor: middle; transition: fill 0.2s; }
 .sdd-loop-label.is-on { fill: var(--vc-accent); }
 .sdd-status { margin-top: 48px; color: var(--case-text-dim); }   /* the loop and its label sit in these 48px */
-/* phones: the row cannot fit, so a 3×2 grid without lines; order shows through the highlight */
-.sdd.is-wrapped .sdd-lines { display: none; }
-.sdd.is-wrapped .sdd-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-.sdd.is-wrapped .sdd-pair { display: contents; }
-.sdd.is-wrapped .sdd-node { text-align: center; padding: 4px 2px; }
-.sdd.is-wrapped .sdd-status { margin-top: 16px; min-height: 48px; }
+/* phones: the row cannot fit, so the same scheme runs top to bottom; the loop goes up beside the column */
+.sdd.is-vertical .sdd-row { flex-direction: column; align-items: flex-start; gap: 28px; }
+.sdd.is-vertical .sdd-node { width: 136px; text-align: center; }
+.sdd.is-vertical .sdd-loop-label { text-anchor: start; }
+.sdd.is-vertical .sdd-status { margin-top: 24px; min-height: 48px; }
 
 /* experience: a draggable month ruler (after jacobschneider.design/about) and the job under it */
 .vc-group--exp { margin-top: var(--vc-gap); }

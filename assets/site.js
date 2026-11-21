@@ -1167,9 +1167,10 @@ window.vcInit = (root) => {
     const row = sdd.querySelector('.sdd-row');
     const draw = () => {
       svg.innerHTML = '';
-      // the row of six blocks either fits on one line (lines drawn) or becomes a 3×2 grid on phones
-      sdd.classList.remove('is-wrapped');
-      if (row.scrollWidth > row.clientWidth + 1) { sdd.classList.add('is-wrapped'); return; }
+      // the six blocks run left to right when they fit, otherwise top to bottom (phones); same lines and loop either way
+      sdd.classList.remove('is-vertical');
+      const vertical = row.scrollWidth > row.clientWidth + 1;
+      sdd.classList.toggle('is-vertical', vertical);
       const r = sdd.getBoundingClientRect();
       const b = {};
       ORDER.forEach((s) => { const q = node(s).getBoundingClientRect(); b[s] = { l: q.left - r.left, r: q.right - r.left, t: q.top - r.top, bt: q.bottom - r.top, cx: q.left + q.width / 2 - r.left, cy: q.top + q.height / 2 - r.top }; });
@@ -1193,18 +1194,34 @@ window.vcInit = (root) => {
         live.style.strokeDashoffset = len;
         links[key] = { live, tip, len };
       };
-      for (let i = 0; i < ORDER.length - 1; i++) {
-        const a = b[ORDER[i]], c = b[ORDER[i + 1]], y = a.cy, x1 = a.r + 4, x2 = c.l - 4;
-        add(ORDER[i] + '>' + ORDER[i + 1], `M${x1} ${y} H${x2}`, `M${x2 - 5} ${y - 4} L${x2} ${y} L${x2 - 5} ${y + 4}`);
-      }
-      // the loop: down from the tests, left under the row, up into the subagents, with rounded corners
-      const te = b.tests, ag = b.agents, yb = te.bt + 4, yl = te.bt + 22, rr = 8;
-      add('tests>agents',
-        `M${te.cx} ${yb} V${yl - rr} Q${te.cx} ${yl} ${te.cx - rr} ${yl} H${ag.cx + rr} Q${ag.cx} ${yl} ${ag.cx} ${yl - rr} V${ag.bt + 4}`,
-        `M${ag.cx - 4} ${ag.bt + 9} L${ag.cx} ${ag.bt + 4} L${ag.cx + 4} ${ag.bt + 9}`);
+      const te = b.tests, ag = b.agents, rr = 8;
       const lab = document.createElementNS(NS, 'text');
-      lab.setAttribute('x', (te.cx + ag.cx) / 2);
-      lab.setAttribute('y', yl + 18);
+      if (!vertical) {
+        for (let i = 0; i < ORDER.length - 1; i++) {
+          const a = b[ORDER[i]], c = b[ORDER[i + 1]], y = a.cy, x1 = a.r + 4, x2 = c.l - 4;
+          add(ORDER[i] + '>' + ORDER[i + 1], `M${x1} ${y} H${x2}`, `M${x2 - 5} ${y - 4} L${x2} ${y} L${x2 - 5} ${y + 4}`);
+        }
+        // the loop: down from the tests, left under the row, up into the subagents, with rounded corners
+        const yb = te.bt + 4, yl = te.bt + 22;
+        add('tests>agents',
+          `M${te.cx} ${yb} V${yl - rr} Q${te.cx} ${yl} ${te.cx - rr} ${yl} H${ag.cx + rr} Q${ag.cx} ${yl} ${ag.cx} ${yl - rr} V${ag.bt + 4}`,
+          `M${ag.cx - 4} ${ag.bt + 9} L${ag.cx} ${ag.bt + 4} L${ag.cx + 4} ${ag.bt + 9}`);
+        lab.setAttribute('x', (te.cx + ag.cx) / 2);
+        lab.setAttribute('y', yl + 18);
+      } else {
+        for (let i = 0; i < ORDER.length - 1; i++) {
+          const a = b[ORDER[i]], c = b[ORDER[i + 1]], x = a.cx, y1 = a.bt + 4, y2 = c.t - 4;
+          add(ORDER[i] + '>' + ORDER[i + 1], `M${x} ${y1} V${y2}`, `M${x - 4} ${y2 - 5} L${x} ${y2} L${x + 4} ${y2 - 5}`);
+        }
+        // the loop: out of the tests to the right, up beside the column, back into the subagents
+        const xr = Math.max(te.r, ag.r) + 24;
+        add('tests>agents',
+          `M${te.r + 4} ${te.cy} H${xr - rr} Q${xr} ${te.cy} ${xr} ${te.cy - rr} V${ag.cy + rr} Q${xr} ${ag.cy} ${xr - rr} ${ag.cy} H${ag.r + 4}`,
+          `M${ag.r + 9} ${ag.cy - 4} L${ag.r + 4} ${ag.cy} L${ag.r + 9} ${ag.cy + 4}`);
+        lab.setAttribute('x', xr + 12);
+        lab.setAttribute('y', (te.cy + ag.cy) / 2 + 5);
+        lab.setAttribute('text-anchor', 'start');
+      }
       lab.setAttribute('class', 'sdd-loop-label');
       lab.textContent = 'не прошли';
       svg.appendChild(lab);
