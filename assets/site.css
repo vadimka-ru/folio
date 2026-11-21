@@ -2339,12 +2339,11 @@ html.light .vc { --vc-accent: #E4572E; }
 .sdd-lines g:last-of-type .sdd-tip.is-on { stroke: var(--vc-accent); }
 .sdd-loop-label { font: 14px/1 var(--font-text); fill: var(--case-text-dim); text-anchor: middle; transition: fill 0.2s; }
 .sdd-loop-label.is-on { fill: var(--vc-accent); }
-.sdd-status { margin-top: 48px; color: var(--case-text-dim); }   /* the loop and its label sit in these 48px */
+.sdd:not(.is-vertical) { padding-bottom: 72px; }   /* room under the row for the loop and its label */
 /* phones: the row cannot fit, so the same scheme runs top to bottom; the loop goes up beside the column */
 .sdd.is-vertical .sdd-row { flex-direction: column; align-items: flex-start; gap: 28px; }
 .sdd.is-vertical .sdd-node { width: 136px; text-align: center; }
 .sdd.is-vertical .sdd-loop-label { text-anchor: start; }
-.sdd.is-vertical .sdd-status { margin-top: 24px; min-height: 48px; }
 
 /* experience: a draggable month ruler (after jacobschneider.design/about) and the job under it */
 .vc-group--exp { margin-top: var(--vc-gap); }

@@ -1277,7 +1277,7 @@ window.vcInit = (root) => {
           }
           if (prev) state(prev, 'is-done' + (prev === 'tests' && mark !== 'pass' && s === 'agents' ? ' is-fail' : ''));
           state(s, 'is-on' + (mark === 'fail' ? ' is-fail' : mark === 'pass' ? ' is-pass' : ''));
-          status.textContent = text;
+          if (status) status.textContent = text;
           prev = s;
           await wait(s === 'done' ? 2800 : 1100);
         }
@@ -1287,7 +1287,7 @@ window.vcInit = (root) => {
       draw();
       ORDER.forEach((s) => state(s, 'is-done'));
       Object.keys(links).forEach((k) => k !== 'loopLabel' && setLink(k, true, true));
-      status.textContent = 'Тесты гоняются по кругу, пока не пройдут, потом ревью';
+      if (status) status.textContent = 'Тесты гоняются по кругу, пока не пройдут, потом ревью';
     } else run();
     window.addEventListener('resize', () => { if (alive()) { draw(); } });
   }
