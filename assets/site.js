@@ -569,7 +569,7 @@
   // swipe left / right on touch screens
   function bindSwipe(m) {
     let sx = 0, sy = 0, st = 0;
-    m.addEventListener('touchstart', (e) => { if (e.touches.length !== 1) return; sx = e.touches[0].clientX; sy = e.touches[0].clientY; st = Date.now(); }, { passive: true });
+    m.addEventListener('touchstart', (e) => { st = 0; if (e.touches.length !== 1 || e.target.closest('[data-noswipe]')) return; sx = e.touches[0].clientX; sy = e.touches[0].clientY; st = Date.now(); }, { passive: true });
     m.addEventListener('touchend', (e) => {
       const t = e.changedTouches[0]; if (!t || !st) return;
       const dx = t.clientX - sx, dy = t.clientY - sy;
@@ -917,6 +917,7 @@ window.vcInit = (root) => {
 
     const tl = document.createElement('div');
     tl.className = 'vc-tl';
+    tl.dataset.noswipe = ''; // horizontal swipes here move the ruler, not the modal to the next card
     tl.tabIndex = 0;
     tl.setAttribute('role', 'listbox');
     tl.setAttribute('aria-label', 'Опыт работы по годам');
@@ -1070,7 +1071,8 @@ window.vcInit = (root) => {
       const gr = tl.parentElement.getBoundingClientRect();
       tl.style.width = mr.width + 'px';
       tl.style.marginLeft = (mr.left - gr.left) + 'px';
-      anchor = gr.left - mr.left;
+      // phones: the needle stands in the middle so jobs on both sides are in view; wider screens: under the text column
+      anchor = window.matchMedia('(max-width: 680px)').matches ? Math.round(mr.width / 2) : gr.left - mr.left;
       needle.style.left = anchor + 'px';
       name.style.left = anchor + 'px';
       zonePrev.style.width = anchor + 'px';

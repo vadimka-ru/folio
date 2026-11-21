@@ -2434,3 +2434,18 @@ g:last-of-type .sdd-tip.is-on { stroke: var(--vc-accent); }
 .vc-group--exp { margin-top: 96px; }
 .vc-group--exp { margin-top: 56px; } /* the ruler has 48px of room for the walking month above its ticks */
 .vc-tl-detail .vc-tl-co ~ b { font-weight: 600; } /* the role reads as a heading too */
+/* business card on phones */
+@media (max-width: 680px) {
+  .vc.ca-article { padding-top: 112px; }
+  /* the scheme: three steps per row, no arrows; order shows through the highlight */
+  .sdd.is-wrapped .sdd-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .sdd.is-wrapped .sdd-pair { display: contents; }
+  .sdd.is-wrapped .sdd-arrow { display: none; }
+  .sdd.is-wrapped .sdd-node { text-align: center; padding: 6px 4px; }
+  .sdd.is-wrapped .sdd-status { margin-top: 16px; min-height: 48px; }
+  .vc-group--exp { margin-top: 24px; }
+  .vc-tl { --fade-l: 18% !important; }
+  .vc-tl-detail { margin-top: 20px; }
+}
+@media (max-width: 680px) { .vc-tl { margin-top: -24px; } }
+@media (max-width: 680px) { .sdd { padding: 16px 12px; } .sdd.is-wrapped .sdd-row { gap: 6px; } .sdd.is-wrapped .sdd-node { padding: 6px 2px; } }
