@@ -918,6 +918,8 @@ window.vcInit = (root) => {
     const tl = document.createElement('div');
     tl.className = 'vc-tl';
     tl.dataset.noswipe = ''; // horizontal swipes here move the ruler, not the modal to the next card
+    // belt and braces: touches on the ruler never reach the modal's card swiper
+    ['touchstart', 'touchmove', 'touchend'].forEach((ev) => tl.addEventListener(ev, (e) => e.stopPropagation(), { passive: true }));
     tl.tabIndex = 0;
     tl.setAttribute('role', 'listbox');
     tl.setAttribute('aria-label', 'Опыт работы по годам');
@@ -1162,16 +1164,17 @@ window.vcInit = (root) => {
     sdd.prepend(svg);
     const links = {}; // key -> { base, live }
 
+    const row = sdd.querySelector('.sdd-row');
     const draw = () => {
       svg.innerHTML = '';
+      // the row of six blocks either fits on one line (lines drawn) or becomes a 3×2 grid on phones
+      sdd.classList.remove('is-wrapped');
+      if (row.scrollWidth > row.clientWidth + 1) { sdd.classList.add('is-wrapped'); return; }
       const r = sdd.getBoundingClientRect();
       const b = {};
       ORDER.forEach((s) => { const q = node(s).getBoundingClientRect(); b[s] = { l: q.left - r.left, r: q.right - r.left, t: q.top - r.top, bt: q.bottom - r.top, cx: q.left + q.width / 2 - r.left, cy: q.top + q.height / 2 - r.top }; });
-      const oneRow = ORDER.every((s) => Math.abs(b[s].cy - b.spec.cy) < 2);
-      sdd.classList.toggle('is-wrapped', !oneRow);
       svg.setAttribute('width', r.width);
       svg.setAttribute('height', r.height);
-      if (!oneRow) return;
       const add = (key, d, head) => {
         const g = document.createElementNS(NS, 'g');
         const base = document.createElementNS(NS, 'path');

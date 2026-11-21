@@ -2291,100 +2291,85 @@ html.light .ca-roadmap:not(.cv-flow) .ca-roadmap-item:not(:last-child)::after { 
   .ca-flow-arrow { height: 48px; font-size: 14px; }
 }
 
-/* ---------- business card, rebuilt ----------
-   One size (16/24) and three styles: regular, semibold, dim. Rows: date or label on the left, content on the right.
-   Experience needs no heading; other groups get one line in the semibold style. */
-.vc { font-family: var(--font-text); font-size: 16px; line-height: 24px; letter-spacing: -0.01em; color: var(--case-text); }
+/* ===================== business card =====================
+   Type: one size (16/24), three styles: regular, semibold, dim.
+   Spacing scale, nothing else: 4 · 8 · 16 · 24 · 32 · 72 · 112 (phones: 112 → 80, 72 → 56). */
+.vc { --vc-accent: #FF8A65; --vc-gap: 112px; --vc-step: 40px;
+  font-family: var(--font-text); font-size: 16px; line-height: 24px; letter-spacing: -0.01em; color: var(--case-text); }
+html.light .vc { --vc-accent: #E4572E; }
+.vc.ca-article { max-width: 800px; padding-top: 184px; }
 .vc b { font-weight: 600; }
 .vc .vc-dim { color: var(--case-text-dim); }
-.vc p, .vc ul { margin: 0; padding: 0; list-style: none; }
-.vc ul li::before { content: none; }
-.vc-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; margin-bottom: 32px; }
+.vc p, .vc ul, .vc ol { margin: 0; padding: 0; list-style: none; }
+
+/* header and intro */
+.vc-head { margin-bottom: 32px; }
 .vc-head > div { display: flex; flex-direction: column; }
 .vc-intro { max-width: 520px; }
 .vc-intro + .vc-intro { margin-top: 16px; }
 .vc-link { color: inherit; text-decoration: underline; text-underline-offset: 4px;
   text-decoration-color: color-mix(in srgb, var(--case-text) 35%, transparent); }
 .vc-link:hover { text-decoration-color: currentColor; }
-.vc-group { margin-top: 64px; }
-.vc-title { display: block; margin-bottom: 24px; }
-.vc-row { display: grid; grid-template-columns: 200px minmax(0, 1fr); column-gap: 24px; }
-.vc-row + .vc-row { margin-top: 24px; }
-.vc-row b { display: block; }
-@media (max-width: 680px) {
-  .vc-row { grid-template-columns: minmax(0, 1fr); }
-  .vc-group { margin-top: 48px; }
-}
-.vc.ca-article { max-width: 800px; }
-.vc-row { grid-template-columns: 168px minmax(0, 1fr); }
-.vc-row + .vc-row { margin-top: 32px; }
-.vc-row li { position: relative; padding-left: 16px; }
-.vc-row li::before { content: '–' !important; position: absolute; left: 0; top: 0; width: auto; height: auto; background: none; }
-.vc-row li + li { margin-top: 4px; }
-.vc-row b + ul, .vc-row b + p { margin-top: 4px; }
-.vc-row { grid-template-columns: 200px minmax(0, 1fr); }
-.vc-row > .vc-dim { white-space: nowrap; }
-@media (max-width: 680px) { .vc-row { grid-template-columns: minmax(0, 1fr); } }
 
-/* business card: experience ruler (after jacobschneider.design/about) */
-.vc { --vc-accent: #FF8A65; }
-html.light .vc { --vc-accent: #E4572E; }
-.vc-tl { position: relative; height: 112px; margin-top: 8px; overflow: hidden; cursor: grab; touch-action: pan-y; outline: none;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent);
-          mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent); }
+/* blocks: big gap between groups, step gap between items, 8px from an item's title to its content */
+.vc-group { margin-top: var(--vc-gap); }
+.vc-row { display: block; }
+.vc-row + .vc-row { margin-top: var(--vc-step); }
+.vc-row b { display: block; }
+.vc-row b + p { margin-top: 4px; }
+.vc-row b + .sdd { margin-top: 8px; }
+
+/* spec-driven scheme: blocks joined by lines that draw themselves in; a loop runs back under the row */
+.sdd { position: relative; padding: 24px; border-radius: 16px; background: var(--bg); }
+.sdd-row { position: relative; z-index: 1; display: flex; align-items: center; gap: 32px; }
+.sdd-pair { display: inline-flex; align-items: center; white-space: nowrap; }
+.sdd-arrow { display: none; font-style: normal; color: var(--case-text-dim); }
+.sdd-node { position: relative; padding: 4px 10px; border-radius: 8px; background: var(--bg); color: var(--case-text-dim);
+  border: 1px solid color-mix(in srgb, var(--case-text) 14%, transparent); transition: color 0.25s, border-color 0.25s, background-color 0.25s; }
+.sdd-node.is-done { color: color-mix(in srgb, var(--case-text) 80%, transparent); border-color: color-mix(in srgb, var(--case-text) 28%, transparent); }
+.sdd-node.is-on { color: var(--case-text); border-color: color-mix(in srgb, var(--case-text) 70%, transparent); background: color-mix(in srgb, var(--case-text) 7%, var(--bg)); }
+.sdd-node.is-fail { border-color: var(--vc-accent); }
+.sdd-node.is-pass { border-color: var(--case-text); }
+.sdd-lines { position: absolute; left: 0; top: 0; pointer-events: none; overflow: visible; }
+.sdd-line { fill: none; stroke: color-mix(in srgb, var(--case-text) 16%, transparent); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.sdd-line--live { stroke: color-mix(in srgb, var(--case-text) 75%, transparent); transition: stroke-dashoffset 0.52s cubic-bezier(0.4, 0, 0.2, 1); }
+.sdd-lines g:last-of-type .sdd-line--live { stroke: var(--vc-accent); }
+.sdd-tip { fill: none; stroke: color-mix(in srgb, var(--case-text) 16%, transparent); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; transition: stroke 0.2s 0.4s; }
+.sdd-tip.is-on { stroke: color-mix(in srgb, var(--case-text) 75%, transparent); }
+.sdd-lines g:last-of-type .sdd-tip.is-on { stroke: var(--vc-accent); }
+.sdd-loop-label { font: 14px/1 var(--font-text); fill: var(--case-text-dim); text-anchor: middle; transition: fill 0.2s; }
+.sdd-loop-label.is-on { fill: var(--vc-accent); }
+.sdd-status { margin-top: 48px; color: var(--case-text-dim); }   /* the loop and its label sit in these 48px */
+/* phones: the row cannot fit, so a 3×2 grid without lines; order shows through the highlight */
+.sdd.is-wrapped .sdd-lines { display: none; }
+.sdd.is-wrapped .sdd-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.sdd.is-wrapped .sdd-pair { display: contents; }
+.sdd.is-wrapped .sdd-node { text-align: center; padding: 4px 2px; }
+.sdd.is-wrapped .sdd-status { margin-top: 16px; min-height: 48px; }
+
+/* experience: a draggable month ruler (after jacobschneider.design/about) and the job under it */
+.vc-group--exp { margin-top: var(--vc-gap); }
+.vc-tl { position: relative; height: 88px; overflow: hidden; cursor: grab; touch-action: pan-y; outline: none;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 var(--fade-l, 18%), #000 82%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 var(--fade-l, 18%), #000 82%, transparent); }
 .vc-tl.is-dragging { cursor: grabbing; }
 .vc-tl-strip { position: absolute; left: 0; top: 0; height: 100%; }
 .vc-tl-strip.is-gliding { transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
-.vc-tl-tick { position: absolute; top: 64px; width: 1px; height: 8px; background: color-mix(in srgb, var(--case-text) 18%, transparent); }
-.vc-tl-tick--month { top: 60px; height: 16px; background: color-mix(in srgb, var(--case-text) 40%, transparent); }
-.vc-tl-month { position: absolute; top: 84px; transform: translateX(-50%); color: var(--case-text-dim); white-space: nowrap; }
+.vc-tl-name { position: absolute; top: 0; margin: 0; white-space: nowrap; z-index: 2; }       /* the month passing by, only while it walks */
+.vc-tl-name.is-walking { font-weight: 400; color: var(--case-text-dim); }
+.vc-tl-needle { position: absolute; top: 30px; width: 2px; height: 30px; margin-left: -1px; border-radius: 1px; background: var(--vc-accent); pointer-events: none; z-index: 3; }
+.vc-tl-tick { position: absolute; top: 42px; width: 1px; height: 8px; background: color-mix(in srgb, var(--case-text) 18%, transparent); }
+.vc-tl-tick--month { top: 38px; height: 16px; background: color-mix(in srgb, var(--case-text) 40%, transparent); }
+.vc-tl-month { position: absolute; top: 62px; transform: translateX(-50%); color: var(--case-text-dim); white-space: nowrap; }
 .vc-tl-month--year { color: var(--case-text); }
-.vc-tl-event { position: absolute; top: 28px; transform: translateX(-50%); padding: 0; border: 0; background: none; font: inherit;
-  color: var(--case-text-dim); white-space: nowrap; cursor: pointer; transition: color 0.2s; }
-.vc-tl-event.is-on { color: var(--case-text); }
-.vc-tl-needle { position: absolute; left: 50%; top: 52px; width: 2px; height: 30px; margin-left: -1px; border-radius: 1px; background: var(--vc-accent); pointer-events: none; }
-.vc-tl-detail { min-height: 120px; margin-top: 24px; opacity: 0; transform: translateY(4px); transition: opacity 0.3s, transform 0.3s; }
-.vc-tl-detail.is-on { opacity: 1; transform: none; }
-.vc-tl-detail > * { display: block; }
-.vc-tl-detail b { margin-top: 0; }
-.vc-tl-detail p { margin-top: 4px; max-width: 560px; }
-
-/* business card: spec-driven development loop */
-.sdd { position: relative; margin-top: 16px; padding-bottom: 8px; }
-.sdd-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
-.sdd-node { padding: 4px 10px; border-radius: 8px; border: 1px solid color-mix(in srgb, var(--case-text) 14%, transparent);
-  color: var(--case-text-dim); transition: color 0.25s, border-color 0.25s, background-color 0.25s; }
-.sdd-node.is-on { color: var(--case-text); border-color: color-mix(in srgb, var(--case-text) 55%, transparent); background: color-mix(in srgb, var(--case-text) 6%, transparent); }
-.sdd-node.is-fail { color: var(--case-text); border-color: var(--vc-accent); }
-.sdd-node.is-pass { color: var(--case-text); border-color: var(--case-text); }
-.sdd-arrow { font-style: normal; color: var(--case-text-dim); }
-.sdd-status { margin-top: 36px; }
-@media (max-width: 680px) {
-  .sdd-status { margin-top: 12px; }
-}
-.sdd-row { gap: 6px; }
-.vc-row b + .sdd { margin-top: 12px; }
-.sdd-pair { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
-/* experience: more air around the ruler */
-.vc-group--exp { margin-top: 120px; }
-.vc-tl { margin-top: 0; }
-.vc-tl-detail { margin-top: 40px; }
-@media (max-width: 680px) { .vc-group--exp { margin-top: 88px; } .vc-tl-detail { margin-top: 32px; } }
-/* jobs are marks on the ruler, not labels: a taller line with a wide hit area; the name is above */
-.vc-tl-event { top: 40px; width: 24px; height: 40px; transform: translateX(-50%); }
+.vc-tl .is-future { opacity: 0.3; }
+.vc-tl-event { position: absolute; top: 18px; width: 24px; height: 40px; transform: translateX(-50%); padding: 0; border: 0; background: none; cursor: pointer; }
 .vc-tl-event::after { content: ''; position: absolute; left: 50%; top: 8px; width: 2px; height: 28px; margin-left: -1px; border-radius: 1px;
   background: color-mix(in srgb, var(--case-text) 55%, transparent); transition: background-color 0.2s; }
 .vc-tl-event:hover::after { background: var(--case-text); }
 .vc-tl-event.is-on::after { background: transparent; }
-.vc-tl { -webkit-mask-image: linear-gradient(90deg, transparent, #000 var(--fade-l, 18%), #000 82%, transparent);
-                 mask-image: linear-gradient(90deg, transparent, #000 var(--fade-l, 18%), #000 82%, transparent); }
-.vc-tl .is-future { opacity: 0.3; } /* months after today */
-/* the company name sits on the ruler, right above the needle */
-.vc-tl-name { position: absolute; top: 20px; margin: 0; white-space: nowrap; z-index: 2; }
-.vc-tl-needle { z-index: 3; }
-/* with a mouse, each half of the ruler around the needle is a button to the neighbouring job:
-   on hover that half fades and names the job; phones just swipe */
-.vc-tl-zone { position: absolute; top: 48px; bottom: 0; display: none; align-items: center; z-index: 1; pointer-events: none;
+/* with a mouse, each half of the ruler is a button to the neighbouring job: on hover it fades and names the job */
+.vc-tl-zone { position: absolute; top: 26px; bottom: 0; display: none; align-items: center; z-index: 1; pointer-events: none;
   background: color-mix(in srgb, var(--case-bg) 85%, transparent); opacity: 0; transition: opacity 0.2s; }
 @media (hover: hover) and (pointer: fine) { .vc-tl-zone { display: flex; } .vc-tl { cursor: pointer; } }
 .vc-tl-zone[hidden] { display: none !important; }
@@ -2392,60 +2377,24 @@ html.light .vc { --vc-accent: #E4572E; }
 .vc-tl-zone--next { right: 0; padding-left: 20px; }
 .vc-tl[data-side="prev"] .vc-tl-zone--prev, .vc-tl[data-side="next"] .vc-tl-zone--next { opacity: 1; }
 .vc-tl.is-dragging .vc-tl-zone { opacity: 0; }
-.vc-row--solo { grid-template-columns: minmax(0, 1fr); } /* skills: no side labels */
-/* the loop sits in a card the colour of the home screen background */
-.sdd { padding: 24px 24px 20px; border-radius: 16px; background: var(--bg); }
-@media (max-width: 680px) { .sdd { padding: 16px; } }
-.vc.ca-article { padding-top: 184px; } /* 104 + 80 above the name */
-@media (max-width: 680px) { .vc.ca-article { padding-top: 160px; } }
-/* spec-driven scheme: blocks joined by connector lines that draw themselves in; a loop runs back under the row */
-.sdd { padding: 28px 24px 24px; }
-.sdd-row { position: relative; z-index: 1; gap: 32px; }
-.sdd-pair { gap: 0; }
-.sdd-arrow { display: none; }
-.sdd-node { position: relative; background: var(--bg); }
-.sdd-node.is-done { color: color-mix(in srgb, var(--case-text) 80%, transparent); border-color: color-mix(in srgb, var(--case-text) 28%, transparent); background: var(--bg); }
-.sdd-node.is-on { color: var(--case-text); border-color: color-mix(in srgb, var(--case-text) 70%, transparent); background: color-mix(in srgb, var(--case-text) 7%, var(--bg)); }
-.sdd-node.is-fail { border-color: var(--vc-accent); }
-.sdd-node.is-pass { border-color: var(--case-text); }
-.sdd-lines { position: absolute; left: 0; top: 0; pointer-events: none; overflow: visible; }
-.sdd-line { fill: none; stroke: color-mix(in srgb, var(--case-text) 16%, transparent); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
-.sdd-line--live { stroke: color-mix(in srgb, var(--case-text) 75%, transparent); transition: stroke-dashoffset 0.52s cubic-bezier(0.4, 0, 0.2, 1); }
-g:last-of-type .sdd-line--live { stroke: var(--vc-accent); } /* the loop back is the accent line */
-.sdd-tip { fill: none; stroke: color-mix(in srgb, var(--case-text) 16%, transparent); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; transition: stroke 0.2s 0.4s; }
-.sdd-tip.is-on { stroke: color-mix(in srgb, var(--case-text) 75%, transparent); }
-g:last-of-type .sdd-tip.is-on { stroke: var(--vc-accent); }
-.sdd-loop-label { font: 14px/1 var(--font-text); fill: var(--case-text-dim); text-anchor: middle; transition: fill 0.2s; }
-.sdd-loop-label.is-on { fill: var(--vc-accent); }
-.sdd-status { margin-top: 56px; }
-.sdd.is-wrapped .sdd-lines { display: none; }
-.sdd.is-wrapped .sdd-row { gap: 6px; }
-.sdd.is-wrapped .sdd-pair { gap: 6px; }
-.sdd.is-wrapped .sdd-arrow { display: inline; }
-.sdd.is-wrapped .sdd-status { margin-top: 12px; }
-/* job block under the ruler: company and dates as one pair, then the role and what was done as another */
-.vc-tl-detail { margin-top: 28px; }
-.vc-tl-detail .vc-tl-co { font-weight: 600; color: var(--case-text); }
-.vc-tl-detail .vc-tl-co + span { margin-top: 0; }
-.vc-tl-detail .vc-tl-co ~ b { margin-top: 16px; font-weight: 400; color: var(--case-text); }
-.vc-tl-detail p { margin-top: 4px; }
-/* while the ruler walks, the month passing under the needle shows above it */
-.vc-tl-name.is-walking { font-weight: 400; color: var(--case-text-dim); }
-.vc-group--exp { margin-top: 96px; }
-.vc-group--exp { margin-top: 56px; } /* the ruler has 48px of room for the walking month above its ticks */
-.vc-tl-detail .vc-tl-co ~ b { font-weight: 600; } /* the role reads as a heading too */
-/* business card on phones */
+/* the job: company + dates as one pair, then role + what was done */
+.vc-tl-detail { margin-top: 32px; opacity: 0; transform: translateY(4px); transition: opacity 0.3s, transform 0.3s; }
+.vc-tl-detail.is-on { opacity: 1; transform: none; }
+.vc-tl-detail > * { display: block; }
+.vc-tl-detail .vc-tl-co { font-weight: 600; }
+.vc-tl-detail .vc-tl-co ~ b { margin-top: 16px; font-weight: 600; }
+.vc-tl-detail p { margin-top: 4px; max-width: 560px; }
+
 @media (max-width: 680px) {
+  .vc { --vc-gap: 80px; --vc-step: 32px; }
   .vc.ca-article { padding-top: 112px; }
-  /* the scheme: three steps per row, no arrows; order shows through the highlight */
-  .sdd.is-wrapped .sdd-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-  .sdd.is-wrapped .sdd-pair { display: contents; }
-  .sdd.is-wrapped .sdd-arrow { display: none; }
-  .sdd.is-wrapped .sdd-node { text-align: center; padding: 6px 4px; }
-  .sdd.is-wrapped .sdd-status { margin-top: 16px; min-height: 48px; }
-  .vc-group--exp { margin-top: 24px; }
+  .sdd { padding: 16px; }
   .vc-tl { --fade-l: 18% !important; }
-  .vc-tl-detail { margin-top: 20px; }
 }
-@media (max-width: 680px) { .vc-tl { margin-top: -24px; } }
-@media (max-width: 680px) { .sdd { padding: 16px 12px; } .sdd.is-wrapped .sdd-row { gap: 6px; } .sdd.is-wrapped .sdd-node { padding: 6px 2px; } }
+/* big headings, the same as in the cases: name as h1, Навыки and Опыт as h2 */
+.vc .vc-h1 { font-size: 54px; line-height: 1.06; font-weight: 600; letter-spacing: -0.03em; margin: 0 0 12px; }
+.vc .vc-h2 { font-size: 30px; line-height: 1.2; font-weight: 600; letter-spacing: -0.02em; margin: 0 0 32px; color: var(--case-text); }
+@media (max-width: 680px) {
+  .vc .vc-h1 { font-size: 38px; }
+  .vc .vc-h2 { font-size: 24px; margin-bottom: 24px; }
+}
