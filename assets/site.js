@@ -1290,5 +1290,21 @@ window.vcInit = (root) => {
       if (status) status.textContent = 'Тесты гоняются по кругу, пока не пройдут, потом ревью';
     } else run();
     window.addEventListener('resize', () => { if (alive()) { draw(); } });
+    // the modal grows in with an animation and fonts load late: if the box changes size so the row
+    // now fits (or no longer fits), redraw in the right direction
+    if (window.ResizeObserver) {
+      let lastW = 0;
+      new ResizeObserver(() => {
+        if (!alive()) return;
+        const w = Math.round(sdd.clientWidth);
+        if (w === lastW) return;
+        lastW = w;
+        const wasVertical = sdd.classList.contains('is-vertical');
+        sdd.classList.remove('is-vertical');
+        const vertical = row.scrollWidth > row.clientWidth + 1;
+        sdd.classList.toggle('is-vertical', wasVertical);
+        if (vertical !== wasVertical || !Object.keys(links).length) draw();
+      }).observe(sdd);
+    }
   }
 };
