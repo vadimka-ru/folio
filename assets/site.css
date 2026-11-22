@@ -2433,3 +2433,4 @@ html.light .ca-brief .cb-grid b { color: #E4572E; }
   .ca-brief .cb-grid h2 { font-size: 17px; }
 }
 
+.ott-board-cap { margin-top: 12px; text-align: center; color: var(--case-text-dim, var(--gray)); }
