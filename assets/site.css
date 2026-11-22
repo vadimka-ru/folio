@@ -2396,3 +2396,40 @@ html.light .vc { --vc-accent: #E4572E; }
   .vc .vc-h1 { font-size: 38px; }
   .vc .vc-h2 { font-size: 24px; margin-bottom: 24px; }
 }
+
+/* OTT case: one spacing scale — 72 between sections, 32 between a text and its media (and between media) */
+.ott-case .ca-figure { margin: 32px 0; }
+.ott-case .ca-figure + .ca-section, .ott-case .gc-row + .ca-section { margin-top: 72px; }
+.ott-case .gc-row { margin: 32px auto; }
+.ott-phone img { object-position: top; }
+.ott-short img { object-fit: contain; background: #222; }
+.ott-case .ca-section.ott-attached { margin-top: 32px; }
+@media (max-width: 680px) {
+  .ott-case .ca-figure + .ca-section, .ott-case .gc-row + .ca-section { margin-top: 56px; }
+  .ott-case .gc-row { margin: 24px auto; }
+  .ott-case .gc-row { flex-wrap: nowrap; gap: 12px; }
+  .ott-case .gc-item { flex: 1 1 0; min-width: 0; gap: 10px; }
+  .ott-case .gc-item .gc-phone { width: 100%; height: auto; }
+  .ott-case .ca-figure { margin: 24px 0; }
+  .ott-case .ca-section.ott-attached { margin-top: 24px; }
+  .ott-case .ca-hero { margin-bottom: 56px; }
+}
+
+/* Case brief header (ported from a reference): crumbs, statement, role, task / results */
+.ca-brief .cb-crumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 14px; font-size: 14px; line-height: 20px; color: var(--gray); margin-bottom: 20px; }
+.ca-brief .cb-crumbs .nda-badge { margin: -6px 0 -6px -4px; }
+.ca-brief .cb-statement { font-family: var(--font-text); font-size: 32px; line-height: 1.3; font-weight: 500; letter-spacing: -0.02em; color: var(--case-text); margin: 0 0 20px; }
+.ca-brief .cb-role { display: flex; gap: 14px; font-size: 16px; line-height: 24px; color: var(--case-text); margin-bottom: 48px; }
+.ca-brief .cb-role span { color: var(--gray); }
+.ca-brief .cb-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+.ca-brief .cb-grid h2 { font-family: var(--font-text); font-size: 18px; line-height: 1.4; font-weight: 600; letter-spacing: -0.005em; color: var(--case-text); margin: 0 0 6px; text-transform: none; }
+.ca-brief .cb-grid p { font-size: 16px; line-height: 1.6; color: var(--gray); margin: 0; }
+.ca-brief .cb-grid b { font-weight: 600; color: #FF8A65; }
+html.light .ca-brief .cb-grid b { color: #E4572E; }
+@media (max-width: 680px) {
+  .ca-brief .cb-statement { font-size: 24px; margin-bottom: 16px; }
+  .ca-brief .cb-role { margin-bottom: 36px; }
+  .ca-brief .cb-grid { grid-template-columns: 1fr; gap: 32px; }
+  .ca-brief .cb-grid h2 { font-size: 17px; }
+}
+
