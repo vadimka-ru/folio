@@ -2402,7 +2402,6 @@ html.light .vc { --vc-accent: #E4572E; }
 .ott-case .ca-figure + .ca-section, .ott-case .gc-row + .ca-section { margin-top: 72px; }
 .ott-case .gc-row { margin: 32px auto; }
 .ott-phone img { object-position: top; }
-.ott-short img { object-fit: contain; background: #222; }
 .ott-case .ca-section.ott-attached { margin-top: 32px; }
 @media (max-width: 680px) {
   .ott-case .ca-figure + .ca-section, .ott-case .gc-row + .ca-section { margin-top: 56px; }
